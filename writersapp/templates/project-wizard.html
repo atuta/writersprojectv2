@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+{% include 'wizard/head.html' %}
+	</head>
+
+	<body>
+		<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+	<div class="image-container set-full-height" style="background-image: url('assets/img/paper-1.jpeg')">
+	   <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-8 col-sm-offset-2">
+
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+
+		                <div class="card wizard-card" data-color="azure" id="wizardProfile">
+		                    <form action="" method="post">
+		                <!--        You can switch " data-color="orange" "  with one of the next bright colors: "blue", "green", "orange", "red", "azure"          -->
+
+		                    	<div class="wizard-header text-center">
+		                        	<h3 class="wizard-title">Create a Project</h3>
+									<p class="category">Kindly give an accurate description of your project.</p>
+		                    	</div>
+
+								<div class="wizard-navigation">
+									<div class="progress-with-circle">
+									     <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3" style="width: 21%;"></div>
+									</div>
+									<ul>
+			                            <li>
+											<a href="#about" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-user"></i>
+												</div>
+												Create Project
+											</a>
+										</li>
+			                            <li>
+											<a href="#account" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-settings"></i>
+												</div>
+												Add a task(s)
+											</a>
+										</li>
+			                            <li>
+											<a href="#address" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-map"></i>
+												</div>
+												Choose Options
+											</a>
+										</li>
+			                        </ul>
+								</div>
+		                        <div class="tab-content">
+		                            <div class="tab-pane" id="about">
+		                            	<div class="row">
+											<h5 class="info-text"> Please tell us more about your project.</h5>
+
+								<form class="row g-3">
+								<div class="col-md-12 form-group">
+								<div style="margin-top: 30px; margin-bottom: 10px;">Title</div>
+								<input style="height: 50px;" type="text" class="form-control" id="inputName5">
+								</div>
+
+								<div class="col-md-6">
+								<div class="form-group">
+								<div style="margin-top: 30px; margin-bottom: 10px;">Language</div>
+								<select style="height: 50px;" class="form-control" id="exampleFormControlSelect10">
+								<option value="" selected>Choose...</option>
+								<optgroup label="Common Languanges">
+								<option>English (United Kingdom)</option>
+								<option>English (United States of America)</option>
+								<option>French</option>
+								</optgroup>
+								<optgroup label="Other Languages">
+								<option>Dutch (Netherlands)</option>
+								<option>Finnish (Finland)</option>
+								<option>Flemish (Belgium)</option>
+								</optgroup>
+								</select>
+								</div>
+								</div>
+
+								<div class="col-md-6">
+								<div class="form-group">
+								<div style="margin-top: 30px; margin-bottom: 10px;">Category</div>
+								<select style="height: 50px;" class="form-control" id="exampleFormControlSelect1">
+								<option value="" selected>Choose...</option>
+								{% for category in categories %}
+								<option value="{{ category.c_name }}">{{ category.c_description }}</option>
+								{% endfor %}
+								</select>
+								</div>
+								</div>
+
+
+								<div class="col-md-12 form-group">
+									<div style="margin-top: 30px; margin-bottom: 10px;">Brief project description. <br>
+										Give us any specific project requirements.</div>
+								<!-- Quill Editor Default -->
+								<div id="project-description" class="quill-editor-default">
+								</div>
+								<!-- End Quill Editor Default -->
+								</div>
+
+								</form><!-- End Multi Columns Form -->
+
+								</div>
+								</div>
+								<div class="tab-pane" id="account">
+								<h5 class="info-text"> Add a New Task </h5>
+								<!--Step 2-->
+
+								<div class="col-md-12">
+								<div style="margin-bottom: 10px;">Title</div>
+								<input style="height: 50px;" type="text" class="form-control" id="inputName53">
+								</div>
+
+								<div class="col-md-4">
+								<div class="form-group">
+								<div style="margin-top: 30px; margin-bottom: 10px;"></div>
+								<input style="height: 50px;" type="text" class="form-control" id="inputName51" placeholder="Word Count">
+								</div>
+								</div>
+
+								<div class="col-md-8">
+								<div class="form-group">
+								<div style="margin-top: 35px; margin-bottom: 10px;"></div>
+
+								<div style="height: 50px; margin-top: 40px;">
+								<label class="radio-inline">
+								<input type="radio" name="optradio" checked>+/- 10%
+								</label>
+								<label class="radio-inline">
+								<input type="radio" name="optradio">Min
+								</label>
+								<label class="radio-inline">
+								<input type="radio" name="optradio">Max
+								</label>
+								</div>
+								</div>
+								</div>
+
+								<div style="margin-bottom: 50px;" class="col-md-12">
+								<div>Keywords: Only enter keywords here; enter instructions in the Special Instructions field below. Separate keywords by a comma; do not use any other punctuation. Keywords are case sensitive.</div>
+								<textarea class="form-control" placeholder="Keywords..." id="floatingTextarea1"></textarea>
+								</div>
+
+
+								<div class="col-lg-6">
+										<div class="form-group">
+											<div>Keyword Repetition</div>
+											<select name="country" class="form-control">
+												<option value="0"> 0 </option>
+												<option value="1"> 1 </option>
+												<option value="2"> 2 </option>
+												<option value="3"> 3 </option>
+												<option value="4"> 4 </option>
+												<option value="5"> 5 </option>
+												<option value="6"> 6 </option>
+												<option value="7"> 7 </option>
+												<option value="8"> 8 </option>
+												<option value="9"> 9 </option>
+												<option value="10"> 10 </option>
+											</select>
+										</div>
+									</div>
+
+
+								<div class="col-lg-12">
+								<br><div>Instructions</div>
+								<div class="form-group">
+								<textarea class="form-control" placeholder="Give task brief instructions here..." id="floatingTextarea"></textarea>
+								</div>
+								</div>
+
+								<div style="margin-bottom: 50px;" class="col-md-12">
+								<div style="margin-bottom: 10px;"><em>(These intructions remain private until the author agrees to work on the document)</em></div>
+								</div>
+
+
+
+								  <div class="row">
+
+									  <div class="col-md-12">
+										  <div class="form-group">
+											  <div style="margin-left: 20px;">Upload helper file. Only PDF and Word documents are allowed</div>
+											<div class="preview-zone hidden">
+											  <div class="box box-solid">
+												<div class="box-header with-border">
+												  <div><b>Preview</b></div>
+												  <div class="box-tools pull-right">
+													<button type="button" class="btn btn-danger btn-xs remove-preview">
+													  <i class="fa fa-times"></i> Reset The Field
+													</button>
+												  </div>
+												</div>
+												<div class="box-body"></div>
+											  </div>
+											</div>
+											<div class="dropzone-wrapper">
+											  <div class="dropzone-desc">
+												<i class="glyphicon glyphicon-download-alt"></i>
+												<p>Choose helper file or drag it here.</p>
+											  </div>
+											  <input type="file" name="img_logo" class="dropzone">
+											</div>
+										  </div>
+
+
+								<!--      <div class="row">-->
+								<!--        <div class="col-md-6">-->
+								<!--          <button type="submit" class="btn btn-primary pull-right">Upload</button>-->
+								<!--        </div>-->
+								<!--      </div>-->
+								</div>
+								</div>
+
+
+								</div>
+
+		                            <div class="tab-pane" id="address">
+									<div class="row">
+									<div class="col-sm-12">
+									<h5 class="info-text"> Project Options </h5>
+									</div>
+									</div>
+
+
+								<div class="row">
+								<div class="col-sm-12">
+								<div class="grid">
+								  <label class="card">
+									<input name="plan" class="radio" type="radio">
+									<span class="plan-details">
+									  <span class="plan-type">Basic</span>
+									  <span class="plan-cost">$0.015 / Word</span>
+									  <p class="description">Not Available</p>
+									</span>
+								  </label>
+								  <label class="card">
+									<input name="plan" class="radio" type="radio" checked>
+									<span class="plan-details" aria-hidden="true">
+									  <span class="plan-type">Standard</span>
+									  <span class="plan-cost">$0.088 / Word</span>
+									  <p class="description">Handled by qualified native speakers, this level is good for general content orders</p>
+									</span>
+								  </label>
+								  <label class="card">
+									<input name="plan" class="radio" type="radio">
+									<span class="plan-details" aria-hidden="true">
+									  <span class="plan-type">Expert</span>
+									  <span class="plan-cost">$0.0154 / Word</span>
+									  <p class="description">Managed by our most experienced writers, this level is best best for more complex orders that require editorial content or research</p>
+									</span>
+								  </label>
+								</div>
+
+
+								<div class="card">
+								<div class="card-body">
+								<table class="table">
+								<tr>
+								<td>
+									<strong>EXTRA PROOFREADING</strong> <br>
+									The project will be proofread by our language managers.
+								</td>
+									<td class="cost">+$0.022 Per Word</td>
+								<td>
+									<label class="switch" for="checkbox">
+									<input type="checkbox" id="checkbox" />
+									<div class="slider round"></div>
+									</label>
+								</td>
+								</tr>
+								<tr>
+								<td>
+									<strong>PRIORITY ORDER</strong> <br>
+									Your project will be assigned a higher priority status.
+								</td>
+									<td class="cost">+$0.044 Per Word</td>
+								<td>
+									<label class="switch" for="checkbox2">
+									<input type="checkbox" id="checkbox2" />
+									<div class="slider round"></div>
+									</label>
+								</td>
+								</tr>
+								</table>
+								</div>
+								</div>
+
+
+
+
+								<div class="card">
+								<div class="card-body">
+								<p class="card-text">Limit this order to my favorite writers.</p>
+								<label class="switch" for="checkbox22">
+								<input type="checkbox" id="checkbox22" />
+								<div class="slider round"></div>
+								</label>
+								</div>
+								</div>
+
+
+
+
+								</div>
+								</div>
+
+		                            </div>
+		                        </div>
+		                        <div class="wizard-footer">
+		                            <div class="pull-right">
+		                                <input type='button' class='btn btn-next btn-fill btn-info btn-wd' name='next' value='Next' />
+		                                <input type='button' class='btn btn-finish btn-fill btn-info btn-wd' name='finish' value='Finish' />
+		                            </div>
+
+		                            <div class="pull-left">
+		                                <input type='button' class='btn btn-previous btn-default btn-wd' name='previous' value='Previous' />
+		                            </div>
+		                            <div class="clearfix"></div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	    	</div><!-- end row -->
+		</div> <!--  big container -->
+
+	    <div class="footer">
+<!--	        <div class="container text-center">-->
+<!--                &copy; Copyright <strong><span>Writers</span></strong>. All Rights Reserved-->
+<!--	        </div>-->
+	    </div>
+
+	</div>
+
+</body>
+
+	{% include 'wizard/js-files.html' %}
+
+</html>
