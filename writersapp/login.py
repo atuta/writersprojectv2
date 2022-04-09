@@ -25,6 +25,7 @@ class CustomLogin:
             if matchcheck:
                 data = {"status": "success", "data": {"message": "login_success",
                                                       "email": str(account_obj.s_email),
+                                                      "phone": str(account_obj.s_phone),
                                                       "firstname": account_obj.s_firstname,
                                                       "lastname": str(account_obj.s_lastname),
                                                       "country": str(account_obj.s_country),

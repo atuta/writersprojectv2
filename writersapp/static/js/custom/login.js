@@ -1,12 +1,8 @@
 $().ready(function() {
     $( "#frm-login" ).submit(function( event ) {
 
-            //var username            = $("input#login-username").val();
-            //var password            = $("input#login-password").val();
-            //var inforedirect        = $("input#inforedirect").val();
-
-            var username            = 'isaacatuta@gmail.com';
-            var password            = 'qwerty';
+            var username            = $("input#username").val();
+            var password            = $("input#password").val();
 
 			var csrftoken = getCookie('csrftoken');
 			$.ajax({
@@ -24,7 +20,20 @@ $().ready(function() {
 				},
 				complete: function() { $(".loading").hide(); },
 				success: function( data ){
-					console.log( data );
+					var resp_data 	= JSON.parse(JSON.stringify(data));
+					var real_data = resp_data.data;
+					var status = resp_data.status;
+					if(status == "success"){
+                        document.cookie = "firstname=" + real_data.firstname + "; Path=/";document.cookie = "lastname=" + real_data.lastname + "; Path=/";document.cookie = "phone=" + real_data.phone + "; Path=/";document.cookie = "email=" + real_data.email + "; Path=/";document.cookie = "country=" + real_data.country + "; Path=/";document.cookie = "role=" + real_data.role + "; Path=/";
+                        $(location).attr('href', "/writersapp/");
+                    }
+                    else {
+                        swal({
+                        title: "Login failed!",
+                        text: "Check your credentials and try again",
+                        icon: "error",
+                        });
+                    }
 				},
 				error: function( jqXhr, textStatus, errorThrown ){
 					console.log( errorThrown );
