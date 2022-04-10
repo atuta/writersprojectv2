@@ -4,8 +4,8 @@ function readFile(input) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
+      //'<img width="200" src="' + e.target.result + '" />'
       var htmlPreview =
-        '<img width="200" src="' + e.target.result + '" />' +
         '<p>' + input.files[0].name + '</p>';
       var wrapperZone = $(input).parent();
       var previewZone = $(input).parent().parent().find('.preview-zone');
@@ -15,6 +15,7 @@ function readFile(input) {
       previewZone.removeClass('hidden');
       boxZone.empty();
       boxZone.append(htmlPreview);
+      $('#msg').html(htmlPreview);
     };
 
     reader.readAsDataURL(input.files[0]);
