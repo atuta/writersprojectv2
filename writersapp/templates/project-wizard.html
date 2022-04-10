@@ -124,14 +124,14 @@
 
 								<form id="frm-add-task" action="" method="post">
 								<div class="col-md-12">
-								<div style="margin-bottom: 10px;">Title</div>
-								<input style="height: 50px;" type="text" class="form-control" id="inputName53">
+								<div style="margin-bottom: 10px;">Task Title</div>
+								<input style="height: 50px;" type="text" class="form-control" id="task-title" name="task-title">
 								</div>
 
 								<div class="col-md-4">
 								<div class="form-group">
 								<div style="margin-top: 30px; margin-bottom: 10px;"></div>
-								<input style="height: 50px;" type="text" class="form-control" id="inputName51" placeholder="Word Count">
+								<input style="height: 50px;" type="text" class="form-control" id="word-count" name="word-count" placeholder="Word Count">
 								</div>
 								</div>
 
@@ -141,13 +141,13 @@
 
 								<div style="height: 50px; margin-top: 40px;">
 								<label class="radio-inline">
-								<input type="radio" name="optradio" checked>+/- 10%
+								<input type="radio" id="plus-minus-10" name="wc-description" value="+/- 10%" checked>+/- 10%
 								</label>
 								<label class="radio-inline">
-								<input type="radio" name="optradio">Min
+								<input type="radio" id="min" name="wc-description" value="min">Min
 								</label>
 								<label class="radio-inline">
-								<input type="radio" name="optradio">Max
+								<input type="radio" id="max" name="wc-description" value="max">Max
 								</label>
 								</div>
 								</div>
@@ -155,14 +155,14 @@
 
 								<div style="margin-bottom: 50px;" class="col-md-12">
 								<div>Keywords: Only enter keywords here; enter instructions in the Special Instructions field below. Separate keywords by a comma; do not use any other punctuation. Keywords are case sensitive.</div>
-								<textarea class="form-control" placeholder="Keywords..." id="floatingTextarea1"></textarea>
+								<textarea class="form-control" placeholder="Keywords..." id="keywords" name="keywords"></textarea>
 								</div>
 
 
 								<div class="col-lg-6">
 										<div class="form-group">
 											<div>Keyword Repetition</div>
-											<select name="country" class="form-control">
+											<select id="keyword-repetition" name="keyword-repetition" class="form-control">
 												<option value="0"> 0 </option>
 												<option value="1"> 1 </option>
 												<option value="2"> 2 </option>
@@ -182,7 +182,7 @@
 								<div class="col-lg-12">
 								<br><div>Instructions</div>
 								<div class="form-group">
-								<textarea class="form-control" placeholder="Give task brief instructions here..." id="floatingTextarea"></textarea>
+								<textarea class="form-control" placeholder="Give task brief instructions here..." id="task-instructions" name="task-instructions"></textarea>
 								</div>
 								</div>
 
@@ -244,7 +244,7 @@
 								<div class="col-sm-12">
 								<div class="grid">
 								  <label class="card">
-									<input name="plan" class="radio" type="radio">
+									<input name="writer-level" id="basic" value="basic" class="radio" type="radio">
 									<span class="plan-details">
 									  <span class="plan-type">Basic</span>
 									  <span class="plan-cost">$0.015 / Word</span>
@@ -252,7 +252,7 @@
 									</span>
 								  </label>
 								  <label class="card">
-									<input name="plan" class="radio" type="radio" checked>
+									<input name="writer-level" id="standard" value="standard" class="radio" type="radio" checked>
 									<span class="plan-details" aria-hidden="true">
 									  <span class="plan-type">Standard</span>
 									  <span class="plan-cost">$0.088 / Word</span>
@@ -260,7 +260,7 @@
 									</span>
 								  </label>
 								  <label class="card">
-									<input name="plan" class="radio" type="radio">
+									<input name="writer-level" id="expert" value="expert" class="radio" type="radio">
 									<span class="plan-details" aria-hidden="true">
 									  <span class="plan-type">Expert</span>
 									  <span class="plan-cost">$0.0154 / Word</span>
@@ -280,8 +280,8 @@
 								</td>
 									<td class="cost">+$0.022 Per Word</td>
 								<td>
-									<label class="switch" for="checkbox">
-									<input type="checkbox" id="checkbox" />
+									<label class="switch" for="extra-proofreading">
+									<input type="checkbox" id="extra-proofreading" value="yes" />
 									<div class="slider round"></div>
 									</label>
 								</td>
@@ -293,8 +293,8 @@
 								</td>
 									<td class="cost">+$0.044 Per Word</td>
 								<td>
-									<label class="switch" for="checkbox2">
-									<input type="checkbox" id="checkbox2" />
+									<label class="switch" for="priority-order">
+									<input type="checkbox" id="priority-order" value="yes" />
 									<div class="slider round"></div>
 									</label>
 								</td>
@@ -304,13 +304,11 @@
 								</div>
 
 
-
-
 								<div class="card">
 								<div class="card-body">
 								<p class="card-text">Limit this order to my favorite writers.</p>
-								<label class="switch" for="checkbox22">
-								<input type="checkbox" id="checkbox22" />
+								<label class="switch" for="favorite-writers">
+								<input type="checkbox" id="favorite-writers" value="yes"  />
 								<div class="slider round"></div>
 								</label>
 								</div>

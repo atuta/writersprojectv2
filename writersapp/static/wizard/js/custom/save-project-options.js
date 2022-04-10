@@ -1,14 +1,28 @@
 $().ready(function() {
-$("#btn-next").css("display", "none");
 
-	$(document).on('click', '#btn-save-project', function( event ) {
+	$(document).on('click', '#btn-finish', function( event ) {
+		var project_code = readCookie('project_code');
+        var writer_level = $('input[name="writer-level"]:checked').val();
 
-		var project_title = $('#project-title').val();
-        var project_language = $('#project-language').val();
-        var project_category = $('#project-category').val();
-        var project_description = $('#project-description').text();
+        if($('#extra-proofreading').is(':checked')){
+            var extra_proofreading = $('#extra-proofreading:checked').val();
+        }else{
+            var extra_proofreading = 'no';
+        }
 
-        if(project_title == '' || project_language == '' || project_category == '' || project_description == ''){
+        if($('#priority-order').is(':checked')){
+            var priority_order = $('#priority-order:checked').val();
+        }else{
+            var priority_order = 'no';
+        }
+
+        if($('#favorite-writers').is(':checked')){
+            var favourite_writers = $('#favorite-writers:checked').val();
+        }else{
+            var favourite_writers = 'no';
+        }
+
+        if(writer_level == '' || extra_proofreading == '' || priority_order == '' || favourite_writers == ''){
             swal({
                 title: "Missing fields!",
                 text: "Fill all required fileds",
@@ -20,12 +34,12 @@ $("#btn-next").css("display", "none");
             //title, category, language, description, owner
             var csrftoken = readCookie('csrftoken');
             $.ajax({
-                    url: '/writersapp/save-project/',
+                    url: '/writersapp/save-project-options/',
                     dataType: 'json',
                     type: 'post',
                     contentType: 'application/json',
-                    data: JSON.stringify( { "title": project_title, "category": project_category,
-                     "language": project_language, "description": project_description, "owner": readCookie("email")} ),
+                    data: JSON.stringify( { "project_code": project_code, "writer_level": writer_level,
+                     "extra_proofreading": extra_proofreading, "priority_order": priority_order, "favourite_writers": favourite_writers} ),
                     processData: false,
                     beforeSend: function(xhr, settings) {
                         $(".loading").show();
@@ -35,17 +49,18 @@ $("#btn-next").css("display", "none");
                     },
                     complete: function() { $(".loading").hide(); },
                     success: function( data ){
+                        //console.log( data );
                         var resp_data 	= JSON.parse(JSON.stringify(data));
                         var real_data = resp_data.data;
                         var status = resp_data.status;
 
                         if(status == "success"){
-                           $('#btn-next').trigger('click');
-                           $("#project-previous").css("display", "none");
-                           $("#btn-save-project").css("display", "none");
-                           $("#btn-save-task").show();
 
-                           createCookie('project_code', real_data.message, '1')
+                            $('#btn-next').trigger('click');
+                            $("#project-previous").css("display", "none");
+                            $("#btn-save-project").css("display", "none");
+                            $("#btn-save-task").css("display", "none");
+
                         }
                         else {
                             swal({

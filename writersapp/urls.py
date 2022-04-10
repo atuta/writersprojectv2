@@ -5,7 +5,9 @@ from . import views
 urlpatterns = [
     path('', views.home, name='writers-home'),
     path('add-post/', views.add_post, name='add-post'),
-    path('save-task/', views.upload_files, name='save-task'),
+    path('save-project-options/', views.view_save_project_options, name='save-project-options'),
+    path('upload-file/', views.upload_files, name='upload-file'),
+    path('save-task/', views.view_save_task, name='save-task'),
     path('save-project/', views.view_save_project, name='save-project'),
     path('create-project/', views.create_project, name='create-project'),
     path('writers-dashboard/', views.dashbooard, name='writers-dashboard'),

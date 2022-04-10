@@ -5,12 +5,41 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class ProjectOptions(models.Model):
+    p_id = models.AutoField(primary_key=True)
+    p_p_code = models.CharField(max_length=70, blank=True)
+    p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
+    p_extra_proofreading = models.CharField(max_length=20, blank=True, default='no')
+    p_priority_order = models.CharField(max_length=20, blank=True, default='no')
+    p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
+    p_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['p_id']
+
+
+class Tasks(models.Model):
+    t_id = models.AutoField(primary_key=True)
+    t_p_code = models.CharField(max_length=70, blank=True)
+    t_title = models.CharField(max_length=200, blank=True)
+    t_word_count = models.CharField(max_length=100, blank=True,)
+    t_wc_description = models.CharField(max_length=100, blank=True, )
+    t_keywords = models.CharField(max_length=500, blank=True)
+    t_keyword_repetition = models.CharField(max_length=20, blank=True, )
+    t_instructions = models.TextField(blank=True)
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['t_id']
+
+
 class Projects(models.Model):
     p_id = models.AutoField(primary_key=True)
+    p_code = models.CharField(max_length=70, blank=True)
     p_title = models.CharField(max_length=200, blank=True)
     p_category = models.CharField(max_length=100, blank=True,)
     p_language = models.CharField(max_length=100, blank=True, )
-    p_description = models.TextField(blank=True, )
+    p_description = models.TextField(blank=True)
     p_owner = models.CharField(max_length=20, blank=True, )
     p_status = models.CharField(max_length=50, blank=True, default='pending')
     p_datetime = models.DateTimeField(auto_now=True, null=True)

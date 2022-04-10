@@ -6,10 +6,27 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from .save_task import SaveTask
+from .save_project_options import SaveProjectOptions
 from .save_project import SaveProject
 from .create_account import CreateSystemUser
 from .login import CustomLogin
 from .models import Categories
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_save_project_options(request):
+    received_data = json.loads(request.body)
+    # project_code, writer_level, extra_proofreading, priority_order, favourite_writers
+    project_code = received_data['project_code']
+    writer_level = received_data['writer_level']
+    extra_proofreading = received_data['extra_proofreading']
+    priority_order = received_data['priority_order']
+    favourite_writers = received_data['favourite_writers']
+
+    response = SaveProjectOptions.save_project_options('', project_code, writer_level, extra_proofreading,
+                                                       priority_order, favourite_writers)
+    return HttpResponse(response, content_type='text/json')
 
 
 @ensure_csrf_cookie
@@ -29,6 +46,7 @@ def upload_files(request):
         return HttpResponse(json.dumps(data), content_type='text/json')
 
 
+# to go to a utility file
 def handle_uploaded_file(f):
     with open(f.name, 'wb+') as destination:
         for chunk in f.chunks():
@@ -39,10 +57,17 @@ def handle_uploaded_file(f):
 @csrf_exempt
 def view_save_task(request):
     received_data = json.loads(request.body)
-    # title, category, language, description, owner
-    title = received_data['title']
 
-    response = SaveTask.save_task('', title)
+    project_code = received_data['project_code']
+    task_title = received_data['task_title']
+    word_count = received_data['word_count']
+    word_count_description = received_data['word_count_description']
+    keywords = received_data['keywords']
+    keyword_repetition = received_data['keyword_repetition']
+    task_instructions = received_data['task_instructions']
+
+    response = SaveTask.save_task('', project_code, task_title, word_count, word_count_description, keywords,
+                                  keyword_repetition, task_instructions)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -50,7 +75,7 @@ def view_save_task(request):
 @csrf_exempt
 def view_save_project(request):
     received_data = json.loads(request.body)
-    # title, category, language, description, owner
+
     title = received_data['title']
     category = received_data['category']
     language = received_data['language']
