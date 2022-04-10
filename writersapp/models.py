@@ -5,6 +5,20 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Projects(models.Model):
+    p_id = models.AutoField(primary_key=True)
+    p_title = models.CharField(max_length=200, blank=True)
+    p_category = models.CharField(max_length=100, blank=True,)
+    p_language = models.CharField(max_length=100, blank=True, )
+    p_description = models.TextField(blank=True, )
+    p_owner = models.CharField(max_length=20, blank=True, )
+    p_status = models.CharField(max_length=50, blank=True, default='pending')
+    p_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['p_id']
+
+
 class SystemUsers(models.Model):
     s_id = models.AutoField(primary_key=True)
     s_firstname = models.CharField(max_length=100, blank=True)

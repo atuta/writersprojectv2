@@ -4,9 +4,25 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from .save_project import SaveProject
 from .create_account import CreateSystemUser
 from .login import CustomLogin
 from .models import Categories
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_save_project(request):
+    received_data = json.loads(request.body)
+    # title, category, language, description, owner
+    title = received_data['title']
+    category = received_data['category']
+    language = received_data['language']
+    description = received_data['description']
+    owner = received_data['owner']
+
+    response = SaveProject.save_project('', title, category, language, description, owner)
+    return HttpResponse(response, content_type='text/json')
 
 
 @api_view(['POST', 'GET'])

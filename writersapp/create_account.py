@@ -1,13 +1,8 @@
 from django.http import HttpResponse
 import requests
 import json
-import random
-from django.contrib.auth.base_user import BaseUserManager
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
 from .models import SystemUsers
-from stellar_base.utils import StellarMnemonic
-from stellar_base.keypair import Keypair
 from .config import EMAIL_URL
 
 
