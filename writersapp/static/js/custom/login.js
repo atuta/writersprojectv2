@@ -1,47 +1,41 @@
 $().ready(function() {
-    $( "#frm-login" ).submit(function( event ) {
-
+   //$(document).on('click', '#btn-login', function(event) {
+   $( "#frm-login" ).submit(function( event ) {
             var username            = $("input#username").val();
             var password            = $("input#password").val();
 
 			var csrftoken = getCookie('csrftoken');
+			var dataString =  'email=' + username + '&password=' + password;
+
+            try{
 			$.ajax({
-				url: '/writersapp/custom-login/',
-				dataType: 'json',
-				type: 'post',
-				contentType: 'application/json',
-				data: JSON.stringify( { "email": username, "password": password } ),
-				processData: false,
-				beforeSend: function(xhr, settings) {
-					$(".loading").show();
-					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-						xhr.setRequestHeader("X-CSRFToken", csrftoken);
-					}
-				},
-				complete: function() { $(".loading").hide(); },
-				success: function( data ){
-					var resp_data 	= JSON.parse(JSON.stringify(data));
-					var real_data = resp_data.data;
-					var status = resp_data.status;
-					if(status == "success"){
-                        document.cookie = "firstname=" + real_data.firstname + "; Path=/";document.cookie = "lastname=" + real_data.lastname + "; Path=/";document.cookie = "phone=" + real_data.phone + "; Path=/";document.cookie = "email=" + real_data.email + "; Path=/";document.cookie = "country=" + real_data.country + "; Path=/";document.cookie = "role=" + real_data.role + "; Path=/";
-                        $(location).attr('href', "/writersapp/");
-                    }
-                    else {
-                        swal({
-                        title: "Login failed!",
-                        text: "Check your credentials and try again",
-                        icon: "error",
-                        });
-                    }
-				},
-				error: function( jqXhr, textStatus, errorThrown ){
-					console.log( errorThrown );
-				}
-			});
+				type: "POST",
+				url: "/writersapp/custom-login/",
+				headers: {'X-CSRFToken': csrftoken},
+				beforeSend: function() { $(".loading").show(); },
+                complete: function() { $(".loading").hide();},
+				data: dataString,
+				success: function(data) {
+						 var status 	= data.status;
+						 var real_data   = data.data;
+						 console.log(status);
+						 if(status === 'success'){
+                            $(location).attr('href', '/writersapp/writers-dashboard/');
+						 }
+				 }
+				 });
+
+			} catch (err){
+				console.log(err.message);
+			}
     event.preventDefault();
     });
     });
+
+    function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
 
 
 	function getCookie(name) {

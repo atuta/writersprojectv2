@@ -12,6 +12,13 @@
   scroll-behavior: smooth;
 }
 
+/* start of custom*/
+.orange{
+color: #FFA500;
+}
+
+/* end of custom*/
+
 body {
   font-family: "Open Sans", sans-serif;
   background: #f6f9ff;

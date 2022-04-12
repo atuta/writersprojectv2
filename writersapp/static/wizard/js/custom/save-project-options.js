@@ -33,13 +33,12 @@ $().ready(function() {
 
             //title, category, language, description, owner
             var csrftoken = readCookie('csrftoken');
+            var dataString =  'project_code=' + project_code + '&writer_level=' + writer_level + '&extra_proofreading=' + extra_proofreading
+             + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers;
             $.ajax({
                     url: '/writersapp/save-project-options/',
-                    dataType: 'json',
                     type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify( { "project_code": project_code, "writer_level": writer_level,
-                     "extra_proofreading": extra_proofreading, "priority_order": priority_order, "favourite_writers": favourite_writers} ),
+                    data: dataString,
                     processData: false,
                     beforeSend: function(xhr, settings) {
                         $(".loading").show();
@@ -49,12 +48,10 @@ $().ready(function() {
                     },
                     complete: function() { $(".loading").hide(); },
                     success: function( data ){
-                        //console.log( data );
-                        var resp_data 	= JSON.parse(JSON.stringify(data));
-                        var real_data = resp_data.data;
-                        var status = resp_data.status;
+                        var real_data = data.data;
+                        var status = data.status;
 
-                        if(status == "success"){
+                        if(status === "success"){
 
                             $('#btn-next').trigger('click');
                             $("#project-previous").css("display", "none");

@@ -5,6 +5,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Plans(models.Model):
+    p_id = models.AutoField(primary_key=True)
+    p_name = models.CharField(max_length=70, blank=True)
+    p_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    p_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['p_id']
+
+
 class ProjectOptions(models.Model):
     p_id = models.AutoField(primary_key=True)
     p_p_code = models.CharField(max_length=70, blank=True)
@@ -22,11 +32,12 @@ class Tasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_p_code = models.CharField(max_length=70, blank=True)
     t_title = models.CharField(max_length=200, blank=True)
-    t_word_count = models.CharField(max_length=100, blank=True,)
-    t_wc_description = models.CharField(max_length=100, blank=True, )
+    t_word_count = models.CharField(max_length=100, blank=True)
+    t_wc_description = models.CharField(max_length=100, blank=True)
     t_keywords = models.CharField(max_length=500, blank=True)
-    t_keyword_repetition = models.CharField(max_length=20, blank=True, )
+    t_keyword_repetition = models.CharField(max_length=20, blank=True)
     t_instructions = models.TextField(blank=True)
+    t_doc = models.CharField(max_length=100, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
@@ -37,8 +48,8 @@ class Projects(models.Model):
     p_id = models.AutoField(primary_key=True)
     p_code = models.CharField(max_length=70, blank=True)
     p_title = models.CharField(max_length=200, blank=True)
-    p_category = models.CharField(max_length=100, blank=True,)
-    p_language = models.CharField(max_length=100, blank=True, )
+    p_category = models.CharField(max_length=100, blank=True)
+    p_language = models.CharField(max_length=100, blank=True)
     p_description = models.TextField(blank=True)
     p_owner = models.CharField(max_length=20, blank=True, )
     p_status = models.CharField(max_length=50, blank=True, default='pending')
@@ -51,12 +62,12 @@ class Projects(models.Model):
 class SystemUsers(models.Model):
     s_id = models.AutoField(primary_key=True)
     s_firstname = models.CharField(max_length=100, blank=True)
-    s_lastname = models.CharField(max_length=100, blank=True,)
-    s_phone = models.CharField(max_length=20, blank=True, )
-    s_email = models.CharField(max_length=100, blank=True, )
-    s_passwd = models.CharField(max_length=100, blank=True, )
-    s_country = models.CharField(max_length=100, blank=True, )
-    s_role = models.CharField(max_length=50, blank=True, )
+    s_lastname = models.CharField(max_length=100, blank=True)
+    s_phone = models.CharField(max_length=20, blank=True)
+    s_email = models.CharField(max_length=100, blank=True)
+    s_passwd = models.CharField(max_length=100, blank=True)
+    s_country = models.CharField(max_length=100, blank=True)
+    s_role = models.CharField(max_length=50, blank=True)
     s_status = models.CharField(max_length=50, blank=True, default='inactive')
     c_datetime = models.DateTimeField(auto_now=True, null=True)
 

@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+{% for project in data.data %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ project.fields.p_title }}</h5>
+                <p class="small">{{ project.fields.p_category }} Created on {{ project.fields.p_datetime }} - <span class="orange">{{ project.fields.p_status }}</span></p>
+              {{ project.fields.p_description }}
+            </div>
+            <div class="card-footer">
+              <button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm me-1"></i> View Tasks</button>
+                <a href="#"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-calendar2-check ms-1"></i> Submit Task</button></a>
+            </div>
+          </div><!-- End Card with header and footer -->
+{% endfor %}
+    </div><!-- End Right side columns -->
+      </div>
+{% endblock %}

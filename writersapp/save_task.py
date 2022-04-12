@@ -9,7 +9,7 @@ class SaveTask:
         pass
 
     def save_task(self, project_code, task_title, word_count, word_count_description, keywords,
-                  keyword_repetition, task_instructions):
+                  keyword_repetition, task_instructions, doc):
         try:
             action = Tasks(
                 t_p_code=project_code,
@@ -18,7 +18,8 @@ class SaveTask:
                 t_wc_description=word_count_description,
                 t_keywords=keywords,
                 t_keyword_repetition=keyword_repetition,
-                t_instructions=task_instructions
+                t_instructions=task_instructions,
+                t_doc=doc,
             )
             action.save()
             data = {"status": "success", "data": {"message": task_title}}

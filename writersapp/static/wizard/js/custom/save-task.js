@@ -10,11 +10,12 @@ $(document).on('click', '#btn-save-task', function( event ) {
         var keywords = $('#keywords').val();
         var keyword_repetition = $('select#keyword-repetition').val();
         var task_instructions = $('#task-instructions').val();
+        var doc = $('input[type=file]').val().replace(/.*(\/|\\)/, '')
 
-        if(task_title == '' || word_count == '' || word_count_description == ''
-        || keywords == '' || keyword_repetition == '' || task_instructions == ''){
+        if(task_title === '' || word_count === '' || word_count_description === ''
+        || keywords === '' || keyword_repetition === '' || task_instructions === '' || doc === ''){
             swal({
-                title: "Missing fields!",
+                title: "Missing fields2!",
                 text: "Fill all required fileds",
                 icon: "error",
                 });
@@ -22,15 +23,13 @@ $(document).on('click', '#btn-save-task', function( event ) {
         }else{
 
             var csrftoken = readCookie('csrftoken');
+            var dataString =  'project_code=' + project_code + '&task_title=' + task_title + '&word_count=' + word_count
+             + '&word_count_description=' + word_count_description + '&keywords=' + keywords + '&keyword_repetition=' + keyword_repetition
+              + '&task_instructions=' + task_instructions + '&doc=' + doc;
             $.ajax({
                     url: '/writersapp/save-task/',
-                    dataType: 'json',
                     type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify( { "project_code": project_code, "task_title": task_title, "word_count": word_count,
-                     "word_count_description": word_count_description, "keywords": keywords, "keyword_repetition": keyword_repetition,
-                     "task_instructions": task_instructions} ),
-                    processData: false,
+                    data: dataString,
                     beforeSend: function(xhr, settings) {
                         $(".loading").show();
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -39,11 +38,10 @@ $(document).on('click', '#btn-save-task', function( event ) {
                     },
                     complete: function() { $(".loading").hide(); },
                     success: function( data ){
-                        var resp_data 	= JSON.parse(JSON.stringify(data));
-                        var real_data = resp_data.data;
-                        var status = resp_data.status;
+                        var real_data = data.data;
+                        var status = data.status;
 
-                        if(status == "success"){
+                        if(status === "success"){
 
                            $('#btn-next').trigger('click');
                            $("#project-previous").css("display", "none");

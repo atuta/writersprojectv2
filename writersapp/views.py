@@ -1,28 +1,28 @@
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
 from .save_project import SaveProject
+from .my_projects import MyProjects
 from .create_account import CreateSystemUser
 from .login import CustomLogin
 from .models import Categories
+from django.contrib.auth import authenticate, login
 
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
 def view_save_project_options(request):
-    received_data = json.loads(request.body)
-    # project_code, writer_level, extra_proofreading, priority_order, favourite_writers
-    project_code = received_data['project_code']
-    writer_level = received_data['writer_level']
-    extra_proofreading = received_data['extra_proofreading']
-    priority_order = received_data['priority_order']
-    favourite_writers = received_data['favourite_writers']
+    project_code = request.POST.get("project_code")
+    writer_level = request.POST.get("writer_level")
+    extra_proofreading = request.POST.get("extra_proofreading")
+    priority_order = request.POST.get("priority_order")
+    favourite_writers = request.POST.get("favourite_writers")
 
     response = SaveProjectOptions.save_project_options('', project_code, writer_level, extra_proofreading,
                                                        priority_order, favourite_writers)
@@ -56,31 +56,28 @@ def handle_uploaded_file(f):
 @api_view(['POST', 'GET'])
 @csrf_exempt
 def view_save_task(request):
-    received_data = json.loads(request.body)
-
-    project_code = received_data['project_code']
-    task_title = received_data['task_title']
-    word_count = received_data['word_count']
-    word_count_description = received_data['word_count_description']
-    keywords = received_data['keywords']
-    keyword_repetition = received_data['keyword_repetition']
-    task_instructions = received_data['task_instructions']
+    project_code = request.POST.get("project_code")
+    task_title = request.POST.get("task_title")
+    word_count = request.POST.get("word_count")
+    word_count_description = request.POST.get("word_count_description")
+    keywords = request.POST.get("keywords")
+    keyword_repetition = request.POST.get("keyword_repetition")
+    task_instructions = request.POST.get("task_instructions")
+    doc = request.POST.get("doc")
 
     response = SaveTask.save_task('', project_code, task_title, word_count, word_count_description, keywords,
-                                  keyword_repetition, task_instructions)
+                                  keyword_repetition, task_instructions, doc)
     return HttpResponse(response, content_type='text/json')
 
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
 def view_save_project(request):
-    received_data = json.loads(request.body)
-
-    title = received_data['title']
-    category = received_data['category']
-    language = received_data['language']
-    description = received_data['description']
-    owner = received_data['owner']
+    title = request.POST.get("title")
+    category = request.POST.get("category")
+    language = request.POST.get("language")
+    description = request.POST.get("description")
+    owner = request.user.email
 
     response = SaveProject.save_project('', title, category, language, description, owner)
     return HttpResponse(response, content_type='text/json')
@@ -89,12 +86,16 @@ def view_save_project(request):
 @api_view(['POST', 'GET'])
 @csrf_exempt
 def view_custom_login(request):
-    received_data = json.loads(request.body)
-    username = received_data['email']
-    password = received_data['password']
+    username = request.POST.get("email")
+    password = request.POST.get("password")
 
-    response = CustomLogin.custom_login('', username, password)
-    return HttpResponse(response, content_type='text/json')
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        data = {"status": "success", "data": {"message": "login_success"}}
+        return HttpResponse(json.dumps(data), content_type='text/json')
+    else:
+        data = {"status": "fail", "data": {"message": "login_fail"}}
+        return HttpResponse(json.dumps(data), content_type='text/json')
 
 
 @api_view(['POST', 'GET'])
@@ -113,6 +114,11 @@ def view_create_account(request):
     return HttpResponse(response, content_type='text/json')
 
 
+def my_projects(request):
+    response = MyProjects.my_projects_data('', request.user.email)
+    return render(request, "my-projects.html", context={"data": response, "page_title": "Available Projects"})
+
+
 def create_project(request):
     categories = list(Categories.objects.values())
     return render(request, "project-wizard.html", context={"categories": categories})
@@ -126,7 +132,7 @@ def dashbooard(request):
     return render(request, "dashboard.html", {})
 
 
-def login(request):
+def login_page(request):
     return render(request, "login.html", {})
 
 
