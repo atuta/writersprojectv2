@@ -5,14 +5,28 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Plans(models.Model):
-    p_id = models.AutoField(primary_key=True)
-    p_name = models.CharField(max_length=70, blank=True)
-    p_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
-    p_datetime = models.DateTimeField(auto_now=True, null=True)
+class ActiveTasks(models.Model):
+    t_id = models.AutoField(primary_key=True)
+    t_code = models.CharField(max_length=70, blank=True)
+    t_article = models.TextField(blank=True)
+    t_writer_reward = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_author = models.CharField(max_length=100, blank=True)
+    t_status = models.CharField(max_length=50, blank=True, default='draft')
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    # statuses: draft,submitted, inreview, approved, returned, disapproved
+    class Meta:
+        ordering = ['t_id']
+
+
+class Costs(models.Model):
+    c_id = models.AutoField(primary_key=True)
+    c_name = models.CharField(max_length=70, blank=True)
+    c_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    c_datetime = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['p_id']
+        ordering = ['c_id']
 
 
 class ProjectOptions(models.Model):
@@ -31,6 +45,7 @@ class ProjectOptions(models.Model):
 class Tasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_p_code = models.CharField(max_length=70, blank=True)
+    t_task_code = models.CharField(max_length=70, blank=True)
     t_title = models.CharField(max_length=200, blank=True)
     t_word_count = models.CharField(max_length=100, blank=True)
     t_wc_description = models.CharField(max_length=100, blank=True)
@@ -38,6 +53,13 @@ class Tasks(models.Model):
     t_keyword_repetition = models.CharField(max_length=20, blank=True)
     t_instructions = models.TextField(blank=True)
     t_doc = models.CharField(max_length=100, blank=True)
+
+    p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
+    p_extra_proofreading = models.CharField(max_length=20, blank=True, default='no')
+    p_priority_order = models.CharField(max_length=20, blank=True, default='no')
+    p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
+
+    t_allocated_to = models.CharField(max_length=100, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:

@@ -1,4 +1,6 @@
 import json
+
+from django.core import serializers
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render, redirect
@@ -7,24 +9,26 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
+from .log_task import LogTask
 from .save_project import SaveProject
+from .project_tasks import ProjectTasks
 from .my_projects import MyProjects
 from .create_account import CreateSystemUser
 from .login import CustomLogin
-from .models import Categories
+from .models import Categories, Projects, Tasks, ActiveTasks
 from django.contrib.auth import authenticate, login
 
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
 def view_save_project_options(request):
-    project_code = request.POST.get("project_code")
+    task_code = request.POST.get("task_code")
     writer_level = request.POST.get("writer_level")
     extra_proofreading = request.POST.get("extra_proofreading")
     priority_order = request.POST.get("priority_order")
     favourite_writers = request.POST.get("favourite_writers")
 
-    response = SaveProjectOptions.save_project_options('', project_code, writer_level, extra_proofreading,
+    response = SaveProjectOptions.save_project_options('', task_code, writer_level, extra_proofreading,
                                                        priority_order, favourite_writers)
     return HttpResponse(response, content_type='text/json')
 
@@ -51,6 +55,17 @@ def handle_uploaded_file(f):
     with open(f.name, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_log_task(request):
+    task_code = request.POST.get("task_code")
+    article = request.POST.get("article")
+    author = request.user.email
+
+    response = LogTask.log_task('', task_code, article, author)
+    return HttpResponse(response, content_type='text/json')
 
 
 @api_view(['POST', 'GET'])
@@ -112,6 +127,31 @@ def view_create_account(request):
 
     response = CreateSystemUser.create_system_user('', firstname, lastname, phone, email, country, role, password)
     return HttpResponse(response, content_type='text/json')
+
+
+def do_task(request, task_code):
+    tasks_obj = Tasks.objects.get(t_task_code=task_code)
+    task_title = tasks_obj.t_title
+
+    try:
+        active_task_obj = ActiveTasks.objects.get(t_code=task_code)
+        article = active_task_obj.t_article
+    except ActiveTasks.DoesNotExist as e:
+        article = ""
+
+    return render(request, "do-task.html", context={"data": tasks_obj,
+                                                    "page_title": task_title, "article": article})
+
+
+def project_tasks(request, project_code):
+    try:
+        project_obj = Projects.objects.get(p_code=project_code)
+        response = ProjectTasks.project_tasks_data('', project_code)
+        project_title = project_obj.p_title
+    except Projects.DoesNotExist as e:
+        response = {}
+        project_title = "No task found!"
+    return render(request, "project-tasks.html", context={"data": response, "page_title": project_title})
 
 
 def my_projects(request):

@@ -11,8 +11,10 @@ class SaveTask:
     def save_task(self, project_code, task_title, word_count, word_count_description, keywords,
                   keyword_repetition, task_instructions, doc):
         try:
+            task_code = get_random_string(64, 'abcdef0123456789')
             action = Tasks(
                 t_p_code=project_code,
+                t_task_code=task_code,
                 t_title=task_title,
                 t_word_count=word_count,
                 t_wc_description=word_count_description,
@@ -22,7 +24,7 @@ class SaveTask:
                 t_doc=doc,
             )
             action.save()
-            data = {"status": "success", "data": {"message": task_title}}
+            data = {"status": "success", "data": {"message": task_code}}
             return HttpResponse(json.dumps(data), content_type='text/json')
         except Exception as e:
             data = {"status": "fail", "data": {"message": "fail"}}

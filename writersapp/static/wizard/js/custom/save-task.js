@@ -15,7 +15,7 @@ $(document).on('click', '#btn-save-task', function( event ) {
         if(task_title === '' || word_count === '' || word_count_description === ''
         || keywords === '' || keyword_repetition === '' || task_instructions === '' || doc === ''){
             swal({
-                title: "Missing fields2!",
+                title: "Missing fields!",
                 text: "Fill all required fileds",
                 icon: "error",
                 });
@@ -47,6 +47,8 @@ $(document).on('click', '#btn-save-task', function( event ) {
                            $("#project-previous").css("display", "none");
                            $("#btn-save-project").css("display", "none");
                            $("#btn-save-task").css("display", "none");
+
+                           createCookie('task_code', real_data.message, '1')
                         }
                         else {
                             swal({

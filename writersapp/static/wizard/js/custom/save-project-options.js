@@ -33,8 +33,10 @@ $().ready(function() {
 
             //title, category, language, description, owner
             var csrftoken = readCookie('csrftoken');
-            var dataString =  'project_code=' + project_code + '&writer_level=' + writer_level + '&extra_proofreading=' + extra_proofreading
-             + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers;
+            var task_code = readCookie('task_code');
+            var dataString =  'project_code=' + project_code + '&task_code=' + task_code + '&writer_level='
+                + writer_level + '&extra_proofreading=' + extra_proofreading
+                + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers;
             $.ajax({
                     url: '/writersapp/save-project-options/',
                     type: 'post',

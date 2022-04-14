@@ -39,6 +39,7 @@ $("#btn-next").css("display", "none");
                         var status = resp_data.status;
 
                         if(status === "success"){
+
                            $('#btn-next').trigger('click');
                            $("#project-previous").css("display", "none");
                            $("#btn-save-project").css("display", "none");
