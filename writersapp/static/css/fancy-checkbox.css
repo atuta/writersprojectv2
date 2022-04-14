@@ -1,0 +1,55 @@
+.c-checkbox > input[type=checkbox]{
+  width: 40px; height: 40px;
+  cursor: pointer;
+  opacity: 0;
+  margin: 0;
+  appearance: none; -webkit-appearance: none;
+}
+.c-checkbox > div{
+  display: grid;
+  pointer-events: none;
+  transition: transform .6s cubic-bezier(.8, .5, .2, 1.4);
+  transform-style: preserve-3d;
+}
+.c-checkbox > div > *{
+  grid-area: 1/1;
+}
+.c-checkbox > div > i:first-child{
+  background: blue;
+  transform:  translatez( -10px );
+}
+.c-checkbox > div > i:last-child{
+  background: #ddd;
+  transform:  translatez( 10px );
+}
+.c-checkbox > div > i:nth-of-type(2),
+.c-checkbox > div > i:nth-of-type(3){
+  height: 20px;
+  transform: rotatex(90deg)rotatey(90deg) ;
+  position: relative;
+  top: 10px;
+}
+.c-checkbox > div > i:nth-of-type(2){
+  background: navy;
+  right: 20px;
+}
+.c-checkbox > div > i:nth-of-type(3){
+  background: darkslategray;
+  left: 20px;
+}
+input:checked + div{
+  transform: rotatey( 180deg );
+}
+.c-checkbox{
+  display: grid;
+  width: 40px; height: 40px;
+}
+.c-checkbox > *{
+  grid-area: 1/1;
+}
+label{
+  font: 60px Girassol;
+  color: lime;
+  text-shadow: 2px 2px 0 blue;
+  cursor: pointer;
+}

@@ -14,7 +14,7 @@
             </div>
             <div class="card-footer">
                 <a href="{% url 'project-tasks' project.fields.p_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm me-1"></i> View Tasks</button></a>
-                <a href="#"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-plus ms-1"></i> Add a Task</button></a>
+                <a href="{% url 'add-task' project.fields.p_code %}"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-x-square ms-1"></i> Add a Task</button></a>
             </div>
           </div><!-- End Card with header and footer -->
 {% endfor %}

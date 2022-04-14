@@ -19,6 +19,6 @@ from writersapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='writers-home'),
+    path('', views.dashbooard, name='dashboard'),
     path('writersapp/', include('writersapp.urls')),
 ]

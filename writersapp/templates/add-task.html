@@ -1,0 +1,211 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+<div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Describe your task</h5>
+
+              <!-- Floating Labels Form -->
+              <form class="row g-3" id="frm-create-project" action="#" method="post">
+                <div class="col-md-12">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="task-title" placeholder="Task Title" autocomplete="off">
+                    <label for="task-title">Task Title</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                <div class="form-group">
+                <div style="margin-top: 30px; margin-bottom: 10px;"></div>
+                <input style="height: 50px;" type="text" class="form-control" id="word-count" name="word-count" placeholder="Word Count" autocomplete="off">
+                </div>
+                </div>
+
+                <div class="col-md-8">
+                <div class="form-group">
+                <div style="margin-top: 35px; margin-bottom: 10px;"></div>
+
+                <div style="height: 50px; margin-top: 40px;">
+                <label class="radio-inline ms-3">
+                <input type="radio" id="plus-minus-10" name="wc-description" value="+/- 10%" checked> +/- 10%
+                </label>
+                <label class="radio-inline ms-3">
+                <input type="radio" id="min" name="wc-description" value="min"> Min
+                </label>
+                <label class="radio-inline ms-3">
+                <input type="radio" id="max" name="wc-description" value="max"> Max
+                </label>
+                </div>
+                </div>
+                </div>
+
+                <div style="margin-bottom: 10px;" class="col-md-12">
+                <div>Keywords: Only enter keywords here; enter instructions in the Special Instructions field below. Separate keywords by a comma; do not use any other punctuation. Keywords are case sensitive.</div>
+                <textarea style="height: 80px;" class="form-control mt-2" placeholder="Keywords..." id="keywords" name="keywords"></textarea>
+                </div>
+
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                        <div>Keyword Repetition</div>
+                        <select id="keyword-repetition" name="keyword-repetition" class="form-control mt-2">
+                            <option value="0"> 0 </option>
+                            <option value="1"> 1 </option>
+                            <option value="2"> 2 </option>
+                            <option value="3"> 3 </option>
+                            <option value="4"> 4 </option>
+                            <option value="5"> 5 </option>
+                            <option value="6"> 6 </option>
+                            <option value="7"> 7 </option>
+                            <option value="8"> 8 </option>
+                            <option value="9"> 9 </option>
+                            <option value="10"> 10 </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                <br><div>Instructions</div>
+                <div class="form-group">
+                <textarea style="height: 150px;" class="form-control mt-2" placeholder="Give task brief instructions here..." id="task-instructions" name="task-instructions"></textarea>
+                </div>
+                </div>
+
+                <div style="margin-bottom: 50px;" class="col-md-12">
+                <div style="margin-bottom: 10px;"><em>(These intructions remain private until the author agrees to work on the document)</em></div>
+                </div>
+
+
+                      <div class="col-md-12">
+                              <div>Upload helper file. Only PDF and Word documents are allowed</div>
+                            <div class="preview-zone hidden">
+                              <div class="box box-solid">
+                                <div class="box-header with-border">
+                                  <div class="pull-left"><b>Preview</b></div>
+<!--                                  <div class="box-tools pull-right">-->
+<!--                                    <button type="button" class="btn btn-outline-danger btn-xs remove-preview">-->
+<!--                                      <i class="bi bi-plus"></i> Reset-->
+<!--                                    </button>-->
+<!--                                  </div>-->
+                                </div>
+                                <div class="box-body"></div>
+                              </div>
+                            </div>
+                            <div class="dropzone-wrapper">
+                              <div class="dropzone-desc">
+                                <i class="glyphicon glyphicon-download-alt"></i>
+                                <p id="msg">Choose helper file or drag it here.</p>
+                              </div>
+                              <input type="file" id="help-doc" name="help-doc" class="dropzone">
+                            </div>
+                          </div>
+                <div class="card-footer">
+                <div class="text-left">
+                <button type="button" class="btn btn-outline-success">Save and Proceed to Step 2/2</button>
+                </div>
+                </div>
+              </form><!-- End floating Labels Form -->
+
+            </div>
+          </div>
+
+
+
+
+    <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Project Options</h5>
+
+              <!-- Floating Labels Form -->
+              <form class="row g-3" id="frm-create-project2" action="#" method="post">
+                <div class="col-md-4">
+                    <label class="card">
+                    <input name="writer-level" id="basic2" value="basic" class="radio" type="radio">
+                    <span class="plan-details">
+                      <span class="plan-type">Basic</span>
+                      <span class="plan-cost">$0.015 / Word</span>
+                      <p class="description">Not Available</p>
+                    </span>
+                  </label>
+                </div>
+                <div class="col-md-4">
+                <label class="card">
+                    <input name="writer-level" id="standard2" value="standard" class="radio" type="radio" checked>
+                    <span class="plan-details" aria-hidden="true">
+                      <span class="plan-type">Standard</span>
+                      <span class="plan-cost">$0.088 / Word</span>
+                      <p class="description">Handled by qualified native speakers, this level is good for general content orders</p>
+                    </span>
+                  </label>
+                </div>
+                <div class="col-md-4">
+                    <label class="card">
+                    <input name="writer-level" id="expert2" value="expert" class="radio" type="radio">
+                    <span class="plan-details" aria-hidden="true">
+                      <span class="plan-type">Expert</span>
+                      <span class="plan-cost">$0.154 / Word</span>
+                      <p class="description">Managed by our most experienced writers. Best for more complex orders</p>
+                    </span>
+                  </label>
+                </div>
+
+
+                  <table class="table">
+								<tr>
+								<td>
+									<strong>EXTRA PROOFREADING</strong> <br>
+									The project will be proofread by our language  <br>
+                                    <em class="small"><strong>+$0.022 Per Word</strong></em>
+								</td>
+								<td>
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="extra-proofreading" value="yes">
+                                    </div>
+								</td>
+								</tr>
+								<tr>
+								<td>
+									<strong>PRIORITY ORDER</strong> <br>
+									Your project will be assigned a higher priority status. <br>
+                                    <em class="small"><strong>+$0.044 Per Word</strong></em>
+								</td>
+
+								<td>
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="priority-order" value="yes">
+                                    </div>
+								</td>
+								</tr>
+                                <tr>
+								<td>
+									<strong>FAVORITE WRITERS</strong> <br>
+									Limit this order to my favorite writers <br>
+								</td>
+								<td>
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="favorite-writers" value="yes" >
+                                    </div>
+								</td>
+								</tr>
+								</table>
+
+
+                <div class="card-footer">
+                <div class="text-left">
+                <button type="button" class="btn btn-outline-success">Save Project</button>
+                </div>
+                </div>
+              </form><!-- End floating Labels Form -->
+
+            </div>
+          </div>
+
+</div><!-- End Right side columns -->
+</div>
+
+
+{% endblock %}

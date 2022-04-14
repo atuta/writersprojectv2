@@ -130,10 +130,11 @@ def view_create_account(request):
 
 
 def do_task(request, task_code):
-    tasks_obj = Tasks.objects.get(t_task_code=task_code)
-    task_title = tasks_obj.t_title
 
     try:
+        tasks_obj = Tasks.objects.get(t_task_code=task_code)
+        task_title = tasks_obj.t_title
+
         active_task_obj = ActiveTasks.objects.get(t_code=task_code)
         article = active_task_obj.t_article
     except ActiveTasks.DoesNotExist as e:
@@ -159,9 +160,27 @@ def my_projects(request):
     return render(request, "my-projects.html", context={"data": response, "page_title": "Available Projects"})
 
 
+def project_wizard(request):
+    categories = list(Categories.objects.values())
+    return render(request, "project-wizard.html", context={"categories": categories, "page_title": "Create a Project"})
+
+
+def add_task(request, project_code):
+    try:
+        project_obj = Projects.objects.get(p_code=project_code)
+        response = ProjectTasks.project_tasks_data('', project_code)
+        project_title = project_obj.p_title
+    except Projects.DoesNotExist as e:
+        response = {}
+        project_title = "No project found!"
+    return render(request, "add-task.html", context={"data": response,
+                                                     "page_title": "Add a new task to the (" + project_title
+                                                                   + ") project", "project_code ": project_code})
+
+
 def create_project(request):
     categories = list(Categories.objects.values())
-    return render(request, "project-wizard.html", context={"categories": categories})
+    return render(request, "create-project.html", context={"categories": categories, "page_title": "Create a Project"})
 
 
 def home(request):
