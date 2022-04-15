@@ -8,7 +8,7 @@
 {% for task in data.data %}
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{ task.fields.t_title }}</h5>
+              <h5 class="card-title">{{ task.fields.t_title }} <a href="{% url 'page-edit-task' task.fields.t_task_code %}"><i class="bi bi-pencil-square ms-1"></i> Edit </a></h5>
                 <p class="small">Created on {{ task.fields.t_datetime }}</p>
 
                 <h3>Instructions</h3>

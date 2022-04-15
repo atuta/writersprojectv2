@@ -1,8 +1,7 @@
 $().ready(function() {
-$("#btn-next").css("display", "none");
+	 $( "#frm-edit-project" ).submit(function( event ) {
 
-	 $( "#frm-create-project" ).submit(function( event ) {
-
+        var project_code = $('#project-code').val();
 		var project_title = $('#project-title').val();
 		var project_category = $('#project-category').val();
         var project_language = $('#project-language').val();
@@ -19,10 +18,10 @@ $("#btn-next").css("display", "none");
 
             //title, category, language, description, owner
             var dataString =  'title=' + project_title + '&category=' + project_category + '&language='
-            + project_language + '&description=' + project_description;
+            + project_language + '&description=' + project_description + '&project_code=' + project_code;
             var csrftoken = readCookie('csrftoken');
             $.ajax({
-                    url: '/writersapp/save-project/',
+                    url: '/writersapp/edit-project/',
                     type: 'post',
                     data: dataString,
                     processData: false,
@@ -34,10 +33,9 @@ $("#btn-next").css("display", "none");
                     },
                     complete: function() { $(".loading").hide(); },
                     success: function( data ){
-                        var resp_data 	= JSON.parse(JSON.stringify(data));
-                        var real_data = resp_data.data;
-                        var status = resp_data.status;
-
+                        var real_data = data.data;
+                        var status = data.status;
+                        console.log(status);
                         if(status === "success"){
 
                            $('#btn-next').trigger('click');

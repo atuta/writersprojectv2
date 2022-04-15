@@ -8,7 +8,7 @@
 {% for project in data.data reversed %}
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{ project.fields.p_title }}</h5>
+                <h5 class="card-title">{{ project.fields.p_title }} <a href="{% url 'page-edit-project' project.fields.p_code %}"><i class="bi bi-pencil-square ms-1"></i> Edit </a></h5>
                 <p class="small">{{ project.fields.p_category }} | Created on {{ project.fields.p_datetime }} - <span class="orange">{{ project.fields.p_status }}</span></p>
               {{ project.fields.p_description }}
             </div>

@@ -7,9 +7,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from .edit_task import EditTask
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
 from .log_task import LogTask
+from .edit_project import EditProject
 from .save_project import SaveProject
 from .project_tasks import ProjectTasks
 from .my_projects import MyProjects
@@ -70,6 +72,28 @@ def view_log_task(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_edit_task(request):
+    task_code = request.POST.get("task_code")
+    task_title = request.POST.get("task_title")
+    word_count = request.POST.get("word_count")
+    word_count_description = request.POST.get("word_count_description")
+    keywords = request.POST.get("keywords")
+    keyword_repetition = request.POST.get("keyword_repetition")
+    task_instructions = request.POST.get("task_instructions")
+    doc = request.POST.get("doc")
+    writer_level = request.POST.get("writer_level")
+    extra_proofreading = request.POST.get("extra_proofreading")
+    priority_order = request.POST.get("priority_order")
+    favourite_writers = request.POST.get("favourite_writers")
+
+    response = EditTask.edit_task('', task_code, task_title, word_count, word_count_description, keywords,
+                                  keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
+                                  priority_order, favourite_writers)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_save_task(request):
     project_code = request.POST.get("project_code")
     task_title = request.POST.get("task_title")
@@ -79,9 +103,27 @@ def view_save_task(request):
     keyword_repetition = request.POST.get("keyword_repetition")
     task_instructions = request.POST.get("task_instructions")
     doc = request.POST.get("doc")
+    writer_level = request.POST.get("writer_level")
+    extra_proofreading = request.POST.get("extra_proofreading")
+    priority_order = request.POST.get("priority_order")
+    favourite_writers = request.POST.get("favourite_writers")
 
     response = SaveTask.save_task('', project_code, task_title, word_count, word_count_description, keywords,
-                                  keyword_repetition, task_instructions, doc)
+                                  keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
+                                  priority_order, favourite_writers)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_edit_project(request):
+    project_code = request.POST.get("project_code")
+    title = request.POST.get("title")
+    category = request.POST.get("category")
+    language = request.POST.get("language")
+    description = request.POST.get("description")
+
+    response = EditProject.edit_project('', project_code, title, category, language, description)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -130,7 +172,6 @@ def view_create_account(request):
 
 
 def do_task(request, task_code):
-
     try:
         tasks_obj = Tasks.objects.get(t_task_code=task_code)
         task_title = tasks_obj.t_title
@@ -155,7 +196,28 @@ def project_tasks(request, project_code):
     return render(request, "project-tasks.html", context={"data": response, "page_title": project_title})
 
 
-def my_projects(request):
+def page_edit_task(request, task_code):
+    try:
+        task_obj = Tasks.objects.get(t_task_code=task_code)
+        task_title = task_obj.t_title
+    except Projects.DoesNotExist as e:
+        task_title = "No task found!"
+    return render(request, "edit-task.html", context={"task_data": task_obj, "page_title": task_title})
+
+
+def page_edit_project(request, project_code):
+    try:
+        project_obj = Projects.objects.get(p_code=project_code)
+        project_title = project_obj.p_title
+        categories = list(Categories.objects.values())
+    except Projects.DoesNotExist as e:
+        project_obj = ''
+        project_title = "No task found!"
+    return render(request, "edit-project.html", context={"project_data": project_obj, "categories": categories,
+                                                         "page_title": project_title})
+
+
+def page_my_projects(request):
     response = MyProjects.my_projects_data('', request.user.email)
     return render(request, "my-projects.html", context={"data": response, "page_title": "Available Projects"})
 

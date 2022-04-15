@@ -9,7 +9,8 @@ class SaveTask:
         pass
 
     def save_task(self, project_code, task_title, word_count, word_count_description, keywords,
-                  keyword_repetition, task_instructions, doc):
+                  keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
+                             priority_order, favourite_writers):
         try:
             task_code = get_random_string(64, 'abcdef0123456789')
             action = Tasks(
@@ -22,6 +23,11 @@ class SaveTask:
                 t_keyword_repetition=keyword_repetition,
                 t_instructions=task_instructions,
                 t_doc=doc,
+                p_writer_level=writer_level,
+                p_extra_proofreading=extra_proofreading,
+                p_priority_order=priority_order,
+                p_favourite_writers=favourite_writers
+
             )
             action.save()
             data = {"status": "success", "data": {"message": task_code}}
