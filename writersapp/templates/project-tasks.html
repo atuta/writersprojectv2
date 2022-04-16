@@ -15,12 +15,21 @@
                 <p>{{ task.fields.t_instructions }}</p>
                 <p><strong>Number of words: </strong>{{ task.fields.t_word_count }} words ( {{ task.fields.t_wc_description }} )</p>
 
+
+
+
+            <div style="display: none;" id="{{ task.fields.t_task_code }}">
                  <h3 class="mt-5">Keywords</h3>
                 <p>{{ task.fields.t_keywords }}</p>
                 <p><strong>Keyword Repetition: </strong>{{ task.fields.t_keyword_repetition }} </p>
 
                 <h3 class="mt-5">Help Document</h3>
+
+                {% if task.fields.t_doc != "" %}
                 <div><a href="#">{{ task.fields.t_doc }}</a></div>
+                {% else %}
+                <div>No document!</div>
+                {% endif %}
 
                 <h3 class="mt-5">Other Options</h3>
                     <ul class="list-group">
@@ -28,8 +37,14 @@
                         <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i> Favourite Writers: <strong>{{ task.fields.p_favourite_writers|upper }}</strong></li>
                         <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i> Priority Order: <strong>{{ task.fields.p_priority_order|upper }}</strong></li>
                         <li class="list-group-item"><i class="bi bi-app-indicator me-1 text-primary"></i> Expertise Level: <strong>{{ task.fields.p_writer_level|upper }}</strong></li>
-                    </ul>
+                </ul>
             </div>
+            <div style="margin-top: 20px; font-weight: bold;">Cost: ${{ task.fields.t_usd_cost|floatformat:2 }}</div>
+
+                <p style="margin-top: 15px;" id="id-more-{{ task.fields.t_task_code }}" class="task-show-more"><a href="">Show more...</a></p>
+                <p style="margin-top: 15px; display: none;" id="id-less-{{ task.fields.t_task_code }}" class="task-show-less"><a href="">Show less...</a></p>
+            </div>
+
             <div class="card-footer">
                 <a href="{% url 'do-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Pick Task</button></a>
                 <a href="#"><button type="button" class="btn btn-outline-danger"><i class="bi bi-x-circle ms-1"></i> Decline Task</button></a>

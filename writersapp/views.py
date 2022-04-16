@@ -18,7 +18,7 @@ from .my_projects import MyProjects
 from .create_account import CreateSystemUser
 from .login import CustomLogin
 from .models import Categories, Projects, Tasks, ActiveTasks
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 @api_view(['POST', 'GET'])
@@ -148,6 +148,7 @@ def view_custom_login(request):
 
     user = authenticate(request, username=username, password=password)
     if user is not None:
+        login(request, user)
         data = {"status": "success", "data": {"message": "login_success"}}
         return HttpResponse(json.dumps(data), content_type='text/json')
     else:
@@ -237,12 +238,17 @@ def add_task(request, project_code):
         project_title = "No project found!"
     return render(request, "add-task.html", context={"data": response,
                                                      "page_title": "Add a new task to the (" + project_title
-                                                                   + ") project", "project_code ": project_code})
+                                                                   + ") project", "project_code": project_code})
 
 
 def create_project(request):
     categories = list(Categories.objects.values())
     return render(request, "create-project.html", context={"categories": categories, "page_title": "Create a Project"})
+
+
+def do_logout(request):
+    logout(request)
+    return render(request, "index.html", {})
 
 
 def home(request):
@@ -254,6 +260,7 @@ def dashbooard(request):
 
 
 def login_page(request):
+    logout(request)
     return render(request, "login.html", {})
 
 

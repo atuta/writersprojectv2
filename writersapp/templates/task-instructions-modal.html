@@ -16,7 +16,11 @@
                 <p><strong>Keyword Repetition: </strong>{{ data.t_keyword_repetition }} </p>
 
                 <h4 class="mt-5">Help Document</h4>
+                {% if data.t_doc != "" %}
                 <div><a href="#">{{ data.t_doc }}</a></div>
+                {% else %}
+                <div>No document!</div>
+                {% endif %}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Close Instructions</button>

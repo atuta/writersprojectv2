@@ -4,6 +4,10 @@ $().ready(function() {
             var username            = $("input#username").val();
             var password            = $("input#password").val();
 
+            if(username === '' || password === ''){
+                return false;
+            }
+
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'email=' + username + '&password=' + password;
 
@@ -18,9 +22,15 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 console.log(status);
 						 if(status === 'success'){
                             $(location).attr('href', '/writersapp/writers-dashboard/');
+						 }else{
+						    swal({
+                            title: "Login Failed!",
+                            text: "Check your credentials and try again",
+                            icon: "error",
+                            });
+                        return false;
 						 }
 				 }
 				 });

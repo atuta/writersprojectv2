@@ -2,7 +2,11 @@ import datetime
 
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
+
+
+class CustomUser(AbstractBaseUser):
+    email = models.EmailField(verbose_name="Email address", max_length=100, unique=True)
 
 
 class ActiveTasks(models.Model):
@@ -52,6 +56,8 @@ class Tasks(models.Model):
     t_keywords = models.CharField(max_length=500, blank=True)
     t_keyword_repetition = models.CharField(max_length=20, blank=True)
     t_instructions = models.TextField(blank=True)
+    t_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     t_doc = models.CharField(max_length=100, blank=True)
 
     p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
@@ -73,6 +79,8 @@ class Projects(models.Model):
     p_category = models.CharField(max_length=100, blank=True)
     p_language = models.CharField(max_length=100, blank=True)
     p_description = models.TextField(blank=True)
+    p_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    p_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     p_owner = models.CharField(max_length=20, blank=True, )
     p_status = models.CharField(max_length=50, blank=True, default='pending')
     p_datetime = models.DateTimeField(auto_now=True, null=True)
