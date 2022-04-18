@@ -15,7 +15,7 @@
             <span class="d-none d-md-block dropdown-toggle ps-2">
 
             {% if user.is_authenticated %}
-            Hi {{ user.first_name }} !
+            Hi {{ user.first_name }} {{ user.last_name }}!
             {% else %}
             Hi Writer
             {% endif %}
@@ -42,6 +42,19 @@
             <li>
               <hr class="dropdown-divider">
             </li>
+
+            {% if user.userrole == '3'  %}
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'upgrade-to-writer' %}">
+                <i class="bi bi-person"></i>
+                <span>Become a Writer</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            {% endif %}
+
 
             <li>
               <a class="dropdown-item d-flex align-items-center" href="#">
@@ -74,6 +87,10 @@
               <a class="dropdown-item d-flex align-items-center" href="{% url 'login' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Login</span>
+              </a>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'signup' %}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Up</span>
               </a>
             </li>
       {% endif %}

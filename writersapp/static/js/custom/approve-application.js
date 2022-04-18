@@ -1,20 +1,15 @@
 $().ready(function() {
-   //$(document).on('click', '#btn-login', function(event) {
-   $( "#frm-login" ).submit(function( event ) {
-            var username            = $("input#username").val();
-            var password            = $("input#password").val();
-
-            if(username === '' || password === ''){
-                    return false;
-            }
+   $(document).on('click', '.accept-application', function(event) {
+            var id = this.id;
+            var application_id  = id.replace('approve-', '');
 
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'email=' + username + '&password=' + password;
+			var dataString =  'application_id=' + application_id;
 
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/custom-login/",
+				url: "/writersapp/approve-application/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},
@@ -22,15 +17,20 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
+						 //console.log(status);
 						 if(status === 'success'){
-                            $(location).attr('href', '/writersapp/writers-dashboard/');
-						 }else{
-						    swal({
-                            title: "Login Failed!",
-                            text: "Check your credentials and try again",
-                            icon: "error"
+                            swal({
+                            title: "Success!",
+                            text: "Application approved successfully",
+                            icon: "success",
                             });
-                        return false;
+                            $('#card-' + application_id).fadeOut('5000');
+						 }else{
+						 swal({
+                            title: "Failed!",
+                            text: "There seems to be a technical error. Try again later",
+                            icon: "error",
+                            });
 						 }
 				 }
 				 });

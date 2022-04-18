@@ -5,8 +5,102 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
 
 
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, first_name, last_name, phone, country, password=None):
+        if not email:
+            raise ValueError('Email is required')
+        if not first_name:
+            raise ValueError('First Name is required')
+        if not last_name:
+            raise ValueError('Last Name is required')
+        if not phone:
+            raise ValueError('Phone is required')
+        if not country:
+            raise ValueError('Country is required')
+
+        user = self.model(
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            country=country
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, first_name, last_name, phone, country, password=None):
+        user = self.create_user(
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            country=country,
+            password=password
+        )
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+
 class CustomUser(AbstractBaseUser):
+    last_login = models.DateTimeField(verbose_name="Last Login", blank=True, null=True)
+    is_superuser = models.BooleanField(default=False)
+    username = models.CharField(max_length=120, null=True)
+    userrole = models.CharField(max_length=20, default="3", null=True)
+    first_name = models.CharField(max_length=120, null=True)
+    last_name = models.CharField(max_length=120, null=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(verbose_name="Date Joined", auto_now_add=True)
+    preferred_language = models.CharField(max_length=100, null=True)
     email = models.EmailField(verbose_name="Email address", max_length=100, unique=True)
+    phone = models.CharField(verbose_name="Phone", max_length=20)
+    country = models.CharField(verbose_name="Country code without the plus sign", max_length=100)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone', 'country']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.first_name
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+
+class WritersApplications(models.Model):
+    a_id = models.AutoField(primary_key=True)
+    a_email = models.CharField(max_length=100, blank=True)
+    a_first_name = models.CharField(max_length=100, blank=True)
+    a_last_name = models.CharField(max_length=100, blank=True)
+    a_country = models.CharField(max_length=100, blank=True)
+    a_article = models.TextField(blank=True)
+    a_language = models.CharField(max_length=100, blank=True)
+    a_status = models.CharField(max_length=20, default='pending')
+    a_datetime = models.DateTimeField(auto_now=True, null=True)
+
+
+class Languages(models.Model):
+    l_id = models.AutoField(primary_key=True)
+    l_code = models.CharField(max_length=70, blank=True)
+    l_isotwo = models.CharField(max_length=5, blank=True)
+    l_name = models.CharField(max_length=100, blank=True)
+    l_datetime = models.DateTimeField(auto_now=True, null=True)
+
+
+class Countries(models.Model):
+    c_id = models.AutoField(primary_key=True)
+    c_pcode = models.CharField(max_length=70, blank=True)
+    c_isotwo = models.CharField(max_length=5, blank=True)
+    c_name = models.CharField(max_length=70, blank=True)
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
 
 
 class ActiveTasks(models.Model):
@@ -65,6 +159,9 @@ class Tasks(models.Model):
     p_priority_order = models.CharField(max_length=20, blank=True, default='no')
     p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
 
+    t_status = models.CharField(max_length=50, blank=True, default='pending')
+    t_remarks = models.TextField(blank=True)
+
     t_allocated_to = models.CharField(max_length=100, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
@@ -108,7 +205,7 @@ class SystemUsers(models.Model):
 class Categories(models.Model):
     c_id = models.AutoField(primary_key=True)
     c_name = models.CharField(max_length=150, blank=True)
-    c_description = models.CharField(max_length=250, blank=True,)
+    c_description = models.CharField(max_length=250, blank=True, )
     c_datetime = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:

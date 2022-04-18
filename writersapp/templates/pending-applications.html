@@ -1,0 +1,36 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+{{ applications.fields }}
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+{% for application in applications %}
+          <div id="card-{{ application.a_id }}" class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ application.a_first_name }} {{ application.a_last_name }} ( {{ application.a_language }} )</h5>
+                <p class="small">{{ application.a_datetime }}</p>
+              {{ application.a_article }}
+
+
+            <div class="rating">
+                <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+            </div>
+
+
+    </div>
+              <div class="card-footer">
+                <button id="approve-{{ application.a_id }}" type="button" class="btn btn-outline-success accept-application"><i class="bi bi-alarm me-1"></i> Accept</button>
+                <button id="reject-{{ application.a_id }}" type="button" class="btn btn-outline-danger reject-application"><i class="bi bi-x-square ms-1"></i> Reject</button>
+          </div><!-- End Card with header and footer -->
+</div>
+
+
+{% endfor %}
+    </div><!-- End Right side columns -->
+</div>
+{% endblock %}

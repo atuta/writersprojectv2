@@ -39,13 +39,8 @@ $("#btn-next").css("display", "none");
                         var status = resp_data.status;
 
                         if(status === "success"){
-
-                           $('#btn-next').trigger('click');
-                           $("#project-previous").css("display", "none");
-                           $("#btn-save-project").css("display", "none");
-                           $("#btn-save-task").show();
-
-                           createCookie('project_code', real_data.message, '1')
+                            $('#create-project-form').hide();
+                            $('#create-project-response').fadeIn('5000');
                         }
                         else {
                             swal({

@@ -6,33 +6,29 @@
         <!-- Left side columns -->
 <div class="col-lg-12">
 
-        <div style="display: none;" id="create-project-response" class="card">
+      <div style="display: none;" id="application-response" class="card">
           <div class="card-body">
-            <h5 style="color: green;" class="card-title">Your project has been created!</h5>
+            <h5 style="color: green;" class="card-title">We have received your application!</h5>
 
               <div class="col-12">
                 <div class="col-md-12 form-group">
-                  <div style="margin-top: 5px;"><a href="{% url 'page-my-projects' %}">Click here to view your projects and add a task(s)</a></div>
+                  <div style="margin-top: 5px;">A status notification will be sent to your email. <br>
+                  Thank you.
+                  </div>
                 </div>
               </div>
           </div>
       </div>
 
-        <div id="create-project-form" class="card">
+        <div id="application-form" class="card">
             <div class="card-body">
-              <h5 class="card-title">Help us understand your project</h5>
+              <h5 class="card-title">Provide the required information</h5>
 
               <!-- Floating Labels Form -->
-              <form class="row g-3" id="frm-create-project" action="#" method="post">
-                <div class="col-md-12">
-                  <div class="form-floating">
-                    <input type="text" class="form-control" id="project-title" placeholder="Project Title" autocomplete="off">
-                    <label for="project-title">Project Title</label>
-                  </div>
-                </div>
+              <form class="row g-3" id="frm-writer-application" action="#" method="post">
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <select class="form-select" id="project-language" aria-label="State">
+                    <select class="form-select" id="preferred-language" aria-label="State">
                       <option value="" selected>Choose Language...</option>
                       <optgroup label="Common Languanges">
                       <option value="EN-US">English (American)</option>
@@ -49,33 +45,23 @@
                       <option value="EN-BE">Flemish (Belgium)</option>
                       </optgroup>
                     </select>
-                    <label for="project-language">Language</label>
+                    <label for="preferred-language">Your Preferred Language</label>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <select class="form-select" id="project-category" aria-label="State">
-                      <option value="" selected>Choose Category...</option>
-                      {% for category in categories %}
-                      <option value="{{ category.c_name }}">{{ category.c_description }}</option>
-                      {% endfor %}
-                    </select>
-                    <label for="project-category">Category</label>
-                  </div>
-                </div>
+
                 <div class="col-12">
                   <div class="col-md-12 form-group">
-                <div style="margin-top: 30px; margin-bottom: 10px;">Brief project description. <br>
-                Give us any specific project requirements.</div>
+                <div style="margin-top: 30px; margin-bottom: 10px;">Write a short essay about yourself. <br>
+                Limit this to 850 words.</div>
                 <!-- Quill Editor Default -->
-                <div style="height: 250px;" id="project-description" class="quill-editor-default">
+                <div style="height: 250px;" id="application-article" class="quill-editor-default">
                 </div>
                 <!-- End Quill Editor Default -->
                 </div>
                 </div>
 
                 <div class="text-left">
-                  <button type="submit" class="btn btn-outline-success">Save Project</button>
+                  <button type="submit" class="btn btn-outline-success">Submit Request</button>
                 </div>
               </form><!-- End floating Labels Form -->
 

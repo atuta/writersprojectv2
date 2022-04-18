@@ -10,56 +10,63 @@
         </a>
       </li><!-- End Dashboard Nav -->
 
+      {% if user.userrole == '2'  %}
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Tasks</span><i class="bi bi-chevron-down ms-auto"></i>
+        <a class="nav-link collapsed" data-bs-target="#admin-projects" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>Projects</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Drafts</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Client Review</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Returned</span>
-            </a>
-          </li>
-          <li>
+        <ul id="admin-projects" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+           <li>
             <a href="#">
               <i class="bi bi-circle"></i><span>Complete</span>
             </a>
           </li>
-
-        </ul>
-      </li><!-- End Components Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Clients</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a id="link-my-projects" href="{% url 'page-my-projects' %}">
-              <i class="bi bi-circle"></i><span>Projects</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'create-project' %}">
-              <i class="bi bi-circle"></i><span>Create Order</span>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Pending Approval</span>
             </a>
           </li>
         </ul>
       </li><!-- End Forms Nav -->
 
+            <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#admin-writers" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>Writers</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="admin-writers" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'pending-writers-applications' %}">
+              <i class="bi bi-circle"></i><span>Pending Approval</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+{% endif %}
+
+{% if user.userrole == '3'  %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>My Projects</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'create-project' %}">
+              <i class="bi bi-circle"></i><span>Create a Project</span>
+            </a>
+          </li>
+           <li>
+            <a id="link-my-projects" href="{% url 'page-my-projects' %}">
+              <i class="bi bi-circle"></i><span>My Projects</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+{% endif %}
+
+{% if user.userrole == '4'  %}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Writers</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-bar-chart"></i><span>My Projects</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -74,7 +81,7 @@
           </li>
         </ul>
       </li><!-- End Charts Nav -->
-
+{% endif %}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-layout-text-window-reverse"></i><span>Wallet</span><i class="bi bi-chevron-down ms-auto"></i>

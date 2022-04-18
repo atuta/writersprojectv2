@@ -7,18 +7,51 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+
+from .reject_application import RejectApplication
+from .approve_application import ApproveApplication
+from .update_task_status import UpdateTaskStatus
 from .edit_task import EditTask
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
 from .log_task import LogTask
 from .edit_project import EditProject
+from .save_writer_application import SaveWriterApplication
 from .save_project import SaveProject
 from .project_tasks import ProjectTasks
+from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
-from .create_account import CreateSystemUser
+from .create_account import CreateCustomUser
 from .login import CustomLogin
-from .models import Categories, Projects, Tasks, ActiveTasks
+from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications
 from django.contrib.auth import authenticate, login, logout
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_save_writer_application(request):
+    email = request.user.email
+    article = request.POST.get("article")
+    language = request.POST.get("language")
+
+    response = SaveWriterApplication.save_writer_application('', email, article, language)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_reject_application(request):
+    application_id = request.POST.get("application_id")
+    response = RejectApplication.reject_application('', application_id)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_approve_application(request):
+    application_id = request.POST.get("application_id")
+    response = ApproveApplication.approve_application('', application_id)
+    return HttpResponse(response, content_type='text/json')
 
 
 @api_view(['POST', 'GET'])
@@ -67,6 +100,16 @@ def view_log_task(request):
     author = request.user.email
 
     response = LogTask.log_task('', task_code, article, author)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_update_task_status(request):
+    task_code = request.POST.get("task_code")
+    task_status = request.POST.get("task_status")
+
+    response = UpdateTaskStatus.update_task_status('', task_code, task_status)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -159,16 +202,15 @@ def view_custom_login(request):
 @api_view(['POST', 'GET'])
 @csrf_exempt
 def view_create_account(request):
-    received_data = json.loads(request.body)
-    firstname = received_data['firstname']
-    lastname = received_data['lastname']
-    phone = received_data['phone']
-    email = received_data['email']
-    country = received_data['country']
-    role = received_data['role']
-    password = received_data['password']
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    phone = request.POST.get("phone")
+    email = request.POST.get("email")
+    country = request.POST.get("country")
+    userrole = '3'
+    password = request.POST.get("password")
 
-    response = CreateSystemUser.create_system_user('', firstname, lastname, phone, email, country, role, password)
+    response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, userrole, password)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -197,6 +239,16 @@ def project_tasks(request, project_code):
     return render(request, "project-tasks.html", context={"data": response, "page_title": project_title})
 
 
+def page_pending_applications(request):
+    try:
+        writers_applications = PendingWriterApplications.pending_writer_applications('')
+        page_title = "Pending Writers Applications"
+    except PendingWriterApplications.DoesNotExist as e:
+        page_title = "No pending task found!"
+    return render(request, "pending-applications.html", context={"applications": writers_applications,
+                                                                 "page_title": page_title})
+
+
 def page_edit_task(request, task_code):
     try:
         task_obj = Tasks.objects.get(t_task_code=task_code)
@@ -216,6 +268,11 @@ def page_edit_project(request, project_code):
         project_title = "No task found!"
     return render(request, "edit-project.html", context={"project_data": project_obj, "categories": categories,
                                                          "page_title": project_title})
+
+
+def upgrade_to_writer(request):
+    # response = MyProjects.my_projects_data('', request.user.email)
+    return render(request, "upgrade-to-writer.html", context={"page_title": "Become a Writer"})
 
 
 def page_my_projects(request):
@@ -257,6 +314,11 @@ def home(request):
 
 def dashbooard(request):
     return render(request, "dashboard.html", {})
+
+
+def signup_page(request):
+    countries = list(Countries.objects.values())
+    return render(request, "signup.html", context={"countries": countries})
 
 
 def login_page(request):
