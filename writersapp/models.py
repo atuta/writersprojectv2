@@ -49,6 +49,7 @@ class CustomUser(AbstractBaseUser):
     last_login = models.DateTimeField(verbose_name="Last Login", blank=True, null=True)
     is_superuser = models.BooleanField(default=False)
     username = models.CharField(max_length=120, null=True)
+    rating_stars = models.CharField(max_length=20, null=True)
     userrole = models.CharField(max_length=20, default="3", null=True)
     first_name = models.CharField(max_length=120, null=True)
     last_name = models.CharField(max_length=120, null=True)
@@ -66,7 +67,7 @@ class CustomUser(AbstractBaseUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.first_name
+        return self.first_name + " " + self.last_name
 
     def has_perm(self, perm, obj=None):
         return True
@@ -107,9 +108,9 @@ class ActiveTasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_code = models.CharField(max_length=70, blank=True)
     t_article = models.TextField(blank=True)
-    t_writer_reward = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_writer_reward = models.DecimalField(max_digits=10, decimal_places=5, default=0, blank=True)
     t_author = models.CharField(max_length=100, blank=True)
-    t_status = models.CharField(max_length=50, blank=True, default='draft')
+    t_status = models.CharField(max_length=50, blank=True, default='writerdraft')
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     # statuses: draft,submitted, inreview, approved, returned, disapproved

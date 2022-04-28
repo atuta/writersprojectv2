@@ -1,0 +1,81 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+{% include "reject-task-modal.html" %}
+<div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+{% for task in tasks %}
+          <div id="card-{{ task.t_task_code }}" class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ task.t_title }}</h5>
+                <p class="small">Created on {{ task.t_datetime }}</p>
+
+                <h3>Instructions</h3>
+                <p>{{ task.t_instructions }}</p>
+                <p><strong>Number of words: </strong>{{ task.t_word_count }} words ( {{ task.t_wc_description }} )</p>
+
+
+
+
+            <div style="display: none;" id="{{ task.t_task_code }}">
+                 <h3 class="mt-5">Keywords</h3>
+                <p>{{ task.t_keywords }}</p>
+                <p><strong>Keyword Repetition: </strong>{{ task.t_keyword_repetition }} </p>
+
+                <h3 class="mt-5">Help Document</h3>
+
+                {% if task.t_doc != "" %}
+                <div><a href="#">{{ task.t_doc }}</a></div>
+                {% else %}
+                <div>No document!</div>
+                {% endif %}
+
+                {% if user.userrole == '2'  %}
+                <h3 class="mt-5">Other Options</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="bi bi-bookmarks me-1 text-primary"></i> Extra Proofreading: <strong>{{ task.p_extra_proofreading|upper }}</strong></li>
+                        <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i> Favourite Writers: <strong>{{ task.p_favourite_writers|upper }}</strong></li>
+                        <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i> Priority Order: <strong>{{ task.p_priority_order|upper }}</strong></li>
+                        <li class="list-group-item"><i class="bi bi-app-indicator me-1 text-primary"></i> Expertise Level: <strong>{{ task.p_writer_level|upper }}</strong></li>
+                </ul>
+                {% endif %}
+
+            </div>
+            <div style="margin-top: 20px; font-weight: bold;">USD {{ task.t_usd_payout|floatformat:2 }}</div>
+
+                <p style="margin-top: 15px;" id="id-more-{{ task.t_task_code }}" class="task-show-more"><a href="">Show more...</a></p>
+                <p style="margin-top: 15px; display: none;" id="id-less-{{ task.t_task_code }}" class="task-show-less"><a href="">Show less...</a></p>
+            </div>
+
+            <div class="card-footer">
+            {% if user.userrole == '3'  %}
+            {% if task.t_status == 'pending'  %}
+            <button id="clientsubmitted-{{ task.t_task_code }}" type="button" class="btn btn-outline-success update-task-status"><i class="bi bi-check-circle ms-1"></i> Submit Task</button>
+            <a href="{% url 'page-edit-task' task.t_task_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-square me-1"></i> Edit</button></a>
+            {% else %}
+            <p>No action required</p>
+            {% endif %}
+
+
+            {% endif %}
+            {% if user.userrole == '2'  %}
+            {% if task.fields.t_status == 'clientsubmitted'  %}
+            <button id="assign-task-{{ task.t_task_code }}" type="button" class="btn btn-outline-primary assign-task"><i class="bi bi-calendar-check me-1"></i> Assign</button>
+            <button type="button" class="btn btn-outline-primary"><i class="bi bi-calendar-check me-1"></i> Return</button>
+            <button type="button" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Reject</button>
+            {% else %}
+            <p>No action needed</p>
+            {% endif %}
+            {% endif %}
+            {% if user.userrole == '4'  %}
+            <a href="{% url 'do-task' task.t_task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Do Task</button></a>
+            <button id="reject-task-{{ task.t_task_code }}" type="button" class="btn btn-outline-danger reject-task"><i class="bi bi-x-circle me-1"></i> Turn Down</button>
+            {% endif %}
+            </div>
+          </div><!-- End Card with header and footer -->
+{% endfor %}
+    </div><!-- End Right side columns -->
+      </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+<div class="col-lg-12">
+    {% if user.userrole == '4'  %}
+{% for task in drafts %}
+          <div id="card-{{ task.t_task_code }}" class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ task.task_title }}</h5>
+                <p class="small">Created on {{ task.task_date }}</p>
+
+                <h3>Instructions</h3>
+                <p>{{ task.task_instructions }}</p>
+                <p><strong>USD  {{ task.payout|floatformat:2 }}</strong></p>
+            </div>
+
+            <div class="card-footer">
+                <a href="{% url 'do-task' task.task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Do Task</button></a>
+
+            </div>
+          </div><!-- End Card with header and footer -->
+{% endfor %}
+    {% else %}
+    <div>You are not permitted to access this page</div>
+    {% endif %}
+    </div><!-- End Right side columns -->
+      </div>
+{% endblock %}

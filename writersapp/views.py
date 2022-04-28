@@ -7,23 +7,26 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-
 from .reject_application import RejectApplication
 from .approve_application import ApproveApplication
+from .pick_task import PickTask
+from .submit_project import SubmitProject
 from .update_task_status import UpdateTaskStatus
 from .edit_task import EditTask
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
+from .assign_task import AssignTask
 from .log_task import LogTask
 from .edit_project import EditProject
 from .save_writer_application import SaveWriterApplication
 from .save_project import SaveProject
+from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
 from .create_account import CreateCustomUser
 from .login import CustomLogin
-from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications
+from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, CustomUser
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -94,12 +97,40 @@ def handle_uploaded_file(f):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_asign_task(request):
+    task_code = request.POST.get("task_code")
+    writer_email = request.POST.get("writer_email")
+
+    response = AssignTask.assign_task('', task_code, writer_email)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_log_task(request):
     task_code = request.POST.get("task_code")
     article = request.POST.get("article")
     author = request.user.email
 
     response = LogTask.log_task('', task_code, article, author)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_pick_task(request):
+    author = request.user.email
+    task_code = request.POST.get("task_code")
+    response = PickTask.pick_task('', task_code, author)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_submit_project(request):
+    project_code = request.POST.get("project_code")
+
+    response = SubmitProject.submit_project('', project_code)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -233,10 +264,34 @@ def project_tasks(request, project_code):
         project_obj = Projects.objects.get(p_code=project_code)
         response = ProjectTasks.project_tasks_data('', project_code)
         project_title = project_obj.p_title
+
+        writers = list(CustomUser.objects.filter(userrole='4'))
     except Projects.DoesNotExist as e:
         response = {}
         project_title = "No task found!"
-    return render(request, "project-tasks.html", context={"data": response, "page_title": project_title})
+    return render(request, "project-tasks.html",
+                  context={"data": response, "writers": writers, "page_title": project_title})
+
+
+def page_my_drafts(request):
+    try:
+        email = request.user.email
+        drafts = MyDrafts.my_drafts_data('', email)
+        page_title = "My Drafts"
+    except Exception as e:
+        page_title = "No drafts found!"
+    return render(request, "my-drafts.html", context={"drafts": drafts,
+                                                                "page_title": page_title})
+
+
+def page_pending_allocations(request):
+    try:
+        pending_allocations = list(Projects.objects.filter(p_status='clientsubmitted'))
+        page_title = "Pending Project Allocations"
+    except Exception as e:
+        page_title = "No pending allocation found!"
+    return render(request, "pending-allocations.html", context={"projects": pending_allocations,
+                                                                "page_title": page_title})
 
 
 def page_pending_applications(request):
@@ -273,6 +328,22 @@ def page_edit_project(request, project_code):
 def upgrade_to_writer(request):
     # response = MyProjects.my_projects_data('', request.user.email)
     return render(request, "upgrade-to-writer.html", context={"page_title": "Become a Writer"})
+
+
+def page_my_tasks(request):
+    owner = request.user.email
+    tasks = list(Tasks.objects.filter(t_status='adminassigned', t_allocated_to=owner))
+
+    return render(request, "my-tasks.html", context={"tasks": tasks, "page_title": "My Allocated Tasks"})
+
+
+def page_writer_wallet(request):
+    return render(request, "writer-wallet.html", context={"page_title": "My Wallet"})
+
+
+def page_available_tasks(request):
+    tasks = list(Tasks.objects.filter(t_status='clientsubmitted'))
+    return render(request, "available-tasks.html", context={"tasks": tasks, "page_title": "Available Tasks"})
 
 
 def page_my_projects(request):

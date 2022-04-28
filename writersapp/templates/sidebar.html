@@ -22,8 +22,8 @@
             </a>
           </li>
           <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Pending Approval</span>
+            <a href="{% url 'pending-allocations' %}">
+              <i class="bi bi-circle"></i><span>Pending Allocations</span>
             </a>
           </li>
         </ul>
@@ -70,13 +70,13 @@
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{% url 'page-my-projects' %}">
-              <i class="bi bi-circle"></i><span>My Tasks</span>
+            <a href="{% url 'page-my-drafts' %}">
+              <i class="bi bi-circle"></i><span>My Drafts</span>
             </a>
           </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Pick a Task</span>
+            <li>
+            <a href="{% url 'available-tasks' %}">
+              <i class="bi bi-circle"></i><span>Available Tasks</span>
             </a>
           </li>
         </ul>
@@ -93,7 +93,7 @@
             </a>
           </li>
           <li>
-            <a href="tables-data.html">
+            <a href="{% url 'page-writer-wallet' %}">
               <i class="bi bi-circle"></i><span>Earnings Tracker</span>
             </a>
           </li>
@@ -110,14 +110,14 @@
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
-
+      {% if user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
+        <a class="nav-link collapsed" href="{% url 'login' %}">
           <i class="bi bi-question-circle"></i>
-          <span>F.A.Q</span>
+          <span>Logout</span>
         </a>
-      </li><!-- End F.A.Q Page Nav -->
-
+      </li><!-- End Logout Nav -->
+    {% endif %}
     </ul>
 
   </aside><!-- End Sidebar-->

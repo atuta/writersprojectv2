@@ -1,0 +1,31 @@
+<div class="modal fade" id="modal-writers-list" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Assign Task to a Writer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="task-code-holder" value="">
+           <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Rating</th>
+                    <th style="text-align: right;" scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for writer in writers %}
+                  <tr>
+                    <td>{{ writer.first_name }} {{ writer.last_name }}</td>
+                    <td>5 Stars</td>
+                      <td style="text-align: right;"><a id="actual-task-assign-{{ writer.email }}" class="actual-task-assign" href="#"><i class="bi bi-check-circle me-1"></i> Assign</a></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+  </div>

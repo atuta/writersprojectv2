@@ -1,0 +1,27 @@
+<div class="modal fade" id="modal-reject-task" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reject a task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="task-code-holder" value="">
+            <input type="hidden" id="user-email" value="{{ user.email }}">
+           <div class="form-floating">
+                    <select class="form-select" id="reject-reason" aria-label="State">
+                    <option value="" selected>Choose Reason...</option>
+                    <option value="I have many tasks">I have many tasks</option>
+                    <option value="The task is too hard for me">The task is too hard for me</option>
+                    <option value="Personal reasons">Personal reasons</option>
+                    <option value="Other">Other</option>
+                    </select>
+                    <label for="reject-reason">Reason</label>
+                  </div>
+        </div>
+           <div class="card-footer">
+               <button id="actual-task-reject-{{ writer.email }}" type="button" class="btn btn-outline-danger actual-task-reject"><i class="bi bi-calendar-check me-1"></i> Confirm Reject</button>
+           </div>
+      </div>
+    </div>
+  </div>
