@@ -10,6 +10,8 @@ from rest_framework.decorators import api_view
 from .reject_application import RejectApplication
 from .approve_application import ApproveApplication
 from .pick_task import PickTask
+from .admin_approve_task import AdminApproveTask
+from .writer_submit_task import WriterSubmitTask
 from .submit_project import SubmitProject
 from .update_task_status import UpdateTaskStatus
 from .edit_task import EditTask
@@ -20,6 +22,7 @@ from .log_task import LogTask
 from .edit_project import EditProject
 from .save_writer_application import SaveWriterApplication
 from .save_project import SaveProject
+from .pending_admin_approvals import PendingAdminApprovals
 from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
@@ -127,6 +130,22 @@ def view_pick_task(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_admin_approve_task(request):
+    task_code = request.POST.get("task_code")
+    response = AdminApproveTask.admin_approve_task('', task_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_writer_submit_task(request):
+    task_code = request.POST.get("task_code")
+    response = WriterSubmitTask.writer_submit_task('', task_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_submit_project(request):
     project_code = request.POST.get("project_code")
 
@@ -182,7 +201,9 @@ def view_save_task(request):
     priority_order = request.POST.get("priority_order")
     favourite_writers = request.POST.get("favourite_writers")
 
-    response = SaveTask.save_task('', project_code, task_title, word_count, word_count_description, keywords,
+    task_owner = request.user.email
+
+    response = SaveTask.save_task('', project_code, task_owner, task_title, word_count, word_count_description, keywords,
                                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
                                   priority_order, favourite_writers)
     return HttpResponse(response, content_type='text/json')
@@ -273,6 +294,16 @@ def project_tasks(request, project_code):
                   context={"data": response, "writers": writers, "page_title": project_title})
 
 
+def page_pending_admin_approvals(request):
+    try:
+        pending_approvals = PendingAdminApprovals.pending_admin_approvals('')
+        page_title = "Pending Admin Approvals"
+    except Exception as e:
+        page_title = "No pending approvals found!"
+    return render(request, "pending-admin-approvals.html", context={"pendings": pending_approvals,
+                                                                    "page_title": page_title})
+
+
 def page_my_drafts(request):
     try:
         email = request.user.email
@@ -281,7 +312,7 @@ def page_my_drafts(request):
     except Exception as e:
         page_title = "No drafts found!"
     return render(request, "my-drafts.html", context={"drafts": drafts,
-                                                                "page_title": page_title})
+                                                      "page_title": page_title})
 
 
 def page_pending_allocations(request):

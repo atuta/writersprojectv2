@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+<div class="col-lg-12">
+    {% if user.userrole == '2'  %}
+{% for task in pendings %}
+          <div id="card-{{ task.task_code }}" class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ task.task_title }}</h5>
+                <p class="small">Created on {{ task.task_date }}</p>
+
+                <h3>Instructions</h3>
+                <p>{{ task.task_instructions }}</p>
+                <p>Payout: USD  {{ task.payout|floatformat:2 }}</p>
+                <p>Article Words  <strong>{{ task.article_words }}</strong> / Words Requested  <strong>{{ task.words_requested }}</strong></p>
+                <p id="show-article-div-{{ task.task_code }}"><a id="show-article-{{ task.task_code }}" class="show-article" href="#">[Show Article]</a></p>
+                <p id="hide-article-div-{{ task.task_code }}" style="display: none; "><a id="hide-article-{{ task.task_code }}" class="hide-article" href="#">[Hide Article]</a></p>
+
+                <div style="display: none;" id="article-{{ task.task_code }}" class="article show-article">
+                    {{ task.task_article }}
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button id="admin-approve-task-{{ task.task_code }}" type="button" class="btn btn-outline-success admin-approve-task"><i class="bi bi-check-circle me-1"></i> Approve</button>
+
+            </div>
+          </div><!-- End Card with header and footer -->
+{% endfor %}
+    {% else %}
+    <div>You are not permitted to access this page</div>
+    {% endif %}
+    </div><!-- End Right side columns -->
+      </div>
+{% endblock %}

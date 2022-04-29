@@ -1,6 +1,7 @@
 $().ready(function() {
    $(document).on('keyup change', '#article', function(event) {
     $('#set-word-count').show();
+    $('.writer-submit-task').hide();
     var text = $('#article').text();
 
             // Initialize the word counter

@@ -21,6 +21,11 @@
               <i class="bi bi-circle"></i><span>Complete</span>
             </a>
           </li>
+            <li>
+            <a href="{% url 'pending-admin-approvals' %}">
+              <i class="bi bi-circle"></i><span>Pending Tasks Approval</span>
+            </a>
+          </li>
           <li>
             <a href="{% url 'pending-allocations' %}">
               <i class="bi bi-circle"></i><span>Pending Allocations</span>
@@ -36,7 +41,7 @@
         <ul id="admin-writers" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{% url 'pending-writers-applications' %}">
-              <i class="bi bi-circle"></i><span>Pending Approval</span>
+              <i class="bi bi-circle"></i><span>Pending Writers Approval</span>
             </a>
           </li>
         </ul>

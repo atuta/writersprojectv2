@@ -9,7 +9,7 @@ class SaveTask:
     def __init__(self):
         pass
 
-    def save_task(self, project_code, task_title, word_count, word_count_description, keywords,
+    def save_task(self, project_code, task_owner, task_title, word_count, word_count_description, keywords,
                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
                              priority_order, favourite_writers):
         try:
@@ -30,6 +30,7 @@ class SaveTask:
                 p_extra_proofreading=extra_proofreading,
                 p_priority_order=priority_order,
                 p_favourite_writers=favourite_writers,
+                t_owner=task_owner,
                 t_usd_cost=task_usd_cost,
                 t_usd_payout=task_usd_cost * payout_perc
             )

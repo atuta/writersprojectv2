@@ -154,15 +154,13 @@ class Tasks(models.Model):
     t_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     t_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     t_doc = models.CharField(max_length=100, blank=True)
-
     p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
     p_extra_proofreading = models.CharField(max_length=20, blank=True, default='no')
     p_priority_order = models.CharField(max_length=20, blank=True, default='no')
     p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
-
     t_status = models.CharField(max_length=50, blank=True, default='pending')
     t_remarks = models.TextField(blank=True)
-
+    t_owner = models.CharField(max_length=100, blank=True)
     t_allocated_to = models.CharField(max_length=100, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 

@@ -25,6 +25,8 @@ $().ready(function() {
                             text: "Task has been saved",
                             icon: "success",
                             });
+
+                            $('.writer-submit-task').show();
 						 }else{
 						 swal({
                             title: "Failed!",
