@@ -61,7 +61,29 @@
           </li>
            <li>
             <a id="link-my-projects" href="{% url 'page-my-projects' %}">
-              <i class="bi bi-circle"></i><span>My Projects</span>
+              <i class="bi bi-circle"></i><span>Pending Projects</span>
+            </a>
+          </li>
+            <li>
+            <a href="{% url 'page-my-projects' %}">
+              <i class="bi bi-circle"></i><span>Complete Projects</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+           <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#client-tasks" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>My Tasks</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="client-tasks" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'my-admin-approved-tasks' %}">
+              <i class="bi bi-circle"></i><span>Received Tasks</span>
+            </a>
+          </li>
+            <li>
+            <a href="{% url 'create-project' %}">
+              <i class="bi bi-circle"></i><span>Complete Tasks</span>
             </a>
           </li>
         </ul>
@@ -92,16 +114,20 @@
           <i class="bi bi-layout-text-window-reverse"></i><span>Wallet</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          {% if user.userrole == '3'  %}
           <li>
-            <a href="tables-general.html">
+            <a href="#">
               <i class="bi bi-circle"></i><span>Top Up Credit</span>
             </a>
           </li>
+          {% endif %}
+          {% if user.userrole == '4'  %}
           <li>
             <a href="{% url 'page-writer-wallet' %}">
               <i class="bi bi-circle"></i><span>Earnings Tracker</span>
             </a>
           </li>
+          {% endif %}
         </ul>
       </li><!-- End Tables Nav -->
 

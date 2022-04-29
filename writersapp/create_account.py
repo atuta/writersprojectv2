@@ -2,7 +2,7 @@ from django.http import HttpResponse
 import requests
 import json
 from django.contrib.auth.hashers import make_password
-from .models import SystemUsers, CustomUser
+from .models import CustomUser
 from .config import EMAIL_URL
 
 

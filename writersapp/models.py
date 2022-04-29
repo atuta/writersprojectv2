@@ -49,12 +49,13 @@ class CustomUser(AbstractBaseUser):
     last_login = models.DateTimeField(verbose_name="Last Login", blank=True, null=True)
     is_superuser = models.BooleanField(default=False)
     username = models.CharField(max_length=120, null=True)
-    rating_stars = models.CharField(max_length=20, null=True)
+    rating_stars = models.CharField(max_length=20, default=0, null=True)
     userrole = models.CharField(max_length=20, default="3", null=True)
     first_name = models.CharField(max_length=120, null=True)
     last_name = models.CharField(max_length=120, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    c_wallet_balance = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     date_joined = models.DateTimeField(verbose_name="Date Joined", auto_now_add=True)
     preferred_language = models.CharField(max_length=100, null=True)
     email = models.EmailField(verbose_name="Email address", max_length=100, unique=True)
@@ -118,6 +119,21 @@ class ActiveTasks(models.Model):
         ordering = ['t_id']
 
 
+class PaymentTransactions(models.Model):
+    p_id = models.AutoField(primary_key=True)
+    p_taskcode = models.CharField(max_length=70, blank=True)
+    p_email = models.CharField(max_length=100, blank=True)
+    p_transid = models.CharField(max_length=100, blank=True)
+    c_usd_amount = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    c_moving_balance = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    p_direction = models.CharField(max_length=20, blank=True)
+    p_narration = models.CharField(max_length=200, blank=True)
+    c_datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['p_id']
+
+
 class Costs(models.Model):
     c_id = models.AutoField(primary_key=True)
     c_name = models.CharField(max_length=70, blank=True)
@@ -160,8 +176,10 @@ class Tasks(models.Model):
     p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
     t_status = models.CharField(max_length=50, blank=True, default='pending')
     t_remarks = models.TextField(blank=True)
+    t_stars = models.CharField(max_length=10, blank=True)
     t_owner = models.CharField(max_length=100, blank=True)
     t_allocated_to = models.CharField(max_length=100, blank=True)
+    t_deadline = models.CharField(max_length=50, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
@@ -183,22 +201,6 @@ class Projects(models.Model):
 
     class Meta:
         ordering = ['p_id']
-
-
-class SystemUsers(models.Model):
-    s_id = models.AutoField(primary_key=True)
-    s_firstname = models.CharField(max_length=100, blank=True)
-    s_lastname = models.CharField(max_length=100, blank=True)
-    s_phone = models.CharField(max_length=20, blank=True)
-    s_email = models.CharField(max_length=100, blank=True)
-    s_passwd = models.CharField(max_length=100, blank=True)
-    s_country = models.CharField(max_length=100, blank=True)
-    s_role = models.CharField(max_length=50, blank=True)
-    s_status = models.CharField(max_length=50, blank=True, default='inactive')
-    c_datetime = models.DateTimeField(auto_now=True, null=True)
-
-    class Meta:
-        ordering = ['s_id']
 
 
 class Categories(models.Model):

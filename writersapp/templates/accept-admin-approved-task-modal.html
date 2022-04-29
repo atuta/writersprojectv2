@@ -1,0 +1,25 @@
+<div class="modal fade" id="modal-accept-admin-approved-task" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Accept Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>Kindly help us know how we faired on this one</p>
+            <div class="rating">
+            <input type="radio" name="rating" value="5" id="5-{{ task.task_code }}"><label for="5-{{ task.task_code }}">☆</label>
+            <input type="radio" name="rating" value="4" id="4-{{ task.task_code }}"><label for="4-{{ task.task_code }}">☆</label>
+            <input type="radio" name="rating" value="3" id="3-{{ task.task_code }}"><label for="3-{{ task.task_code }}">☆</label>
+            <input type="radio" name="rating" value="2" id="2-{{ task.task_code }}"><label for="2-{{ task.task_code }}">☆</label>
+            <input type="radio" name="rating" value="1" id="1-{{ task.task_code }}"><label for="1-{{ task.task_code }}">☆</label>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <input id="accept-admin-approved-task-code" type="hidden" value="">
+          <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Rate & Accept</button>
+        </div>
+      </div>
+    </div>
+  </div>

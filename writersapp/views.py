@@ -21,14 +21,15 @@ from .assign_task import AssignTask
 from .log_task import LogTask
 from .edit_project import EditProject
 from .save_writer_application import SaveWriterApplication
+from .accept_admin_approved_task import AcceptAdminApprovedTask
 from .save_project import SaveProject
 from .pending_admin_approvals import PendingAdminApprovals
+from .my_admin_approved_tasks import MyAdminApprovedTasks
 from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
 from .create_account import CreateCustomUser
-from .login import CustomLogin
 from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, CustomUser
 from django.contrib.auth import authenticate, login, logout
 
@@ -203,7 +204,8 @@ def view_save_task(request):
 
     task_owner = request.user.email
 
-    response = SaveTask.save_task('', project_code, task_owner, task_title, word_count, word_count_description, keywords,
+    response = SaveTask.save_task('', project_code, task_owner, task_title, word_count, word_count_description,
+                                  keywords,
                                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
                                   priority_order, favourite_writers)
     return HttpResponse(response, content_type='text/json')
@@ -219,6 +221,16 @@ def view_edit_project(request):
     description = request.POST.get("description")
 
     response = EditProject.edit_project('', project_code, title, category, language, description)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_accept_admin_approved_task(request):
+    task_code = request.POST.get("task_code")
+    stars = request.POST.get("stars")
+
+    response = AcceptAdminApprovedTask.accept_admin_approved_task('', task_code, stars)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -301,6 +313,17 @@ def page_pending_admin_approvals(request):
     except Exception as e:
         page_title = "No pending approvals found!"
     return render(request, "pending-admin-approvals.html", context={"pendings": pending_approvals,
+                                                                    "page_title": page_title})
+
+
+def page_my_admin_approved_tasks(request):
+    try:
+        email = request.user.email
+        tasks = MyAdminApprovedTasks.my_admin_approved_tasks('', email)
+        page_title = "Admin Approved Tasks"
+    except Exception as e:
+        page_title = "No tasks found!"
+    return render(request, "my-admin-approved-tasks.html", context={"tasks": tasks,
                                                                     "page_title": page_title})
 
 
