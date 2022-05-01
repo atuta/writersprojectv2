@@ -202,10 +202,11 @@ def view_edit_task(request):
     extra_proofreading = request.POST.get("extra_proofreading")
     priority_order = request.POST.get("priority_order")
     favourite_writers = request.POST.get("favourite_writers")
+    deadline = request.POST.get("deadline")
 
     response = EditTask.edit_task('', task_code, task_title, word_count, word_count_description, keywords,
                                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
-                                  priority_order, favourite_writers)
+                                  priority_order, favourite_writers, deadline)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -224,13 +225,14 @@ def view_save_task(request):
     extra_proofreading = request.POST.get("extra_proofreading")
     priority_order = request.POST.get("priority_order")
     favourite_writers = request.POST.get("favourite_writers")
+    deadline = request.POST.get("deadline")
 
     task_owner = request.user.email
 
     response = SaveTask.save_task('', project_code, task_owner, task_title, word_count, word_count_description,
                                   keywords,
                                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
-                                  priority_order, favourite_writers)
+                                  priority_order, favourite_writers, deadline)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -407,6 +409,13 @@ def upgrade_to_writer(request):
     return render(request, "upgrade-to-writer.html", context={"page_title": "Become a Writer"})
 
 
+def page_writer_pending_tasks(request):
+    owner = request.user.email
+    tasks_qs = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'),
+                                    t_allocated_to=owner)
+    return render(request, "my-pending-tasks.html", context={"tasks": tasks_qs, "page_title": "My Pending Tasks"})
+
+
 def page_writer_complete_tasks(request):
     owner = request.user.email
     tasks_qs = Tasks.objects.filter(t_status='complete', t_allocated_to=owner)
@@ -426,14 +435,48 @@ def page_writer_wallet(request):
     return render(request, "writer-wallet.html", context={"page_title": "My Wallet", "transactions": transactions_qs})
 
 
+def page_revision_tasks(request):
+    owner = request.user.email
+    tasks = list(Tasks.objects.filter(Q(t_status='clientreturned') | Q(t_status='adminreturned'),
+                                      t_allocated_to=owner))
+    return render(request, "revision-tasks.html", context={"tasks": tasks, "page_title": "Revision Tasks"})
+
+
 def page_available_tasks(request):
     tasks = list(Tasks.objects.filter(t_status='clientsubmitted'))
     return render(request, "available-tasks.html", context={"tasks": tasks, "page_title": "Available Tasks"})
 
 
+def page_my_submitted_projects(request):
+    email = request.user.email
+    submitted = Projects.objects.filter(p_status='clientsubmitted', p_owner=email)
+    return render(request, "my-submitted-projects.html", context={"submitted": submitted, "page_title": "Pending "
+                                                                                                        "Projects"})
+
+
+def page_my_draft_projects(request):
+    email = request.user.email
+    drafts = Projects.objects.filter(p_status='clientdraft', p_owner=email)
+    return render(request, "my-draft-projects.html", context={"drafts": drafts, "page_title": "Draft Projects"})
+
+
+def page_client_complete_projects(request):
+    email = request.user.email
+    complete_projects = Projects.objects.filter(p_status='complete', p_owner=email)
+    return render(request, "client-complete-projects.html", context={"complete_projects": complete_projects,
+                                                                     "page_title": "Complete Projects"})
+
+
+def page_client_pending_projects(request):
+    email = request.user.email
+    pending_projects = Projects.objects.filter(p_status='pending', p_owner=email)
+    return render(request, "client-pending-projects.html", context={"pending_projects": pending_projects,
+                                                                    "page_title": "Pending Projects"})
+
+
 def page_my_projects(request):
     response = MyProjects.my_projects_data('', request.user.email)
-    return render(request, "my-projects.html", context={"data": response, "page_title": "Available Projects"})
+    return render(request, "my-projects.html", context={"data": response, "page_title": "My Projects"})
 
 
 def project_wizard(request):
@@ -489,14 +532,61 @@ def writer_dashboard(request):
     if not wip_count:
         wip_count = '0'
 
+    revision_count = Tasks.objects.filter(Q(t_status='adminreturned') | Q(t_status='clientreturned'),
+                                          t_allocated_to=email).count()
+    if not revision_count:
+        revision_count = '0'
+
+    complete_count = Tasks.objects.filter(t_status='complete', t_allocated_to=email).count()
+    if not complete_count:
+        complete_count = '0'
+
+    available_count = Tasks.objects.filter(t_status='clientsubmitted').count()
+    if not available_count:
+        available_count = '0'
+
     return render(request, "writer-dashboard.html", context={"available_tasks": available_tasks_qs,
                                                              "drafts_count": drafts_count,
                                                              "wip_count": wip_count,
+                                                             "revision_count": revision_count,
+                                                             "complete_count": complete_count,
+                                                             "available_count": available_count,
                                                              "page_title": "Writer Dashboard"})
 
 
 def dashboard(request):
-    return render(request, "dashboard.html", context={"page_title": "Dashboard"})
+    email = request.user.email
+    available_tasks_qs = Tasks.objects.filter(t_status='clientsubmitted')
+
+    drafts_count = ActiveTasks.objects.filter(t_status='writerdraft', t_author=email).count()
+    if not drafts_count:
+        drafts_count = '0'
+
+    wip_count = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'),
+                                     t_allocated_to=email).count()
+    if not wip_count:
+        wip_count = '0'
+
+    revision_count = Tasks.objects.filter(Q(t_status='adminreturned') | Q(t_status='clientreturned'),
+                                          t_allocated_to=email).count()
+    if not revision_count:
+        revision_count = '0'
+
+    complete_count = Tasks.objects.filter(t_status='complete', t_allocated_to=email).count()
+    if not complete_count:
+        complete_count = '0'
+
+    available_count = Tasks.objects.filter(t_status='clientsubmitted').count()
+    if not available_count:
+        available_count = '0'
+
+    return render(request, "dashboard.html", context={"available_tasks": available_tasks_qs,
+                                                      "drafts_count": drafts_count,
+                                                      "wip_count": wip_count,
+                                                      "revision_count": revision_count,
+                                                      "complete_count": complete_count,
+                                                      "available_count": available_count,
+                                                      "page_title": "Dashboard"})
 
 
 def page_my_profile(request):
@@ -520,7 +610,6 @@ def signup_page(request):
 
 
 def password_change_success(request):
-
     return render(request, "password-change-success.html", context={"page_title": "Password Change Successful!"})
 
 

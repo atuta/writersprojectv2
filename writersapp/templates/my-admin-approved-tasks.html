@@ -17,13 +17,13 @@
                 <p>Article Words  <strong>{{ task.article_words }}</strong> / Words Requested  <strong>{{ task.words_requested }}</strong></p>
                 <p><strong>Article</strong></p>
                 <div class="article">
-                    {{ task.task_article }}
+                    {{ task.task_article|safe }}
                 </div>
             </div>
 
             <div class="card-footer">
                 <button id="accept-task-{{ task.task_code }}" type="button" class="btn btn-outline-success accept-admin-approved-task"><i class="bi bi-check-circle me-1"></i> Accept</button>
-
+                <button id="reject-task-{{ task.task_code }}" type="button" class="btn btn-outline-danger reject-admin-approved-task"><i class="bi bi-x-circle me-1"></i> Reject</button>
             </div>
           </div><!-- End Card with header and footer -->
 {% endfor %}

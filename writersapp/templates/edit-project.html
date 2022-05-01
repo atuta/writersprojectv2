@@ -63,11 +63,11 @@
                   <div class="col-md-12 form-group">
                 <div style="margin-top: 30px; margin-bottom: 10px;">Brief project description. <br>
                 Give us any specific project requirements.</div>
-                <!-- Quill Editor Default -->
-                <div style="height: 250px;" id="project-description" class="quill-editor-default">
-                  {{ project_data.p_description }}
-                </div>
-                <!-- End Quill Editor Default -->
+                <!-- TinyMCE Editor -->
+                <textarea id="project-description" class="tinymce-editor">
+                {{ project_data.p_description }}
+                </textarea>
+                <!-- End TinyMCE Editor -->
                 </div>
                 </div>
 

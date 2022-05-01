@@ -6,7 +6,7 @@ $().ready(function() {
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'task_code=' + task_code;
 
-			console.log(task_code);
+			//console.log(task_code);
 
             try{
 			$.ajax({
@@ -19,7 +19,7 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 //console.log(status);
+						 //console.log(data);
 						 if(status === 'success'){
                             swal({
                                 title: "Success!",
@@ -31,7 +31,7 @@ $().ready(function() {
 						 }else{
                              swal({
                                 title: "Failed!",
-                                text: "There seems to be a technical error. Try again later",
+                                text: "This task might have been picked by someone else already.",
                                 icon: "error"
                                 });
                              }

@@ -5,7 +5,8 @@ $().ready(function() {
 		var project_title = $('#project-title').val();
 		var project_category = $('#project-category').val();
         var project_language = $('#project-language').val();
-        var project_description = $('#project-description').text();
+        // var project_description = $('#project-description').text();
+        var project_description = tinymce.get("project-description").getContent();
 
         if(project_title === '' || project_language === '' || project_category === '' || project_description === ''){
             swal({
@@ -18,7 +19,7 @@ $().ready(function() {
 
             //title, category, language, description, owner
             var dataString =  'title=' + project_title + '&category=' + project_category + '&language='
-            + project_language + '&description=' + project_description + '&project_code=' + project_code;
+            + project_language + '&description=' + encodeURIComponent(project_description) + '&project_code=' + project_code;
             var csrftoken = readCookie('csrftoken');
             $.ajax({
                     url: '/writersapp/edit-project/',
@@ -35,7 +36,7 @@ $().ready(function() {
                     success: function( data ){
                         var real_data = data.data;
                         var status = data.status;
-                        console.log(status);
+                        //console.log(status);
                         if(status === "success"){
 
                            $('#btn-next').trigger('click');

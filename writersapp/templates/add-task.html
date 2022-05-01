@@ -125,17 +125,17 @@
               <form class="row g-3" id="frm-task-options" action="#" method="post">
                 <div class="col-md-4">
                     <label class="card">
-                    <input name="writer-level" id="basic" value="basic" class="radio" type="radio">
+                    <input style="border: 0;" name="writer-level" id="basic" value="basic" class="radio" type="radio">
                     <span class="plan-details">
-                      <span class="plan-type">Basic</span>
-                      <span class="plan-cost">$0.015 / Word</span>
-                      <p class="description">Not Available</p>
+                      <span class="plan-type">A La Carte </span>
+                      <span class="plan-cost">$0.08 / Word</span>
+                      <p class="description">Affordable basic pricing</p>
                     </span>
                   </label>
                 </div>
                 <div class="col-md-4">
                 <label class="card">
-                    <input name="writer-level" id="standard" value="standard" class="radio" type="radio" checked>
+                    <input style="border: 0;" name="writer-level" id="standard" value="standard" class="radio" type="radio" checked>
                     <span class="plan-details" aria-hidden="true">
                       <span class="plan-type">Standard</span>
                       <span class="plan-cost">$0.088 / Word</span>
@@ -145,10 +145,10 @@
                 </div>
                 <div class="col-md-4">
                     <label class="card">
-                    <input name="writer-level" id="expert" value="expert" class="radio" type="radio">
+                    <input style="border: 0;" name="writer-level" id="expert" value="expert" class="radio" type="radio">
                     <span class="plan-details" aria-hidden="true">
-                      <span class="plan-type">Expert</span>
-                      <span class="plan-cost">$0.154 / Word</span>
+                      <span class="plan-type">Enterprise</span>
+                      <span class="plan-cost">$0.14 / Word</span>
                       <p class="description">Managed by our most experienced writers. Best for more complex orders</p>
                     </span>
                   </label>
@@ -160,7 +160,7 @@
 								<td>
 									<strong>EXTRA PROOFREADING</strong> <br>
 									The project will be proofread by our language managers. <br>
-                                    <em class="small"><strong>+$0.022 Per Word</strong></em>
+                                    <em class="small"><strong>+$0.02 Per Word</strong></em>
 								</td>
 								<td>
                                     <div class="form-check">
@@ -170,9 +170,15 @@
 								</tr>
 								<tr>
 								<td>
-									<strong>PRIORITY ORDER</strong> <br>
-									Your project will be assigned a higher priority status. <br>
-                                    <em class="small"><strong>+$0.044 Per Word</strong></em>
+                                <strong>PRIORITY ORDER (SET DEADLINE)</strong> <br>
+                                Your project will be assigned a higher priority status. <br>
+                                <em class="small"><strong>+$0.04 Per Word</strong></em>
+
+                                <div id="deadline-div" style="margin-top: 20px; display: none;" class="col-md-6">
+                                <label for="deadline"><strong>Deadline</strong></label>
+                                <input id="deadline"  type="date" class="form-control">
+                                </div>
+
 								</td>
 
 								<td>
@@ -198,7 +204,7 @@
                 <div class="card-footer">
                 <div class="text-left">
                     <input id="project-code" type="hidden" value="{{ project_code }}">
-                    <button id="back-to-task-description" type="button" class="btn btn-outline-secondary ms-2">Back</button>
+                    <button id="back-to-task-description" type="button" class="btn btn-outline-secondary">Back</button>
                     <button id="btn-save-task" type="button" class="btn btn-outline-success">Save Task</button>
                 </div>
                 </div>

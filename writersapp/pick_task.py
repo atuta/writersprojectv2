@@ -13,8 +13,14 @@ class PickTask:
 
     def pick_task(self, task_code, email):
         try:
-            task_exists = Tasks.objects.filter(t_task_code=task_code).exists()
+            task_exists = Tasks.objects.filter(t_task_code=task_code, t_status='clientsubmitted').exists()
             if task_exists:
+
+                # update mother project status to pending
+                task_obj = Tasks.objects.get(t_task_code=task_code)
+                project_code = task_obj.t_p_code
+                Projects.objects.filter(p_code=project_code).update(p_status='pending')
+
                 Tasks.objects.filter(t_task_code=task_code).update(t_status='writerdraft', t_allocated_to=email)
                 InitTask.init_task('', task_code, email)
                 data = {"status": "success", "data": {"message": task_code}}

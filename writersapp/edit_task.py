@@ -12,7 +12,7 @@ class EditTask:
 
     def edit_task(self, task_code, task_title, word_count, word_count_description, keywords,
                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
-                  priority_order, favourite_writers):
+                  priority_order, favourite_writers, deadline):
         try:
             payout_perc = decimal.Decimal(get_cost('payout_perc'))
 
@@ -31,6 +31,7 @@ class EditTask:
             task_obj.p_priority_order = priority_order
             task_obj.p_favourite_writers = favourite_writers
             task_obj.t_usd_cost = task_usd_cost
+            task_obj.t_deadline = deadline
             task_obj.t_usd_payout = task_usd_cost * payout_perc
             task_obj.save()
 

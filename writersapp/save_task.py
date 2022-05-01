@@ -11,7 +11,7 @@ class SaveTask:
 
     def save_task(self, project_code, task_owner, task_title, word_count, word_count_description, keywords,
                   keyword_repetition, task_instructions, doc, writer_level, extra_proofreading,
-                             priority_order, favourite_writers):
+                             priority_order, favourite_writers, deadline):
         try:
             payout_perc = decimal.Decimal(get_cost('payout_perc'))
             task_code = get_random_string(64, 'abcdef0123456789')
@@ -29,9 +29,11 @@ class SaveTask:
                 p_writer_level=writer_level,
                 p_extra_proofreading=extra_proofreading,
                 p_priority_order=priority_order,
+                t_urgent=priority_order,
                 p_favourite_writers=favourite_writers,
                 t_owner=task_owner,
                 t_usd_cost=task_usd_cost,
+                t_deadline=deadline,
                 t_usd_payout=task_usd_cost * payout_perc
             )
             action.save()

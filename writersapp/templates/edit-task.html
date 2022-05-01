@@ -149,23 +149,23 @@
                 <div class="col-md-4">
                     <label class="card">
                     {% if task_data.p_writer_level == 'basic' %}
-                    <input name="writer-level" id="basic" value="basic" class="radio" type="radio" checked>
+                    <input style="border: 0;" name="writer-level" id="basic" value="basic" class="radio" type="radio" checked>
                     {% else %}
-                    <input name="writer-level" id="basic" value="basic" class="radio" type="radio">
+                    <input style="border: 0;" name="writer-level" id="basic" value="basic" class="radio" type="radio">
                     {% endif %}
                     <span class="plan-details">
-                      <span class="plan-type">Basic</span>
-                      <span class="plan-cost">$0.015 / Word</span>
-                      <p class="description">Not Available</p>
+                      <span class="plan-type">A La Carte Pricing</span>
+                      <span class="plan-cost">$0.08 / Word</span>
+                      <p class="description">Affordable basic pricing</p>
                     </span>
                   </label>
                 </div>
                 <div class="col-md-4">
                 <label class="card">
                     {% if task_data.p_writer_level == 'standard' %}
-                    <input name="writer-level" id="standard" value="standard" class="radio" type="radio" checked>
+                    <input style="border: 0;" name="writer-level" id="standard" value="standard" class="radio" type="radio" checked>
                     {% else %}
-                    <input name="writer-level" id="standard" value="standard" class="radio" type="radio">
+                    <input style="border: 0;" name="writer-level" id="standard" value="standard" class="radio" type="radio">
                     {% endif %}
                     <span class="plan-details" aria-hidden="true">
                       <span class="plan-type">Standard</span>
@@ -177,13 +177,13 @@
                 <div class="col-md-4">
                     <label class="card">
                     {% if task_data.p_writer_level == 'expert' %}
-                    <input name="writer-level" id="expert" value="expert" class="radio" type="radio" checked>
+                    <input style="border: 0;" name="writer-level" id="expert" value="expert" class="radio" type="radio" checked>
                     {% else %}
-                    <input name="writer-level" id="expert" value="expert" class="radio" type="radio">
+                    <input style="border: 0;" name="writer-level" id="expert" value="expert" class="radio" type="radio">
                     {% endif %}
                     <span class="plan-details" aria-hidden="true">
-                      <span class="plan-type">Expert</span>
-                      <span class="plan-cost">$0.154 / Word</span>
+                      <span class="plan-type">Enterprise</span>
+                      <span class="plan-cost">$0.14 / Word</span>
                       <p class="description">Managed by our most experienced writers. Best for more complex orders</p>
                     </span>
                   </label>
@@ -195,7 +195,7 @@
 								<td>
 									<strong>EXTRA PROOFREADING</strong> <br>
 									The project will be proofread by our language managers. <br>
-                                    <em class="small"><strong>+$0.022 Per Word</strong></em>
+                                    <em class="small"><strong>+$0.02 Per Word</strong></em>
 								</td>
 								<td>
                                     <div class="form-check">
@@ -211,7 +211,13 @@
 								<td>
 									<strong>PRIORITY ORDER</strong> <br>
 									Your project will be assigned a higher priority status. <br>
-                                    <em class="small"><strong>+$0.044 Per Word</strong></em>
+                                    <em class="small"><strong>+$0.04 Per Word</strong></em>
+
+                                    <div id="deadline-div" style="margin-top: 20px; display: none;" class="col-md-6">
+                                    <label for="deadline"><strong>Deadline</strong></label>
+                                    <input id="deadline"  type="date" class="form-control" value="{{ task_data.t_deadline }}">
+                                    </div>
+
 								</td>
 
 								<td>
@@ -257,6 +263,4 @@
 
 </div><!-- End Right side columns -->
 </div>
-
-
 {% endblock %}

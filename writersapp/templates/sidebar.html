@@ -77,13 +77,18 @@
               <i class="bi bi-circle"></i><span>Create a Project</span>
             </a>
           </li>
+          <li>
+            <a href="{% url 'my-draft-projects' %}">
+              <i class="bi bi-circle"></i><span>Draft Projects</span>
+            </a>
+          </li>
            <li>
-            <a id="link-my-projects" href="{% url 'page-my-projects' %}">
+            <a id="link-my-projects" href="{% url 'client-pending-projects' %}">
               <i class="bi bi-circle"></i><span>Pending Projects</span>
             </a>
           </li>
             <li>
-            <a href="{% url 'page-my-projects' %}">
+            <a href="{% url 'client-complete-projects' %}">
               <i class="bi bi-circle"></i><span>Complete Projects</span>
             </a>
           </li>
@@ -122,6 +127,16 @@
             <li>
             <a href="{% url 'available-tasks' %}">
               <i class="bi bi-circle"></i><span>Available Tasks</span>
+            </a>
+          </li>
+           <li>
+            <a href="{% url 'page-writer-pending-tasks' %}">
+              <i class="bi bi-circle"></i><span>Pending Tasks</span>
+            </a>
+          </li>
+           <li>
+            <a href="{% url 'revision-tasks' %}">
+              <i class="bi bi-circle"></i><span>Revision Tasks</span>
             </a>
           </li>
           <li>

@@ -1,5 +1,20 @@
 $(document).ready(function (e) {
 
+  if ($('#priority-order').is(':checked')) {
+     $('#deadline-div').fadeIn('3000');
+  } else {
+     $('#deadline-div').hide();
+     $('#deadline').val('')
+  }
+$('#priority-order').change(function() {
+  if ($(this).is(':checked')) {
+     $('#deadline-div').fadeIn('3000');
+  } else {
+     $('#deadline-div').hide();
+     $('#deadline').val('')
+  }
+});
+
 $(document).on('click', '#btn-edit-task', function( event ) {
 
 		var task_code = $('#task-code').val();
@@ -7,7 +22,7 @@ $(document).on('click', '#btn-edit-task', function( event ) {
         var task_title = $('#task-title').val();
         var word_count = $('#word-count').val();
         var word_count_description = $('input[name="wc-description"]:checked').val();
-
+        var deadline = $('#deadline').val().replace(/.*(\/|\\)/, '');
         var keywords = $('#keywords').val();
         var keyword_repetition = $('select#keyword-repetition').val();
         var task_instructions = $('#task-instructions').val();
@@ -23,6 +38,14 @@ $(document).on('click', '#btn-edit-task', function( event ) {
 
         if($('#priority-order').is(':checked')){
             var priority_order = $('#priority-order:checked').val();
+            if(deadline === ''){
+                swal({
+                    title: "Hold on!",
+                    text: "You chose a priority order. You must specify the deadline",
+                    icon: "error",
+                    });
+                return false;
+            }
         }else{
             var priority_order = 'no';
         }
@@ -50,7 +73,7 @@ $(document).on('click', '#btn-edit-task', function( event ) {
              + '&word_count_description=' + word_count_description + '&keywords=' + keywords + '&keyword_repetition=' + keyword_repetition
               + '&task_instructions=' + task_instructions + '&doc=' + doc + '&writer_level='
                 + writer_level + '&extra_proofreading=' + extra_proofreading
-                + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers;
+                + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers + '&deadline=' + encodeURIComponent(deadline);
             $.ajax({
                     url: '/writersapp/edit-task/',
                     type: 'post',

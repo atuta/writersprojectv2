@@ -20,14 +20,14 @@
                 <p id="hide-article-div-{{ task.task_code }}" style="display: none; "><a id="hide-article-{{ task.task_code }}" class="hide-article" href="#">[Hide Article]</a></p>
 
                 <div style="display: none;" id="article-{{ task.task_code }}" class="article show-article">
-                    {{ task.task_article }}
+                    {{ task.task_article|safe }}
                 </div>
 
             </div>
 
             <div class="card-footer">
                 <button id="admin-approve-task-{{ task.task_code }}" type="button" class="btn btn-outline-success admin-approve-task"><i class="bi bi-check-circle me-1"></i> Approve</button>
-
+                <button id="admin-reject-task-{{ task.task_code }}" type="button" class="btn btn-outline-danger admin-approve-task"><i class="bi bi-x-circle me-1"></i> Reject</button>
             </div>
           </div><!-- End Card with header and footer -->
 {% endfor %}

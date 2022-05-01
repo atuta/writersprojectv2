@@ -6,7 +6,8 @@ $("#btn-next").css("display", "none");
 		var project_title = $('#project-title').val();
 		var project_category = $('#project-category').val();
         var project_language = $('#project-language').val();
-        var project_description = $('#project-description').text();
+        // var project_description = $('#project-description').text();
+        var project_description = tinymce.get("project-description").getContent();
 
         if(project_title === '' || project_language === '' || project_category === '' || project_description === ''){
             swal({
