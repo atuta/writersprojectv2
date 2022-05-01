@@ -18,7 +18,6 @@ class LogTask:
                 active_tasks_obj = ActiveTasks.objects.get(t_code=task_code)
                 active_tasks_obj.t_article = article
                 active_tasks_obj.save()
-                print(task_code)
             except ActiveTasks.DoesNotExist as e:
                 action = ActiveTasks(
                     t_code=task_code,

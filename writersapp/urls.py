@@ -3,11 +3,13 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.dashbooard, name='writers-dashboard'),
+    path('', views.dashboard, name='writers-dashboard'),
+    path('writers-dashboard', views.dashboard, name='writers-dashboard'),
     path('logout/', views.do_logout, name='logout'),
     path('do-task/<str:task_code>/', views.do_task, name='do-task'),
     path('project-tasks/<str:project_code>/', views.project_tasks, name='project-tasks'),
     path('available-tasks/', views.page_available_tasks, name='available-tasks'),
+    path('page-writer-complete-tasks/', views.page_writer_complete_tasks, name='page-writer-complete-tasks'),
     path('page-my-tasks/', views.page_my_tasks, name='page-my-tasks'),
     path('page-writer-wallet/', views.page_writer_wallet, name='page-writer-wallet'),
     path('pending-admin-approvals/', views.page_pending_admin_approvals, name='pending-admin-approvals'),
@@ -36,7 +38,12 @@ urlpatterns = [
     path('save-project/', views.view_save_project, name='save-project'),
     path('add-task/<str:project_code>/', views.add_task, name='add-task'),
     path('create-project/', views.create_project, name='create-project'),
-    path('writers-dashboard/', views.dashbooard, name='writers-dashboard'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin-dashboard'),
+    path('client-dashboard/', views.client_dashboard, name='client-dashboard'),
+    path('writer-dashboard/', views.writer_dashboard, name='writer-dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('page-my-profile/', views.page_my_profile, name='page-my-profile'),
+    path('password-change-success/', views.password_change_success, name='password-change-success'),
     path('signup/', views.signup_page, name='signup'),
     path('login/', views.login_page, name='login'),
     path('custom-login/', views.view_custom_login, name='custom-login'),

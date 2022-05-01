@@ -2,11 +2,11 @@ $().ready(function() {
    $(document).on('click', '#btn-save-do-task', function(event) {
    //$( "#frm-login" ).submit(function( event ) {
             var task_code          = $("input#task-code").val();
-            var article            = $("#article").text();
-
+            //var article            = $("#article").html();
+            var article = tinymce.get("article").getContent();
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code + '&article=' + article;
-
+			var dataString =  'task_code=' + task_code + '&article=' + encodeURIComponent(article);
+console.log(article);
             try{
 			$.ajax({
 				type: "POST",

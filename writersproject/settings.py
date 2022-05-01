@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'writersapp',
     'rest_framework',
+    'widget_tweaks',
     'django.contrib.humanize',
 ]
 

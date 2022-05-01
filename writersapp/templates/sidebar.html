@@ -3,12 +3,30 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
+      {% if user.userrole == '2'  %}
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'writers-dashboard' %}">
+        <a class="nav-link " href="{% url 'admin-dashboard' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
+      {% endif %}
+      {% if user.userrole == '3'  %}
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'client-dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+      {% endif %}
+      {% if user.userrole == '4'  %}
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'writer-dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+      {% endif %}
 
       {% if user.userrole == '2'  %}
       <li class="nav-item">
@@ -93,7 +111,7 @@
 {% if user.userrole == '4'  %}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>My Projects</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-bar-chart"></i><span>My Tasks</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -104,6 +122,11 @@
             <li>
             <a href="{% url 'available-tasks' %}">
               <i class="bi bi-circle"></i><span>Available Tasks</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'page-writer-complete-tasks' %}">
+              <i class="bi bi-circle"></i><span>Complete Tasks</span>
             </a>
           </li>
         </ul>
@@ -136,7 +159,7 @@
       <li class="nav-heading">Other Pages</li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
+        <a class="nav-link collapsed" href="{% url 'page-my-profile' %}">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>

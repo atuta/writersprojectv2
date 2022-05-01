@@ -1,9 +1,9 @@
 {% if user.userrole == '2'  %}
-{% include "admin-dashboard.html" %}
+{% include 'admin-dashboard.html' %}
 {% endif %}
 {% if user.userrole == '3'  %}
-{% include "client-dashboard.html" %}
+{% include 'client-dashboard.html' %}
 {% endif %}
 {% if user.userrole == '4'  %}
-{% include "client-dashboard.html" %}
+{% include 'writer-dashboard.html' %}
 {% endif %}

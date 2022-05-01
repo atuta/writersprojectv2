@@ -11,15 +11,15 @@
               <div class="card info-card sales-card">
 
                 <div class="card-body">
-                  <h5 class="card-title">Draft Projects</h5>
+                  <h5 class="card-title">Draft Tasks</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-hourglass-split"></i>
+                      <i class="bi bi-back"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>0</h6>
-                      <span class="text-success small pt-1 fw-bold">0</span> <span class="text-muted small pt-2 ps-1">Tasks</span>
+                      <h6>{{ drafts_count }}</h6>
+                      <span class="text-muted small pt-2 ps-1"><a class="brown" href="#">View Tasks</a></span>
 
                     </div>
                   </div>
@@ -30,17 +30,17 @@
 
             <!-- Revenue Card -->
             <div class="col-xxl-3 col-md-6">
-              <div class="card info-card revenue-card">
+              <div class="card info-card customers-card">
                 <div class="card-body">
-                  <h5 class="card-title">Work In Progress</h5>
+                  <h5 class="card-title">Pending</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-intersect"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>0</h6>
-                      <span class="text-danger small pt-1 fw-bold">0</span> <span class="text-muted small pt-2 ps-1">Tasks</span>
+                      <h6>{{ wip_count }}</h6>
+                      <span class="text-muted small pt-2 ps-1"><a class="brown" href="#">View Tasks</a></span>
 
                     </div>
                   </div>
@@ -49,35 +49,12 @@
               </div>
             </div><!-- End Revenue Card -->
 
-            <!-- Customers Card -->
-            <div class="col-xxl-3 col-xl-12">
-
-              <div class="card info-card customers-card">
-                <div class="card-body">
-                  <h5 class="card-title">Completed</h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-slash-square"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>0</h6>
-                      <span class="text-success small pt-1 fw-bold">0</span> <span class="text-muted small pt-2 ps-1">Tasks</span>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div><!-- End Customers Card -->
-
              <!-- Customers Card -->
             <div class="col-xxl-3 col-xl-12">
 
               <div class="card info-card customers-card">
                 <div class="card-body">
-                  <h5 class="card-title">Returned</h5>
+                  <h5 class="card-title">Revision</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -85,7 +62,7 @@
                     </div>
                     <div class="ps-3">
                       <h6>0</h6>
-                      <span class="text-success small pt-1 fw-bold">0</span> <span class="text-muted small pt-2 ps-1">Tasks</span>
+                     <span class="text-muted small pt-2 ps-1"><a class="brown" href="#">View Tasks</a></span>
 
                     </div>
                   </div>
@@ -95,87 +72,79 @@
 
             </div><!-- End Customers Card -->
 
+            <!-- Customers Card -->
+            <div class="col-xxl-3 col-xl-12">
+
+              <div class="card info-card revenue-card">
+                <div class="card-body">
+                  <h5 class="card-title">Completed</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-bag-check"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>0</h6>
+                      <span class="text-muted small pt-2 ps-1"><a class="brown" href="#">View Tasks</a></span>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+
             <!-- Reports -->
             <div class="col-12">
-              <div class="card">
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+              {% if available_tasks %}
+              {% for task in available_tasks %}
+          <div id="card-{{ task.t_task_code }}" class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ task.t_title }}</h5>
+                <p class="small">Created on {{ task.t_datetime }}</p>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
+                <h3>Instructions</h3>
+                <p>{{ task.t_instructions }}</p>
+                <p><strong>Number of words: </strong>{{ task.t_word_count }} words ( {{ task.t_wc_description }} )</p>
+                <div style="display: none;" id="{{ task.t_task_code }}">
+                 <h3 class="mt-5">Keywords</h3>
+                <p>{{ task.t_keywords }}</p>
+                <p><strong>Keyword Repetition: </strong>{{ task.t_keyword_repetition }} </p>
 
-                <div class="card-body">
-                  <h5 class="card-title">Reports <span>/Today</span></h5>
+                <h3 class="mt-5">Help Document</h3>
 
-                  <!-- Line Chart -->
-                  <div id="reportsChart"></div>
+                {% if task.t_doc != "" %}
+                <div><a href="#">{{ task.t_doc }}</a></div>
+                {% else %}
+                <div>No document!</div>
+                {% endif %}
 
-                  <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Revenue',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.4,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 2
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'dd/MM/yy HH:mm'
-                          },
-                        }
-                      }).render();
-                    });
-                  </script>
-                  <!-- End Line Chart -->
+          </div>
+          <div style="margin-top: 20px; font-weight: bold;">USD {{ task.t_usd_payout|floatformat:2 }}</div>
 
-                </div>
+          <p style="margin-top: 15px;" id="id-more-{{ task.t_task_code }}" class="task-show-more"><a href="">Show more...</a></p>
+          <p style="margin-top: 15px; display: none;" id="id-less-{{ task.t_task_code }}" class="task-show-less"><a href="">Show less...</a></p>
+          </div>
 
-              </div>
-            </div><!-- End Reports -->
+          <div class="card-footer">
+          <button id="pick-task-{{ task.t_task_code }}" type="button" class="btn btn-outline-success pick-task"><i class="bi bi-check-circle me-1"></i> Pick Task</button>
+          </div>
+          </div><!-- End Card with header and footer -->
+          {% endfor %}
+
+
+          {% else %}
+
+          <div class="alert alert-primary fade show" role="alert">
+          <h4 class="alert-heading">Oops!</h4><hr>
+          <p class="mb-0">There are no available tasks at the moment! Check again later</p>
+          </div>
+          {% endif %}
+
+          </div><!-- End Reports -->
 
           </div>
         </div><!-- End Left side columns -->

@@ -30,8 +30,31 @@ from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
 from .create_account import CreateCustomUser
-from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, CustomUser
+from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, \
+    CustomUser, PaymentTransactions
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
+from django.db.models import Q
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/change_password.html', {
+        'form': form
+    })
 
 
 @api_view(['POST', 'GET'])
@@ -271,7 +294,7 @@ def view_create_account(request):
     phone = request.POST.get("phone")
     email = request.POST.get("email")
     country = request.POST.get("country")
-    userrole = '3'
+    userrole = request.POST.get("userrole")
     password = request.POST.get("password")
 
     response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, userrole, password)
@@ -384,6 +407,12 @@ def upgrade_to_writer(request):
     return render(request, "upgrade-to-writer.html", context={"page_title": "Become a Writer"})
 
 
+def page_writer_complete_tasks(request):
+    owner = request.user.email
+    tasks_qs = Tasks.objects.filter(t_status='complete', t_allocated_to=owner)
+    return render(request, "my-complete-tasks.html", context={"tasks": tasks_qs, "page_title": "My Complete Tasks"})
+
+
 def page_my_tasks(request):
     owner = request.user.email
     tasks = list(Tasks.objects.filter(t_status='adminassigned', t_allocated_to=owner))
@@ -392,7 +421,9 @@ def page_my_tasks(request):
 
 
 def page_writer_wallet(request):
-    return render(request, "writer-wallet.html", context={"page_title": "My Wallet"})
+    email = request.user.email
+    transactions_qs = PaymentTransactions.objects.filter(p_email=email).order_by('-c_datetime')
+    return render(request, "writer-wallet.html", context={"page_title": "My Wallet", "transactions": transactions_qs})
 
 
 def page_available_tasks(request):
@@ -437,13 +468,60 @@ def home(request):
     return render(request, "index.html", {})
 
 
-def dashbooard(request):
-    return render(request, "dashboard.html", {})
+def admin_dashboard(request):
+    return render(request, "admin-dashboard.html", {})
+
+
+def client_dashboard(request):
+    return render(request, "client-dashboard.html", {})
+
+
+def writer_dashboard(request):
+    email = request.user.email
+    available_tasks_qs = Tasks.objects.filter(t_status='clientsubmitted')
+
+    drafts_count = ActiveTasks.objects.filter(t_status='writerdraft', t_author=email).count()
+    if not drafts_count:
+        drafts_count = '0'
+
+    wip_count = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'),
+                                     t_allocated_to=email).count()
+    if not wip_count:
+        wip_count = '0'
+
+    return render(request, "writer-dashboard.html", context={"available_tasks": available_tasks_qs,
+                                                             "drafts_count": drafts_count,
+                                                             "wip_count": wip_count,
+                                                             "page_title": "Writer Dashboard"})
+
+
+def dashboard(request):
+    return render(request, "dashboard.html", context={"page_title": "Dashboard"})
+
+
+def page_my_profile(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('password-change-success')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, "my-profile.html", context={"page_title": "My Profile", "form": form})
 
 
 def signup_page(request):
     countries = list(Countries.objects.values())
     return render(request, "signup.html", context={"countries": countries})
+
+
+def password_change_success(request):
+
+    return render(request, "password-change-success.html", context={"page_title": "Password Change Successful!"})
 
 
 def login_page(request):

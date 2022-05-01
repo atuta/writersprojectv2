@@ -23,7 +23,7 @@ $().ready(function() {
 						 var status 	= data.status;
 						 var real_data   = data.data;
 						 if(status === 'success'){
-                            $(location).attr('href', '/writersapp/writers-dashboard/');
+                            $(location).attr('href', '/writersapp/dashboard/');
 						 }else{
 						    swal({
                             title: "Login Failed!",

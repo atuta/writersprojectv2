@@ -13,13 +13,12 @@
             <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#modal-task-instructions">
             <i class="bi bi-info-circle ms-1"></i> View Instructions</button>
             <span style="font-size: 20px; font-style: bold;" id="word-count"></span>
-            <span id="set-word-count" style="font-size: 20px; font-style: bold; display: none;">/{{ data.t_word_count }} words</span></h5>
+            <span id="set-word-count" style="font-size: 20px; font-style: bold;">Words Required: {{ data.t_word_count }}</span></h5>
 
-            <!-- Quill Editor Default -->
-            <div id="article" style="height: 350px;" class="quill-editor-default">
-            {{ article }}
-            </div>
-            <!-- End Quill Editor Default -->
+            <!-- TinyMCE Editor -->
+              <textarea id="article" class="tinymce-editor">
+                  {{ article }}
+              </textarea><!-- End TinyMCE Editor -->
             </div>
             <div class="card-footer">
                  <input id="task-code" type="hidden" value="{{ data.t_task_code }}">
