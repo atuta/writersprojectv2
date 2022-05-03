@@ -6,7 +6,7 @@ $().ready(function() {
             var article = tinymce.get("article").getContent();
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'task_code=' + task_code + '&article=' + encodeURIComponent(article);
-console.log(article);
+            //console.log(article);
             try{
 			$.ajax({
 				type: "POST",
@@ -18,7 +18,7 @@ console.log(article);
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 console.log(status);
+						 //console.log(status);
 						 if(status === 'success'){
                             swal({
                             title: "Success!",
@@ -26,7 +26,7 @@ console.log(article);
                             icon: "success",
                             });
 
-                            $('.writer-submit-task').show();
+                            $('#writer-submit-task-' + task_code).show();
 						 }else{
 						 swal({
                             title: "Failed!",

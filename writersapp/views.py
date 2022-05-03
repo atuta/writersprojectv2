@@ -10,6 +10,10 @@ from rest_framework.decorators import api_view
 from .reject_application import RejectApplication
 from .approve_application import ApproveApplication
 from .pick_task import PickTask
+from .client_writer_reject import ClientWriterReject
+from .client_writer_return import ClientWriterReturn
+from .admin_writer_return import AdminWriterReturn
+from .admin_writer_reject import AdminWriterReject
 from .admin_approve_task import AdminApproveTask
 from .writer_submit_task import WriterSubmitTask
 from .submit_project import SubmitProject
@@ -25,6 +29,7 @@ from .accept_admin_approved_task import AcceptAdminApprovedTask
 from .save_project import SaveProject
 from .pending_admin_approvals import PendingAdminApprovals
 from .my_admin_approved_tasks import MyAdminApprovedTasks
+from .my_revisions import MyRevisions
 from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
@@ -149,6 +154,40 @@ def view_pick_task(request):
     author = request.user.email
     task_code = request.POST.get("task_code")
     response = PickTask.pick_task('', task_code, author)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_client_writer_reject(request):
+    task_code = request.POST.get("task_code")
+    response = ClientWriterReject.client_writer_reject('', task_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_client_writer_return(request):
+    task_code = request.POST.get("task_code")
+    reason = request.POST.get("reason")
+    response = ClientWriterReturn.client_writer_return('', task_code, reason)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_admin_writer_return(request):
+    task_code = request.POST.get("task_code")
+    reason = request.POST.get("reason")
+    response = AdminWriterReturn.admin_writer_return('', task_code, reason)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_admin_writer_reject(request):
+    task_code = request.POST.get("task_code")
+    response = AdminWriterReject.admin_writer_reject('', task_code)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -436,10 +475,13 @@ def page_writer_wallet(request):
 
 
 def page_revision_tasks(request):
-    owner = request.user.email
-    tasks = list(Tasks.objects.filter(Q(t_status='clientreturned') | Q(t_status='adminreturned'),
-                                      t_allocated_to=owner))
-    return render(request, "revision-tasks.html", context={"tasks": tasks, "page_title": "Revision Tasks"})
+    try:
+        email = request.user.email
+        revisions = MyRevisions.my_revisions_data('', email)
+        page_title = "My Revisions"
+    except Exception as e:
+        page_title = "No revisions found!"
+    return render(request, "revision-tasks.html", context={"revisions": revisions, "page_title": page_title})
 
 
 def page_available_tasks(request):

@@ -1,31 +1,27 @@
-from django.db.models import Q
 from django.http import HttpResponse
 import json
-from .models import Tasks, Projects
+from .models import Tasks, Projects, ActiveTasks
 from django.utils.crypto import get_random_string
 from .costs import *
 import decimal
 from .init_task import InitTask
 
 
-class PickTask:
+class AdminWriterReturn:
     def __init__(self):
         pass
 
-    def pick_task(self, task_code, email):
+    def admin_writer_return(self, task_code, reason):
         try:
-            task_exists = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned')
-                                               | Q(t_status='clientsubmitted'),
-                                               t_task_code=task_code).exists()
-            if task_exists:
+            active_task_exists = ActiveTasks.objects.filter(t_code=task_code).exists()
+            if active_task_exists:
+                Tasks.objects.filter(t_task_code=task_code).update(t_status='adminwriterreturned')
+                ActiveTasks.objects.filter(t_code=task_code).update(t_status='adminwriterreturned')
 
-                # update mother project status to pending
                 task_obj = Tasks.objects.get(t_task_code=task_code)
-                project_code = task_obj.t_p_code
-                Projects.objects.filter(p_code=project_code).update(p_status='pending')
+                task_obj.t_remarks = reason
+                task_obj.save()
 
-                Tasks.objects.filter(t_task_code=task_code).update(t_status='writerdraft', t_allocated_to=email)
-                InitTask.init_task('', task_code, email)
                 data = {"status": "success", "data": {"message": task_code}}
                 return HttpResponse(json.dumps(data), content_type='text/json')
             else:

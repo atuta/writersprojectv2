@@ -7,7 +7,7 @@
 <div class="col-lg-12">
     {% if user.userrole == '3'  %}
 {% for task in tasks %}
-          <div id="card-{{ task.t_task_code }}" class="card">
+          <div id="card-{{ task.task_code }}" class="card">
             <div class="card-body">
               <h5 class="card-title">{{ task.task_title }}</h5>
                 <p class="small">Created on {{ task.task_date }}</p>
@@ -23,6 +23,7 @@
 
             <div class="card-footer">
                 <button id="accept-task-{{ task.task_code }}" type="button" class="btn btn-outline-success accept-admin-approved-task"><i class="bi bi-check-circle me-1"></i> Accept</button>
+                <button id="return-task-{{ task.task_code }}" type="button" class="btn btn-outline-info return-admin-approved-task"><i class="bi bi-check-circle me-1"></i> Return</button>
                 <button id="reject-task-{{ task.task_code }}" type="button" class="btn btn-outline-danger reject-admin-approved-task"><i class="bi bi-x-circle me-1"></i> Reject</button>
             </div>
           </div><!-- End Card with header and footer -->
@@ -33,4 +34,5 @@
     </div><!-- End Right side columns -->
       </div>
 {% include "accept-admin-approved-task-modal.html" %}
+{% include "client-return-task-modal.html" %}
 {% endblock %}
