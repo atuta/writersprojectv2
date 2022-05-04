@@ -20,10 +20,20 @@ $().ready(function() {
                 complete: function() { $(".loading").hide();},
 				data: dataString,
 				success: function(data) {
-						 var status 	= data.status;
-						 var real_data   = data.data;
-						 if(status === 'success'){
-                            $(location).attr('href', '/writersapp/dashboard/');
+                        var status 	= data.status;
+                        var real_data   = data.data;
+                        if(status === 'success'){
+
+                        if(real_data.userrole === '2'){
+                        $(location).attr('href', '/writersapp/admin-dashboard/');
+                        }
+                        if(real_data.userrole === '3'){
+                        $(location).attr('href', '/writersapp/client-dashboard/');
+                        }
+                        if(real_data.userrole === '4'){
+                        $(location).attr('href', '/writersapp/writer-dashboard/');
+                        }
+
 						 }else{
 						    swal({
                             title: "Login Failed!",

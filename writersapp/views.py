@@ -25,6 +25,7 @@ from .assign_task import AssignTask
 from .log_task import LogTask
 from .edit_project import EditProject
 from .save_writer_application import SaveWriterApplication
+from .admin_pay import AdminPay
 from .accept_admin_approved_task import AcceptAdminApprovedTask
 from .save_project import SaveProject
 from .pending_admin_approvals import PendingAdminApprovals
@@ -290,6 +291,15 @@ def view_edit_project(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_admin_pay(request):
+    task_code = request.POST.get("task_code")
+
+    response = AdminPay.admin_pay('', task_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_accept_admin_approved_task(request):
     task_code = request.POST.get("task_code")
     stars = request.POST.get("stars")
@@ -320,7 +330,8 @@ def view_custom_login(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        data = {"status": "success", "data": {"message": "login_success"}}
+        userole = request.user.userrole
+        data = {"status": "success", "data": {"message": "login_success", "userrole": userole}}
         return HttpResponse(json.dumps(data), content_type='text/json')
     else:
         data = {"status": "fail", "data": {"message": "login_fail"}}
@@ -502,6 +513,24 @@ def page_my_draft_projects(request):
     return render(request, "my-draft-projects.html", context={"drafts": drafts, "page_title": "Draft Projects"})
 
 
+def page_admin_complete_tasks(request):
+    completes = Tasks.objects.filter(t_status='complete')
+    return render(request, "admin-complete-tasks.html", context={"completes": completes,
+                                                                     "page_title": "Complete Tasks"})
+
+
+def page_admin_revision_tasks(request):
+    revisions = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned'))
+    return render(request, "admin-revision-tasks.html", context={"revisions": revisions,
+                                                                     "page_title": "Revision Tasks"})
+
+
+def page_admin_pending_tasks(request):
+    pendings = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'))
+    return render(request, "admin-pending-tasks.html", context={"pendings": pendings,
+                                                                     "page_title": "Pending Tasks"})
+
+
 def page_client_complete_projects(request):
     email = request.user.email
     complete_projects = Projects.objects.filter(p_status='complete', p_owner=email)
@@ -554,7 +583,30 @@ def home(request):
 
 
 def admin_dashboard(request):
-    return render(request, "admin-dashboard.html", {})
+    email = request.user.email
+    non_paid_tasks_qs = Tasks.objects.filter(t_status='complete', t_paid='no')
+
+    drafts_count = ActiveTasks.objects.filter(t_status='writerdraft').count()
+    if not drafts_count:
+        drafts_count = '0'
+
+    wip_count = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted')).count()
+    if not wip_count:
+        wip_count = '0'
+
+    revision_count = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned')).count()
+    if not revision_count:
+        revision_count = '0'
+
+    complete_count = Tasks.objects.filter(t_status='complete').count()
+    if not complete_count:
+        complete_count = '0'
+    return render(request, "admin-dashboard.html", {"non_paids": non_paid_tasks_qs,
+                                                             "drafts_count": drafts_count,
+                                                             "wip_count": wip_count,
+                                                             "revision_count": revision_count,
+                                                             "complete_count": complete_count,
+                                                             "page_title": "Admin Dashboard"})
 
 
 def client_dashboard(request):
@@ -574,7 +626,7 @@ def writer_dashboard(request):
     if not wip_count:
         wip_count = '0'
 
-    revision_count = Tasks.objects.filter(Q(t_status='adminreturned') | Q(t_status='clientreturned'),
+    revision_count = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned'),
                                           t_allocated_to=email).count()
     if not revision_count:
         revision_count = '0'
