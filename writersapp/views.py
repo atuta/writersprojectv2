@@ -516,19 +516,19 @@ def page_my_draft_projects(request):
 def page_admin_complete_tasks(request):
     completes = Tasks.objects.filter(t_status='complete')
     return render(request, "admin-complete-tasks.html", context={"completes": completes,
-                                                                     "page_title": "Complete Tasks"})
+                                                                 "page_title": "Complete Tasks"})
 
 
 def page_admin_revision_tasks(request):
     revisions = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned'))
     return render(request, "admin-revision-tasks.html", context={"revisions": revisions,
-                                                                     "page_title": "Revision Tasks"})
+                                                                 "page_title": "Revision Tasks"})
 
 
 def page_admin_pending_tasks(request):
     pendings = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'))
     return render(request, "admin-pending-tasks.html", context={"pendings": pendings,
-                                                                     "page_title": "Pending Tasks"})
+                                                                "page_title": "Pending Tasks"})
 
 
 def page_client_complete_projects(request):
@@ -594,7 +594,8 @@ def admin_dashboard(request):
     if not wip_count:
         wip_count = '0'
 
-    revision_count = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned')).count()
+    revision_count = Tasks.objects.filter(
+        Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned')).count()
     if not revision_count:
         revision_count = '0'
 
@@ -602,11 +603,11 @@ def admin_dashboard(request):
     if not complete_count:
         complete_count = '0'
     return render(request, "admin-dashboard.html", {"non_paids": non_paid_tasks_qs,
-                                                             "drafts_count": drafts_count,
-                                                             "wip_count": wip_count,
-                                                             "revision_count": revision_count,
-                                                             "complete_count": complete_count,
-                                                             "page_title": "Admin Dashboard"})
+                                                    "drafts_count": drafts_count,
+                                                    "wip_count": wip_count,
+                                                    "revision_count": revision_count,
+                                                    "complete_count": complete_count,
+                                                    "page_title": "Admin Dashboard"})
 
 
 def client_dashboard(request):
@@ -705,6 +706,24 @@ def signup_page(request):
 
 def password_change_success(request):
     return render(request, "password-change-success.html", context={"page_title": "Password Change Successful!"})
+
+
+def payment_complete(request):
+    body = json.loads(request.body)
+    print('BODY:', body)
+    return render(request, "payment-complete.html", {})
+
+
+def checkout_page(request, project_code):
+    try:
+        project_obj = Projects.objects.get(p_code=project_code)
+        project_title = project_obj.p_title
+        project_code = project_obj.p_code
+        project_cost = project_obj.p_usd_cost
+    except Projects.DoesNotExist as e:
+        project_title = "Project not found!"
+    return render(request, "checkout.html", context={"project_title": project_title, "project_cost": project_cost,
+                                                     "page_title": "Checkout", "project_code": project_code})
 
 
 def login_page(request):

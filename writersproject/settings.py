@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'writersapp',
     'rest_framework',
     'widget_tweaks',
+    'paypal.standard.ipn',
     'django.contrib.humanize',
 ]
 
@@ -124,6 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/writersapp/'
+PAYPAL_RECEIVER_EMAIL = 'isaacatuta@gmail.com'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

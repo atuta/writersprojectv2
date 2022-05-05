@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from . import paypal_view
 
 urlpatterns = [
     path('', views.dashboard, name='writers-dashboard'),
     path('writers-dashboard', views.dashboard, name='writers-dashboard'),
+    path('paypal/', paypal_view.process_payment, name='paypal'),
     path('logout/', views.do_logout, name='logout'),
     path('do-task/<str:task_code>/', views.do_task, name='do-task'),
+    path('payment-complete/', views.payment_complete, name='payment-complete'),
+    path('checkout/<str:project_code>/', views.checkout_page, name='checkout'),
     path('project-tasks/<str:project_code>/', views.project_tasks, name='project-tasks'),
     path('revision-tasks/', views.page_revision_tasks, name='revision-tasks'),
     path('available-tasks/', views.page_available_tasks, name='available-tasks'),
