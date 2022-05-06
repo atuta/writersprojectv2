@@ -28,8 +28,9 @@
                 {% if user.userrole == '3'  %}
                 <a href="{% url 'project-tasks' project.fields.p_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm me-1"></i> View Tasks</button></a>
                 {% if project.fields.p_status == 'clientdraft'  %}
-                <a href="{% url 'add-task' project.fields.p_code %}"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-x-square ms-1"></i> Add a Task</button></a>
-                <button id="{{ project.fields.p_code }}" type="button" class="btn btn-outline-success submit-project"><i class="bi bi-check-circle ms-1"></i> Submit Project</button>
+                <a href="{% url 'add-task' project.fields.p_code %}"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-folder-plus ms-1"></i> Add a Task</button></a>
+                <a href="{% url 'checkout' project.fields.p_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle ms-1"></i> Submit Project</button></a>
+                <!--<button id="{{ project.fields.p_code }}" type="button" class="btn btn-outline-success submit-project"><i class="bi bi-check-circle ms-1"></i> Submit Project</button>-->
                 {% endif %}
                 {% endif %}
             </div>

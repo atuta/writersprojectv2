@@ -18,6 +18,10 @@ class CreateCustomUser:
                 data = {"status": "fail", "data": {"message": "user_exists"}}
                 return HttpResponse(json.dumps(data), content_type='text/json')
 
+            status = True
+            if userrole == '4':
+                status = False
+
             action = CustomUser(
                 first_name=firstname,
                 last_name=lastname,
@@ -25,6 +29,7 @@ class CreateCustomUser:
                 email=email,
                 country=country,
                 username=email,
+                is_active=status,
                 userrole=userrole)
             action.set_password(password)
             action.save()

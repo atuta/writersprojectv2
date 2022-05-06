@@ -1,6 +1,7 @@
 $().ready(function() {
-   //$(document).on('click', '#btn-login', function(event) {
-   $( "#frm-create-account" ).submit(function( event ) {
+
+   $(document).on('click', '#writer-signup-proceed', function(event) {
+
             var first_name          = $("#first-name").val();
             var last_name           = $("#last-name").val();
             var phone               = $("#phone").val();
@@ -8,6 +9,56 @@ $().ready(function() {
             var country             = $("select#country").val();
             var password            = $("#password").val();
             var confirm_password    = $("#confirm-password").val();
+
+
+            if(first_name === '' || last_name === '' || phone === '' || email === ''
+            || country === '' || password === '' || confirm_password === ''){
+
+                    swal({
+                        title: "Missing fields!",
+                        text: "Fill all required fields",
+                        icon: "error"
+                        });
+                    return false;
+            }
+
+            if(password !== confirm_password){
+                    swal({
+                        title: "Password mismatch!",
+                        text: "Check your password and try again",
+                        icon: "error"
+                        });
+                    return false;
+            }
+
+            $('#writer-signup-first').hide();
+            $('#writer-signup-second').show();
+   });
+
+   $( "#frm-create-account" ).submit(function( event ) {
+
+            var first_name          = $("#first-name").val();
+            var last_name           = $("#last-name").val();
+            var phone               = $("#phone").val();
+            var email               = $("#email").val();
+            var country             = $("select#country").val();
+            var password            = $("#password").val();
+            var confirm_password    = $("#confirm-password").val();
+
+            var preferred_language = $('#preferred-language').val();
+            var application_article = tinymce.get("application-article").getContent();
+
+            if(first_name === '' || last_name === '' || phone === '' || email === ''
+            || country === '' || password === '' || confirm_password === ''
+            || preferred_language === '' || application_article === ''){
+
+                    swal({
+                        title: "Missing fields!",
+                        text: "Fill all required fields",
+                        icon: "error"
+                        });
+                    return false;
+            }
 
             if(password !== confirm_password){
                     swal({
@@ -20,7 +71,11 @@ $().ready(function() {
 
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'first_name=' + first_name + '&last_name=' + last_name + '&phone=' + encodeURIComponent(phone)
-			 + '&email=' + email + '&country=' + country + '&password=' + password;
+			+ '&email=' + email + '&country=' + country
+			  + '&application_article=' + application_article + '&userrole=4' + '&language='
+			  + preferred_language + '&password=' + password;
+
+			  // console.log(dataString); return false;
 
             try{
 			$.ajax({
@@ -39,6 +94,7 @@ $().ready(function() {
                                 text: "Your account has been created successfully",
                                 icon: "success"
                                 });
+                                $('#writer-signup-card').hide();
                             return false;
 						 }else{
 						    if(real_data.message === 'user_exists'){

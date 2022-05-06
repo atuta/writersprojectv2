@@ -349,6 +349,11 @@ def view_create_account(request):
     userrole = request.POST.get("userrole")
     password = request.POST.get("password")
 
+    article = request.POST.get("article")
+    if userrole == '4' and article != '':
+        language = request.POST.get("language")
+        SaveWriterApplication.save_writer_application('', email, article, language)
+
     response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, userrole, password)
     return HttpResponse(response, content_type='text/json')
 
@@ -699,6 +704,11 @@ def page_my_profile(request):
     return render(request, "my-profile.html", context={"page_title": "My Profile", "form": form})
 
 
+def writer_signup_page(request):
+    countries = list(Countries.objects.values())
+    return render(request, "writer-signup.html", context={"countries": countries})
+
+
 def signup_page(request):
     countries = list(Countries.objects.values())
     return render(request, "signup.html", context={"countries": countries})
@@ -710,7 +720,12 @@ def password_change_success(request):
 
 def payment_complete(request):
     body = json.loads(request.body)
-    print('BODY:', body)
+    project_code = body['project_code']
+    print('project_code:', project_code)
+    project_exists = Tasks.objects.filter(t_p_code=project_code).exists()
+    if project_exists:
+        Projects.objects.filter(p_code=project_code).update(p_status='clientsubmitted')
+        Tasks.objects.filter(t_p_code=project_code).update(t_status='clientsubmitted')
     return render(request, "payment-complete.html", {})
 
 

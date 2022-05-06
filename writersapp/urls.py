@@ -62,6 +62,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('page-my-profile/', views.page_my_profile, name='page-my-profile'),
     path('password-change-success/', views.password_change_success, name='password-change-success'),
+    path('writer-signup/', views.writer_signup_page, name='writer-signup'),
     path('signup/', views.signup_page, name='signup'),
     path('login/', views.login_page, name='login'),
     path('custom-login/', views.view_custom_login, name='custom-login'),
