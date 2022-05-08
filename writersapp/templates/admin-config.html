@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+<!-- Left side columns -->
+<div class="col-lg-6">
+
+    <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Admin Settings</h5>
+
+              <!-- Multi Columns Form -->
+              <form id="frm-save-admin-settings" class="row g-3">
+                <div class="col-md-12">
+                  <label for="words-per-hour" class="form-label">Words Per Hour</label>
+                  <input type="number" class="form-control" id="words-per-hour" value="{{ words_per_hour }}">
+                </div>
+                <div class="col-12">
+                  <label for="buffer-in-hours" class="form-label">Buffer (In Hours)</label>
+                  <input type="number" class="form-control" id="buffer-in-hours" value="{{ buffer_in_hours }}">
+                </div>
+
+                <div class="text-left">
+                  <hr>
+                  <button type="submit" class="btn btn-outline-success">Submit</button>
+                </div>
+              </form><!-- End Multi Columns Form -->
+
+            </div>
+          </div>
+
+</div><!-- End Right side columns -->
+</div>
+{% endblock %}

@@ -10,7 +10,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ application.a_first_name }} {{ application.a_last_name }} ( {{ application.a_language }} )</h5>
                 <p class="small">{{ application.a_datetime }}</p>
-              {{ application.a_article }}
+              {{ application.a_article|safe }}
 
 
     </div>

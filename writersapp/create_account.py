@@ -11,7 +11,7 @@ class CreateCustomUser:
         pass
 
     def create_custom_user(self, firstname, lastname, phone, email, country, userrole, password):
-
+        # print("email:" + email)
         try:
             user_exists = CustomUser.objects.filter(email=email).exists()
             if user_exists:

@@ -37,7 +37,7 @@ $().ready(function() {
                             text: "Thank you for the great business",
                             icon: "success"
                             });
-                            $('#modal-accept-admin-approved-task').hide();
+                            $('#modal-accept-admin-approved-task').modal('hide');
                             $('#card-' + task_code).fadeOut('5000');
 						 }else{
 						 swal({

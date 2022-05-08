@@ -44,11 +44,11 @@
               <hr class="dropdown-divider">
             </li>
 
-            {% if user.userrole == '3'  %}
+            {% if user.userrole == '2'  %}
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="{% url 'upgrade-to-writer' %}">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'page-admin-config' %}">
                 <i class="bi bi-person"></i>
-                <span>Become a Writer</span>
+                <span>System Config</span>
               </a>
             </li>
             <li>

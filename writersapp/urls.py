@@ -4,7 +4,7 @@ from . import views
 from . import paypal_view
 
 urlpatterns = [
-    path('', views.dashboard, name='writers-dashboard'),
+    path('', views.dashboard, name='home'),
     path('writers-dashboard', views.dashboard, name='writers-dashboard'),
     path('paypal/', paypal_view.process_payment, name='paypal'),
     path('logout/', views.do_logout, name='logout'),
@@ -14,6 +14,9 @@ urlpatterns = [
     path('project-tasks/<str:project_code>/', views.project_tasks, name='project-tasks'),
     path('revision-tasks/', views.page_revision_tasks, name='revision-tasks'),
     path('available-tasks/', views.page_available_tasks, name='available-tasks'),
+    path('page-client-completed-tasks/', views.page_client_completed_tasks, name='page-client-completed-tasks'),
+    path('page-client-revision-tasks/', views.page_client_revision_tasks, name='page-client-revision-tasks'),
+    path('page-client-pending-tasks/', views.page_client_pending_tasks, name='page-client-pending-tasks'),
     path('page-writer-pending-tasks/', views.page_writer_pending_tasks, name='page-writer-pending-tasks'),
     path('page-writer-complete-tasks/', views.page_writer_complete_tasks, name='page-writer-complete-tasks'),
     path('page-my-tasks/', views.page_my_tasks, name='page-my-tasks'),
@@ -30,6 +33,7 @@ urlpatterns = [
     path('log-task/', views.view_log_task, name='log-task'),
     path('page-edit-project/<str:project_code>/', views.page_edit_project, name='page-edit-project'),
     path('pick-task/', views.view_pick_task, name='pick-task'),
+    path('page-admin-config/', views.page_admin_config, name='page-admin-config'),
     path('admin-pay/', views.view_admin_pay, name='admin-pay'),
     path('accept-admin-approved-task/', views.view_accept_admin_approved_task, name='accept-admin-approved-task'),
     path('my-admin-approved-tasks/', views.page_my_admin_approved_tasks, name='my-admin-approved-tasks'),
@@ -46,6 +50,7 @@ urlpatterns = [
     path('pending-allocations/', views.page_pending_allocations, name='pending-allocations'),
     path('pending-writers-applications/', views.page_pending_applications, name='pending-writers-applications'),
     path('save-writer-application/', views.view_save_writer_application, name='save-writer-application'),
+    path('save-admin-settings/', views.view_save_admin_settings, name='save-admin-settings'),
     path('save-project/', views.view_save_project, name='save-project'),
     path('add-task/<str:project_code>/', views.add_task, name='add-task'),
     path('my-submitted-projects/', views.page_my_submitted_projects, name='my-submitted-projects'),
@@ -69,5 +74,6 @@ urlpatterns = [
     path('reject-application/', views.view_reject_application, name='reject-application'),
     path('approve-application/', views.view_approve_application, name='approve-application'),
     path('upgrade-to-writer/', views.upgrade_to_writer, name='upgrade-to-writer'),
+    path('topup-credit/', views.topup_credit, name='topup-credit'),
     path('create-account/', views.view_create_account, name='create-account'),
 ]

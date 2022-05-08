@@ -89,6 +89,13 @@ class WritersApplications(models.Model):
     a_datetime = models.DateTimeField(auto_now=True, null=True)
 
 
+class Configs(models.Model):
+    c_id = models.AutoField(primary_key=True)
+    words_per_hour = models.CharField(max_length=50, blank=True)
+    buffer_in_hours = models.CharField(max_length=50, blank=True)
+    c_datetime = models.DateTimeField(auto_now=True, null=True)
+
+
 class Languages(models.Model):
     l_id = models.AutoField(primary_key=True)
     l_code = models.CharField(max_length=70, blank=True)
@@ -179,9 +186,11 @@ class Tasks(models.Model):
     t_remarks = models.TextField(blank=True)
     t_stars = models.CharField(max_length=10, blank=True)
     t_owner = models.CharField(max_length=100, blank=True)
+    t_owner_names = models.CharField(max_length=150, blank=True)
     t_allocated_to = models.CharField(max_length=100, blank=True)
     t_urgent = models.CharField(max_length=10, blank=True)
     t_deadline = models.CharField(max_length=50, blank=True)
+    t_writer_deadline = models.CharField(max_length=50, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:

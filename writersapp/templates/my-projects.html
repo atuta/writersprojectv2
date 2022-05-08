@@ -7,33 +7,36 @@
         <div class="col-lg-12">
 {% for project in data.data reversed %}
           <div id="project-{{ project.fields.p_code }}" class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{ project.fields.p_title }}
+<div class="card-body">
+<h5 class="card-title">{{ project.fields.p_title }}
                     {% if project.fields.p_status == 'clientdraft'  %}
                     <a href="{% url 'page-edit-project' project.fields.p_code %}"><i class="bi bi-pencil-square ms-1"></i> Edit </a>
                     {% endif %}
                 </h5>
                 <p class="small">{{ project.fields.p_category }} | Created on {{ project.fields.p_datetime }} - <span class="orange">{{ project.fields.p_status }}</span></p>
 
+
                 {% if project.fields.p_status == 'clientdraft'  %}
                 <div>{{ project.fields.p_description|safe }}</div>
                 {% else %}
                 <div style="color: green;">{{ project.fields.p_description|safe }}</div>
                 {% endif %}
-
                 <div style="margin-top: 20px; font-weight: bold;">USD {{ project.fields.p_usd_cost|floatformat:2 }}</div>
 
-            </div>
-            <div class="card-footer">
+
+                <div class="card-footer">
                 {% if user.userrole == '3'  %}
-                <a href="{% url 'project-tasks' project.fields.p_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm me-1"></i> View Tasks</button></a>
+                <a href="{% url 'project-tasks' project.fields.p_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm ms-1"></i> View Tasks</button></a>
                 {% if project.fields.p_status == 'clientdraft'  %}
                 <a href="{% url 'add-task' project.fields.p_code %}"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-folder-plus ms-1"></i> Add a Task</button></a>
                 <a href="{% url 'checkout' project.fields.p_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle ms-1"></i> Submit Project</button></a>
                 <!--<button id="{{ project.fields.p_code }}" type="button" class="btn btn-outline-success submit-project"><i class="bi bi-check-circle ms-1"></i> Submit Project</button>-->
                 {% endif %}
                 {% endif %}
-            </div>
+                </div>
+
+
+</div>
           </div><!-- End Card with header and footer -->
 {% endfor %}
     </div><!-- End Right side columns -->

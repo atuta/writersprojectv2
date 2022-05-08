@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -27,6 +28,7 @@ from .edit_project import EditProject
 from .save_writer_application import SaveWriterApplication
 from .admin_pay import AdminPay
 from .accept_admin_approved_task import AcceptAdminApprovedTask
+from .save_admin_settings import SaveAdminSettings
 from .save_project import SaveProject
 from .pending_admin_approvals import PendingAdminApprovals
 from .my_admin_approved_tasks import MyAdminApprovedTasks
@@ -37,7 +39,7 @@ from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
 from .create_account import CreateCustomUser
 from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, \
-    CustomUser, PaymentTransactions
+    CustomUser, PaymentTransactions, Configs
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -310,6 +312,16 @@ def view_accept_admin_approved_task(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_save_admin_settings(request):
+    words_per_hour = request.POST.get("words_per_hour")
+    buffer_in_hours = request.POST.get("buffer_in_hours")
+
+    response = SaveAdminSettings.save_admin_settings('', words_per_hour, buffer_in_hours)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_save_project(request):
     title = request.POST.get("title")
     category = request.POST.get("category")
@@ -350,9 +362,12 @@ def view_create_account(request):
     password = request.POST.get("password")
 
     article = request.POST.get("article")
-    if userrole == '4' and article != '':
+    user_exists = CustomUser.objects.filter(email=email).exists()
+    if userrole == '4' and article != '' and not user_exists:
+        print("correct")
         language = request.POST.get("language")
-        SaveWriterApplication.save_writer_application('', email, article, language)
+        # email, article, country, first_name, last_name, language
+        SaveWriterApplication.save_writer_application('', email, article, country, first_name, last_name, language)
 
     response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, userrole, password)
     return HttpResponse(response, content_type='text/json')
@@ -386,6 +401,7 @@ def project_tasks(request, project_code):
                   context={"data": response, "writers": writers, "page_title": project_title})
 
 
+@login_required
 def page_pending_admin_approvals(request):
     try:
         pending_approvals = PendingAdminApprovals.pending_admin_approvals('')
@@ -396,6 +412,7 @@ def page_pending_admin_approvals(request):
                                                                     "page_title": page_title})
 
 
+@login_required
 def page_my_admin_approved_tasks(request):
     try:
         email = request.user.email
@@ -407,6 +424,7 @@ def page_my_admin_approved_tasks(request):
                                                                     "page_title": page_title})
 
 
+@login_required
 def page_my_drafts(request):
     try:
         email = request.user.email
@@ -418,6 +436,7 @@ def page_my_drafts(request):
                                                       "page_title": page_title})
 
 
+@login_required
 def page_pending_allocations(request):
     try:
         pending_allocations = list(Projects.objects.filter(p_status='clientsubmitted'))
@@ -428,6 +447,7 @@ def page_pending_allocations(request):
                                                                 "page_title": page_title})
 
 
+@login_required
 def page_pending_applications(request):
     try:
         writers_applications = PendingWriterApplications.pending_writer_applications('')
@@ -438,6 +458,7 @@ def page_pending_applications(request):
                                                                  "page_title": page_title})
 
 
+@login_required
 def page_edit_task(request, task_code):
     try:
         task_obj = Tasks.objects.get(t_task_code=task_code)
@@ -447,6 +468,7 @@ def page_edit_task(request, task_code):
     return render(request, "edit-task.html", context={"task_data": task_obj, "page_title": task_title})
 
 
+@login_required
 def page_edit_project(request, project_code):
     try:
         project_obj = Projects.objects.get(p_code=project_code)
@@ -459,24 +481,51 @@ def page_edit_project(request, project_code):
                                                          "page_title": project_title})
 
 
+@login_required
 def upgrade_to_writer(request):
     # response = MyProjects.my_projects_data('', request.user.email)
     return render(request, "upgrade-to-writer.html", context={"page_title": "Become a Writer"})
 
 
+@login_required
+def page_client_completed_tasks(request):
+    owner = request.user.email
+    tasks_qs = Tasks.objects.filter(t_status='complete', t_owner=owner)
+    return render(request, "client-completed-tasks.html", context={"tasks": tasks_qs,
+                                                                   "page_title": "My Complete Tasks"})
+
+
+@login_required
+def page_client_revision_tasks(request):
+    owner = request.user.email
+    tasks_qs = Tasks.objects.filter(t_status='clientwriterreturned', t_owner=owner)
+    return render(request, "client-revision-tasks.html", context={"tasks": tasks_qs, "page_title": "My Revision Tasks"})
+
+
+@login_required
+def page_client_pending_tasks(request):
+    owner = request.user.email
+    tasks_qs = Tasks.objects.filter(t_status='clientsubmitted', t_owner=owner)
+    return render(request, "client-pending-tasks.html", context={"tasks": tasks_qs, "page_title": "My Pending Tasks"})
+
+
+@login_required
 def page_writer_pending_tasks(request):
     owner = request.user.email
-    tasks_qs = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'),
+    tasks_qs = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted')
+                                    | Q(t_status='adminwriterapproved'),
                                     t_allocated_to=owner)
     return render(request, "my-pending-tasks.html", context={"tasks": tasks_qs, "page_title": "My Pending Tasks"})
 
 
+@login_required
 def page_writer_complete_tasks(request):
     owner = request.user.email
     tasks_qs = Tasks.objects.filter(t_status='complete', t_allocated_to=owner)
     return render(request, "my-complete-tasks.html", context={"tasks": tasks_qs, "page_title": "My Complete Tasks"})
 
 
+@login_required
 def page_my_tasks(request):
     owner = request.user.email
     tasks = list(Tasks.objects.filter(t_status='adminassigned', t_allocated_to=owner))
@@ -484,12 +533,14 @@ def page_my_tasks(request):
     return render(request, "my-tasks.html", context={"tasks": tasks, "page_title": "My Allocated Tasks"})
 
 
+@login_required
 def page_writer_wallet(request):
     email = request.user.email
     transactions_qs = PaymentTransactions.objects.filter(p_email=email).order_by('-c_datetime')
     return render(request, "writer-wallet.html", context={"page_title": "My Wallet", "transactions": transactions_qs})
 
 
+@login_required
 def page_revision_tasks(request):
     try:
         email = request.user.email
@@ -500,11 +551,13 @@ def page_revision_tasks(request):
     return render(request, "revision-tasks.html", context={"revisions": revisions, "page_title": page_title})
 
 
+@login_required
 def page_available_tasks(request):
     tasks = list(Tasks.objects.filter(t_status='clientsubmitted'))
     return render(request, "available-tasks.html", context={"tasks": tasks, "page_title": "Available Tasks"})
 
 
+@login_required
 def page_my_submitted_projects(request):
     email = request.user.email
     submitted = Projects.objects.filter(p_status='clientsubmitted', p_owner=email)
@@ -512,30 +565,35 @@ def page_my_submitted_projects(request):
                                                                                                         "Projects"})
 
 
+@login_required
 def page_my_draft_projects(request):
     email = request.user.email
     drafts = Projects.objects.filter(p_status='clientdraft', p_owner=email)
     return render(request, "my-draft-projects.html", context={"drafts": drafts, "page_title": "Draft Projects"})
 
 
+@login_required
 def page_admin_complete_tasks(request):
     completes = Tasks.objects.filter(t_status='complete')
     return render(request, "admin-complete-tasks.html", context={"completes": completes,
                                                                  "page_title": "Complete Tasks"})
 
 
+@login_required
 def page_admin_revision_tasks(request):
     revisions = Tasks.objects.filter(Q(t_status='adminwriterreturned') | Q(t_status='clientwriterreturned'))
     return render(request, "admin-revision-tasks.html", context={"revisions": revisions,
                                                                  "page_title": "Revision Tasks"})
 
 
+@login_required
 def page_admin_pending_tasks(request):
     pendings = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'))
     return render(request, "admin-pending-tasks.html", context={"pendings": pendings,
                                                                 "page_title": "Pending Tasks"})
 
 
+@login_required
 def page_client_complete_projects(request):
     email = request.user.email
     complete_projects = Projects.objects.filter(p_status='complete', p_owner=email)
@@ -543,6 +601,7 @@ def page_client_complete_projects(request):
                                                                      "page_title": "Complete Projects"})
 
 
+@login_required
 def page_client_pending_projects(request):
     email = request.user.email
     pending_projects = Projects.objects.filter(p_status='pending', p_owner=email)
@@ -550,16 +609,19 @@ def page_client_pending_projects(request):
                                                                     "page_title": "Pending Projects"})
 
 
+@login_required
 def page_my_projects(request):
     response = MyProjects.my_projects_data('', request.user.email)
     return render(request, "my-projects.html", context={"data": response, "page_title": "My Projects"})
 
 
+@login_required
 def project_wizard(request):
     categories = list(Categories.objects.values())
     return render(request, "project-wizard.html", context={"categories": categories, "page_title": "Create a Project"})
 
 
+@login_required
 def add_task(request, project_code):
     try:
         project_obj = Projects.objects.get(p_code=project_code)
@@ -573,6 +635,7 @@ def add_task(request, project_code):
                                                                    + ") project", "project_code": project_code})
 
 
+@login_required
 def create_project(request):
     categories = list(Categories.objects.values())
     return render(request, "create-project.html", context={"categories": categories, "page_title": "Create a Project"})
@@ -587,6 +650,7 @@ def home(request):
     return render(request, "index.html", {})
 
 
+@login_required
 def admin_dashboard(request):
     email = request.user.email
     non_paid_tasks_qs = Tasks.objects.filter(t_status='complete', t_paid='no')
@@ -615,10 +679,37 @@ def admin_dashboard(request):
                                                     "page_title": "Admin Dashboard"})
 
 
+@login_required
 def client_dashboard(request):
-    return render(request, "client-dashboard.html", {})
+    email = request.user.email
+
+    drafts_count = Projects.objects.filter(p_status='clientdraft', p_owner=email).count()
+    if not drafts_count:
+        drafts_count = '0'
+
+    wip_count = Tasks.objects.filter(t_status='clientsubmitted', t_owner=email).count()
+    if not wip_count:
+        wip_count = '0'
+
+    revision_count = Tasks.objects.filter(t_status='clientwriterreturned', t_owner=email).count()
+    if not revision_count:
+        revision_count = '0'
+
+    complete_count = Tasks.objects.filter(t_status='complete', t_owner=email).count()
+    if not complete_count:
+        complete_count = '0'
+
+    pending_qs = Tasks.objects.filter(t_status='clientsubmitted', t_owner=email)
+    return render(request, "client-dashboard.html", context={
+        "drafts_count": drafts_count,
+        "wip_count": wip_count,
+        "revision_count": revision_count,
+        "complete_count": complete_count,
+        "pendings": pending_qs,
+        "page_title": "Dashboard"})
 
 
+@login_required
 def writer_dashboard(request):
     email = request.user.email
     available_tasks_qs = Tasks.objects.filter(t_status='clientsubmitted')
@@ -627,7 +718,8 @@ def writer_dashboard(request):
     if not drafts_count:
         drafts_count = '0'
 
-    wip_count = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted'),
+    wip_count = Tasks.objects.filter(Q(t_status='writersubmitted') | Q(t_status='writerresubmitted')
+                                     | Q(t_status='adminwriterapproved'),
                                      t_allocated_to=email).count()
     if not wip_count:
         wip_count = '0'
@@ -654,6 +746,7 @@ def writer_dashboard(request):
                                                              "page_title": "Writer Dashboard"})
 
 
+@login_required
 def dashboard(request):
     email = request.user.email
     available_tasks_qs = Tasks.objects.filter(t_status='clientsubmitted')
@@ -689,6 +782,7 @@ def dashboard(request):
                                                       "page_title": "Dashboard"})
 
 
+@login_required
 def page_my_profile(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -718,6 +812,7 @@ def password_change_success(request):
     return render(request, "password-change-success.html", context={"page_title": "Password Change Successful!"})
 
 
+@login_required
 def payment_complete(request):
     body = json.loads(request.body)
     project_code = body['project_code']
@@ -729,6 +824,7 @@ def payment_complete(request):
     return render(request, "payment-complete.html", {})
 
 
+@login_required
 def checkout_page(request, project_code):
     try:
         project_obj = Projects.objects.get(p_code=project_code)
@@ -739,6 +835,31 @@ def checkout_page(request, project_code):
         project_title = "Project not found!"
     return render(request, "checkout.html", context={"project_title": project_title, "project_cost": project_cost,
                                                      "page_title": "Checkout", "project_code": project_code})
+
+
+@login_required
+def page_admin_config(request):
+    try:
+        configs_exists = Configs.objects.filter(~Q(buffer_in_hours=''), ~Q(words_per_hour='')).exists()
+
+        if configs_exists:
+            configs_qs = Configs.objects.filter(~Q(buffer_in_hours=''), ~Q(words_per_hour='')).first()
+            buffer_in_hours = configs_qs.buffer_in_hours
+            words_per_hour = configs_qs.words_per_hour
+        else:
+            buffer_in_hours = ''
+            words_per_hour = ''
+    except Exception as e:
+        buffer_in_hours = ''
+        words_per_hour = ''
+    return render(request, "admin-config.html", context={"buffer_in_hours": buffer_in_hours,
+                                                         "words_per_hour": words_per_hour,
+                                                         "page_title": "System Configuration"})
+
+
+@login_required
+def topup_credit(request):
+    return render(request, "topup-credit.html", context={"page_title": "Topup Credit"})
 
 
 def login_page(request):

@@ -15,7 +15,7 @@ $().ready(function() {
 
             var csrftoken = readCookie('csrftoken');
             var dataString =  'language=' + preferred_language
-            + '&article=' + application_article
+            + '&article=' + encodeURIComponent(application_article)
             $.ajax({
                     url: '/writersapp/save-writer-application/',
                     type: 'post',

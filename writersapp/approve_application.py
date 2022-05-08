@@ -25,6 +25,7 @@ class ApproveApplication:
             user_obj = CustomUser.objects.get(email=email)
             user_obj.preferred_language = language
             user_obj.userrole = '4'
+            user_obj.is_active = True
             user_obj.save()
 
             url = EMAIL_URL

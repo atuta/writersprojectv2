@@ -71,7 +71,7 @@ $(document).on('click', '#btn-edit-task', function( event ) {
             var csrftoken = readCookie('csrftoken');
             var dataString =  'task_code=' + task_code + '&task_title=' + task_title + '&word_count=' + word_count
              + '&word_count_description=' + word_count_description + '&keywords=' + keywords + '&keyword_repetition=' + keyword_repetition
-              + '&task_instructions=' + task_instructions + '&doc=' + doc + '&writer_level='
+              + '&task_instructions=' + encodeURIComponent(task_instructions) + '&doc=' + doc + '&writer_level='
                 + writer_level + '&extra_proofreading=' + extra_proofreading
                 + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers + '&deadline=' + encodeURIComponent(deadline);
             $.ajax({

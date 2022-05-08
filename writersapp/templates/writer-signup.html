@@ -21,20 +21,20 @@
                   <!--<span class="d-none d-lg-block">Content Lancers</span>-->
                 </a>
               </div><!-- End Logo -->
-
-              <div class="card mb-3">
+            <div class="col-md-12">
+              <div id="writer-signup-card" class="card mb-3">
 
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Creat an Account</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Creat a Writer Account</h5>
                     <p class="text-center small">Enter your details</p>
                   </div>
 
-                  <form id="frm-create-account" class="row g-3 needs-validation" action="#" method="post" novalidate>
+                  <form id="frm-create-writer-account" class="row g-3 needs-validation" action="#" method="post" novalidate>
                   {% csrf_token %}
 
-                    <div id="writer-signup-first" class="row">
+                    <div id="writer-signup-first">
 
                     <div class="col-md-12">
                       <div class="form-floating">
@@ -94,7 +94,7 @@
 
 
 
-<div style="display: none; " id="writer-signup-second" class="row">
+<div style="display: none; " id="writer-signup-second">
                     <div class="col-md-12 mt-2">
                   <div class="form-floating">
                     <select class="form-select" id="preferred-language" aria-label="State">
@@ -139,6 +139,14 @@
 
                 </div>
               </div>
+            </div>
+
+                <div style="display: none;" id="writer-signup-success" class="alert alert-success fade show" role="alert">
+                <h4 class="alert-heading">Application Successful!</h4><hr>
+                <p class="mb-0">Your application to become a writer was successful. You will recieve an email notifying you the application status.</p>
+                <hr>
+                <div><a href="/">Back to main Website</a></div>
+                </div>
 
              {% include "credits.html" %}
 

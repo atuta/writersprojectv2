@@ -6,6 +6,7 @@
         <!-- Left side columns -->
 <div class="col-lg-12">
     {% if user.userrole == '3'  %}
+    {% if tasks %}
 {% for task in tasks %}
           <div id="card-{{ task.task_code }}" class="card">
             <div class="card-body">
@@ -28,6 +29,12 @@
             </div>
           </div><!-- End Card with header and footer -->
 {% endfor %}
+{% else %}
+<div class="alert alert-primary fade show" role="alert">
+<h4 class="alert-heading">No tasks found!</h4><hr>
+<p class="mb-0">There are no tasks from the admin at the moment</p>
+</div>
+{% endif %}
     {% else %}
     <div>You are not permitted to access this page</div>
     {% endif %}
