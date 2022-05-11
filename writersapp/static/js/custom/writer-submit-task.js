@@ -17,7 +17,7 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 //console.log(status);
+						 //console.log(data);
 						 if(status === 'success'){
                             swal({
                                 title: "Success!",
@@ -27,12 +27,35 @@ $().ready(function() {
 
                             $('#card-' + task_code).hide();
 						 }else{
+						 if(real_data.message === 'past_deadline'){
+						     swal({
+                                title: "Failed!",
+                                text: "You cannot submit this task. It is past deadline",
+                                icon: "error"
+                                });
+						 }else if(real_data.message === 'too_few_words'){
+						    swal({
+                                title: "Failed!",
+                                text: "Your article has less than the required words. If you just added some more text ensure that you save it before submitting.",
+                                icon: "error"
+                                });
+						 }
+						 else if(real_data.message === 'too_many_words'){
+						    swal({
+                                title: "Failed!",
+                                text: "Your article has more than the required words",
+                                icon: "error"
+                                });
+						 }
+						 else{
+
                              swal({
                                 title: "Failed!",
                                 text: "There seems to be a technical error. Try again later",
                                 icon: "error"
                                 });
                              }
+                         }
 				 }
 				 });
 

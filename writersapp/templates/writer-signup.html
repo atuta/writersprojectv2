@@ -119,7 +119,7 @@
                 </div>
 
                 <div class="col-md-12 mt-2">
-                <div style="margin-bottom: 10px;">Write a short essay about why you think you will make a good writer. <br>
+                <div style="margin-bottom: 10px;">{{ article_title }}. <br>
                 Limit this to 850 words.</div>
                 <textarea id="application-article" class="tinymce-editor"></textarea>
                 </div>
@@ -128,6 +128,7 @@
                 <p class="small mb-0">Do you have an account? <a href="{% url 'login' %}">Login</a></p>
                 </div>
                 <div class="col-12 mt-2">
+                    <input id="userrole" type="hidden" value="4">
                 <button class="btn btn-secondary w-100" type="submit">Sign Up</button>
                 </div>
 </div>

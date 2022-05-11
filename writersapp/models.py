@@ -55,9 +55,11 @@ class CustomUser(AbstractBaseUser):
     last_name = models.CharField(max_length=120, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_verified = models.CharField(max_length=10, default="no", null=True)
+    otp_string = models.CharField(max_length=120, null=True)
     c_wallet_balance = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     date_joined = models.DateTimeField(verbose_name="Date Joined", auto_now_add=True)
-    preferred_language = models.CharField(max_length=100, null=True)
+    preferred_language = models.CharField(max_length=100, default='EN-US', blank=True)
     email = models.EmailField(verbose_name="Email address", max_length=100, unique=True)
     phone = models.CharField(verbose_name="Phone", max_length=20)
     country = models.CharField(verbose_name="Country code without the plus sign", max_length=100)
@@ -93,6 +95,7 @@ class Configs(models.Model):
     c_id = models.AutoField(primary_key=True)
     words_per_hour = models.CharField(max_length=50, blank=True)
     buffer_in_hours = models.CharField(max_length=50, blank=True)
+    signup_article_title = models.TextField(blank=True)
     c_datetime = models.DateTimeField(auto_now=True, null=True)
 
 
@@ -116,6 +119,7 @@ class ActiveTasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_code = models.CharField(max_length=70, blank=True)
     t_article = models.TextField(blank=True)
+    t_article_word_count = models.TextField(max_length=20, blank=True)
     t_writer_reward = models.DecimalField(max_digits=10, decimal_places=5, default=0, blank=True)
     t_author = models.CharField(max_length=100, blank=True)
     t_status = models.CharField(max_length=50, blank=True, default='writerdraft')
@@ -168,7 +172,8 @@ class Tasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_p_code = models.CharField(max_length=70, blank=True)
     t_task_code = models.CharField(max_length=70, blank=True)
-    t_title = models.CharField(max_length=200, blank=True)
+    t_title = models.CharField(max_length=500, blank=True)
+    t_project_category = models.CharField(max_length=100, blank=True)
     t_word_count = models.CharField(max_length=100, blank=True)
     t_wc_description = models.CharField(max_length=100, blank=True)
     t_keywords = models.CharField(max_length=500, blank=True)
@@ -234,6 +239,16 @@ class Posts(models.Model):
 
     class Meta:
         ordering = ['p_id']
+
+
+class EmailTemplates(models.Model):
+    e_id = models.AutoField(primary_key=True)
+    e_cid = models.CharField(max_length=10, blank=True)
+    e_category = models.CharField(max_length=10, blank=True)
+    e_mail = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['e_id']
 
 
 class Articles(models.Model):

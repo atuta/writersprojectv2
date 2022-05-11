@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from .reject_application import RejectApplication
+from .save_email_template import SaveEmailTemplate
 from .approve_application import ApproveApplication
 from .pick_task import PickTask
 from .client_writer_reject import ClientWriterReject
@@ -37,9 +38,11 @@ from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
+from .update_user_status import UpdateUserStatus
+from .create_admin import CreateAdmin
 from .create_account import CreateCustomUser
 from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, \
-    CustomUser, PaymentTransactions, Configs
+    CustomUser, PaymentTransactions, Configs, EmailTemplates
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -145,9 +148,10 @@ def view_asign_task(request):
 def view_log_task(request):
     task_code = request.POST.get("task_code")
     article = request.POST.get("article")
+    words = request.POST.get("words")
     author = request.user.email
 
-    response = LogTask.log_task('', task_code, article, author)
+    response = LogTask.log_task('', task_code, article, words, author)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -198,7 +202,8 @@ def view_admin_writer_reject(request):
 @csrf_exempt
 def view_admin_approve_task(request):
     task_code = request.POST.get("task_code")
-    response = AdminApproveTask.admin_approve_task('', task_code)
+    article = request.POST.get("article")
+    response = AdminApproveTask.admin_approve_task('', task_code, article)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -216,6 +221,16 @@ def view_submit_project(request):
     project_code = request.POST.get("project_code")
 
     response = SubmitProject.submit_project('', project_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_update_user_status(request):
+    email = request.POST.get("email")
+    status = request.POST.get("status")
+
+    response = UpdateUserStatus.update_user_status('', email, status)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -315,8 +330,9 @@ def view_accept_admin_approved_task(request):
 def view_save_admin_settings(request):
     words_per_hour = request.POST.get("words_per_hour")
     buffer_in_hours = request.POST.get("buffer_in_hours")
+    signup_article_title = request.POST.get("signup_article_title")
 
-    response = SaveAdminSettings.save_admin_settings('', words_per_hour, buffer_in_hours)
+    response = SaveAdminSettings.save_admin_settings('', words_per_hour, buffer_in_hours, signup_article_title)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -352,6 +368,19 @@ def view_custom_login(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_create_admin(request):
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    phone = request.POST.get("phone")
+    email = request.POST.get("email")
+    country = request.POST.get("country")
+
+    response = CreateAdmin.create_admin('', first_name, last_name, phone, email, country)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_create_account(request):
     first_name = request.POST.get("first_name")
     last_name = request.POST.get("last_name")
@@ -363,16 +392,19 @@ def view_create_account(request):
 
     article = request.POST.get("article")
     user_exists = CustomUser.objects.filter(email=email).exists()
+    language = request.POST.get("language")
+    if not language:
+        language = 'EN-US'
     if userrole == '4' and article != '' and not user_exists:
-        print("correct")
-        language = request.POST.get("language")
-        # email, article, country, first_name, last_name, language
-        SaveWriterApplication.save_writer_application('', email, article, country, first_name, last_name, language)
+        SaveWriterApplication.save_writer_application('', email, article, country, first_name,
+                                                      last_name, language)
 
-    response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, userrole, password)
+    response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, language,
+                                                   userrole, password)
     return HttpResponse(response, content_type='text/json')
 
 
+@login_required
 def do_task(request, task_code):
     try:
         tasks_obj = Tasks.objects.get(t_task_code=task_code)
@@ -387,6 +419,7 @@ def do_task(request, task_code):
                                                     "page_title": task_title, "article": article})
 
 
+@login_required
 def project_tasks(request, project_code):
     try:
         project_obj = Projects.objects.get(p_code=project_code)
@@ -604,7 +637,7 @@ def page_client_complete_projects(request):
 @login_required
 def page_client_pending_projects(request):
     email = request.user.email
-    pending_projects = Projects.objects.filter(p_status='pending', p_owner=email)
+    pending_projects = Projects.objects.filter(Q(p_status='pending') | Q(p_status='clientsubmitted'), p_owner=email)
     return render(request, "client-pending-projects.html", context={"pending_projects": pending_projects,
                                                                     "page_title": "Pending Projects"})
 
@@ -699,7 +732,7 @@ def client_dashboard(request):
     if not complete_count:
         complete_count = '0'
 
-    pending_qs = Tasks.objects.filter(t_status='clientsubmitted', t_owner=email)
+    pending_qs = Tasks.objects.filter(Q(t_status='clientsubmitted') | Q(t_status='pending'), t_owner=email)
     return render(request, "client-dashboard.html", context={
         "drafts_count": drafts_count,
         "wip_count": wip_count,
@@ -799,8 +832,10 @@ def page_my_profile(request):
 
 
 def writer_signup_page(request):
-    countries = list(Countries.objects.values())
-    return render(request, "writer-signup.html", context={"countries": countries})
+    countries = Countries.objects.values().order_by('c_name')
+    configs_qs = Configs.objects.filter(~Q(buffer_in_hours=''), ~Q(words_per_hour='')).first()
+    article_title = configs_qs.signup_article_title
+    return render(request, "writer-signup.html", context={"countries": countries, "article_title": article_title})
 
 
 def signup_page(request):
@@ -846,15 +881,103 @@ def page_admin_config(request):
             configs_qs = Configs.objects.filter(~Q(buffer_in_hours=''), ~Q(words_per_hour='')).first()
             buffer_in_hours = configs_qs.buffer_in_hours
             words_per_hour = configs_qs.words_per_hour
+            signup_article_title = configs_qs.signup_article_title
         else:
             buffer_in_hours = ''
             words_per_hour = ''
+            signup_article_title = ''
     except Exception as e:
         buffer_in_hours = ''
         words_per_hour = ''
     return render(request, "admin-config.html", context={"buffer_in_hours": buffer_in_hours,
                                                          "words_per_hour": words_per_hour,
+                                                         "signup_article_title": signup_article_title,
                                                          "page_title": "System Configuration"})
+
+
+def view_save_email_template(request):
+    category_id = request.POST.get("category_id")
+    email_body = request.POST.get("email_body")
+
+    response = SaveEmailTemplate.save_email_template('', category_id, email_body)
+    return HttpResponse(response, content_type='text/json')
+
+
+@login_required
+def email_template(request, category):
+    try:
+        email_template_obj = EmailTemplates.objects.get(e_cid=category)
+        email_category = email_template_obj.e_category
+        email_body = email_template_obj.e_mail
+    except EmailTemplates.DoesNotExist:
+        email_category = ''
+        email_body = ''
+
+    if category == '1':
+        page_title = 'Writer Registration'
+    elif category == '2':
+        page_title = 'Writer Acceptance'
+    elif category == '3':
+        page_title = 'Writer Decline'
+    elif category == '4':
+        page_title = 'Client Registration'
+    else:
+        page_title = 'Email Template'
+    return render(request, "email-template.html", context={
+        "email_category_id": category,
+        "email_category": email_category,
+        "email_body": email_body,
+        "page_title": page_title
+    })
+
+
+def view_verify_email(request, otp_string):
+    try:
+        otp_obj = CustomUser.objects.get(otp_string=otp_string)
+        otp_obj.is_verified = 'yes'
+        otp_obj.otp_string = ''
+        otp_obj.save();
+        status = 'success'
+    except Exception as e:
+        status = 'fail'
+
+    return render(request, "verify-email.html", context={
+        "status": status,
+        "page_title": "Email Verification"})
+
+
+@login_required
+def view_admins(request):
+    admins_qs = CustomUser.objects.filter(userrole='2')
+    return render(request, "admins.html", context={"admins": admins_qs, "page_title": "Admins"})
+
+
+@login_required
+def view_clients(request):
+    clients_qs = CustomUser.objects.filter(userrole='3')
+    return render(request, "clients.html", context={"clients": clients_qs, "page_title": "Clients"})
+
+
+@login_required
+def view_writers(request):
+    writers_qs = CustomUser.objects.filter(userrole='4')
+    return render(request, "writers.html", context={"writers": writers_qs, "page_title": "Writers"})
+
+
+@login_required
+def view_add_admin(request):
+    countries = list(Countries.objects.values())
+    return render(request, "add-admin.html", context={"countries": countries,"page_title": "Add Admin"})
+
+
+@login_required
+def page_writer_profile(request, email):
+
+    try:
+        user_obj = CustomUser.objects.get(email=email)
+    except Exception as e:
+        user_qs = ''
+    return render(request, "writer-profile.html", context={"user_details": user_obj, "page_title": "Writer Profile"})
 
 
 @login_required

@@ -18,18 +18,21 @@
             {% if user.is_authenticated %}
             Hi {{ user.first_name }} {{ user.last_name }}!
             {% else %}
-            Hi Writer
+            Hi ContentLancer
             {% endif %}
 
 
             </span>
           </a><!-- End Profile Iamge Icon -->
 
+
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>{{ user.first_name }} {{ user.last_name }}</h6>
               <span>{{ user.email }}</span>
             </li>
+
+             {% if user.is_authenticated %}
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -54,7 +57,6 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            {% endif %}
 
             <li>
               <hr class="dropdown-divider">
@@ -69,13 +71,14 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-        {% if user.is_authenticated %}
+          {% endif %}
             <li>
               <a class="dropdown-item d-flex align-items-center" href="{% url 'login' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Logout</span>
               </a>
             </li>
+
             {% else %}
             <li>
               <a class="dropdown-item d-flex align-items-center" href="{% url 'login' %}">
@@ -87,7 +90,8 @@
                 <span>Sign Up</span>
               </a>
             </li>
-      {% endif %}
+            {% endif %}
+
           </ul><!-- End Profile Dropdown Items -->
         </li><!-- End Profile Nav -->
 

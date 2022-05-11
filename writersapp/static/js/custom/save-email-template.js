@@ -1,26 +1,25 @@
 $().ready(function() {
-   $( "#frm-save-admin-settings" ).submit(function( event ) {
-            var words_per_hour          = $("input#words-per-hour").val();
-            var buffer_in_hours         = $("input#buffer-in-hours").val();
-            var signup_article_title     = $("#signup-article-title").val();
+  $(document).on('click', '#btn-save-email', function(event) {
+            var category_id = $("#email-template-category").val();
+            var email_body  = tinymce.get("email-body").getContent();
 
-            if(words_per_hour === '' || buffer_in_hours === '' || signup_article_title === ''){
+            if(email_body === ''){
                     swal({
                         title: "Missing Fields!",
-                        text: "All fields are required.",
+                        text: "Email body required.",
                         icon: "error"
                         });
                     return false;
             }
 
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'words_per_hour=' + words_per_hour + '&buffer_in_hours=' + buffer_in_hours
-			+ '&signup_article_title=' + encodeURIComponent(signup_article_title);
+			var dataString =  'category_id=' + category_id
+			+ '&email_body=' + encodeURIComponent(email_body);
 
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/save-admin-settings/",
+				url: "/writersapp/save-email-template/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},
@@ -30,8 +29,8 @@ $().ready(function() {
                         var status 	= data.status;
                         if(status === 'success'){
                             swal({
-                                title: "Settings Updated!",
-                                text: "Settings have been updated successfully.",
+                                title: "Email Template Updated!",
+                                text: "Email Template has been updated successfully.",
                                 icon: "success"
                             });
 						 }else{

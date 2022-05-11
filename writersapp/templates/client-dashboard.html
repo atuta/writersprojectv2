@@ -32,7 +32,7 @@
             <div class="col-xxl-3 col-md-6">
               <div class="card info-card customers-card">
                 <div class="card-body">
-                  <h5 class="card-title">Pending</h5>
+                  <h5 class="card-title">Pending Tasks</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -54,7 +54,7 @@
 
               <div class="card info-card customers-card">
                 <div class="card-body">
-                  <h5 class="card-title">Revision</h5>
+                  <h5 class="card-title">Revision Tasks</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -77,7 +77,7 @@
 
               <div class="card info-card revenue-card">
                 <div class="card-body">
-                  <h5 class="card-title">Completed</h5>
+                  <h5 class="card-title">Completed Tasks</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -109,17 +109,17 @@
                   <tr>
                     <th style="width: 40%;" scope="col">Task Title</th>
                     <th scope="col">Words</th>
-                    <th scope="col">Due</th>
-                    <th scope="col">Task Date</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Due Date</th>
                   </tr>
                 </thead>
                 <tbody>
                 {% for task in pendings %}
                   <tr id="tr-{{ task.t_task_code }}">
-                    <td style="width: 40%; vertical-align: bottom;">{{ task.t_title }}</th>
+                    <td style="width: 40%; vertical-align: bottom;">{{ task.t_title }}</td>
                     <td style="vertical-align: bottom;">{{ task.t_word_count }}</td>
-                    <td style="vertical-align: bottom;"><strong>USD {{ task.t_usd_payout|floatformat:2 }}</strong></td>
-                    <td style="vertical-align: bottom;">{{ task.t_datetime }}</td>
+                    <td style="vertical-align: bottom;"><strong>${{ task.t_usd_cost|floatformat:2 }}</strong></td>
+                    <td style="vertical-align: bottom;">{{ task.t_deadline }}</td>
                   </tr>
                 {% endfor %}
                 </tbody>

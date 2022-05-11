@@ -1,45 +1,22 @@
 $().ready(function() {
-   $( "#frm-create-account" ).submit(function( event ) {
+   $( "#frm-create-admin" ).submit(function( event ) {
 
             var first_name          = $("#first-name").val();
             var last_name           = $("#last-name").val();
             var phone               = $("#phone").val();
             var email               = $("#email").val();
-            var userrole            = $("#userrole").val();
             var country             = $("select#country").val();
-            var password            = $("#password").val();
-            var confirm_password    = $("#confirm-password").val();
-
-            if(first_name === '' || last_name === '' || phone === '' || email === ''
-            || country === '' || password === '' || confirm_password === ''){
-
-                    swal({
-                        title: "Missing fields!",
-                        text: "Fill all required fields",
-                        icon: "error"
-                        });
-                    return false;
-            }
-
-            if(password !== confirm_password){
-                    swal({
-                        title: "Password mismatch!",
-                        text: "Check your password and try again",
-                        icon: "error"
-                        });
-                    return false;
-            }
 
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'first_name=' + first_name + '&last_name=' + last_name + '&phone=' + encodeURIComponent(phone)
-			+ '&email=' + email + '&userrole=' + userrole + '&country=' + country + '&password=' + password;
+			+ '&email=' + email + '&country=' + country;
 
 			  // console.log(dataString); return false;
 
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/create-account/",
+				url: "/writersapp/create-admin/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},
@@ -48,14 +25,13 @@ $().ready(function() {
 						 var status 	= data.status;
 						 var real_data   = data.data;
 						 //console.log(data)
-						 if(status === 'success'){
+						  if(status === 'success'){
                             swal({
                                 title: "Account Created!",
-                                text: "Your account has been created successfully",
+                                text: "Admin account has been created successfully",
                                 icon: "success"
                                 });
-                                $('#signup-card').hide();
-                                $('#signup-success').show();
+                                $('#admin-card').hide();
                             return false;
 						 }else{
 						    if(real_data.message === 'user_exists'){
@@ -66,7 +42,7 @@ $().ready(function() {
                                 });
 						    }else{
                                 swal({
-                                    title: "Sign Up Failed!",
+                                    title: "Account Creation Failed!",
                                     text: "Kindly try again later",
                                     icon: "error"
                                     });
@@ -74,6 +50,7 @@ $().ready(function() {
 
                         return false;
 						 }
+
 				 }
 				 });
 

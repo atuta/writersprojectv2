@@ -11,17 +11,22 @@
           <div id="card-{{ task.task_code }}" class="card">
             <div class="card-body">
               <h5 class="card-title">{{ task.task_title }}</h5>
-                <p class="small">Created on {{ task.task_date }}</p>
+                <p class="small"><strong>Deadline:</strong> {{ task.task_deadline }} <> <strong>Client:</strong> {{ task.client_name }}</p>
 
+                <div style="display: none;">
                 <h3>Instructions</h3>
                 <p>{{ task.task_instructions }}</p>
                 <p>Payout: USD  {{ task.payout|floatformat:2 }}</p>
                 <p>Article Words  <strong>{{ task.article_words }}</strong> / Words Requested  <strong>{{ task.words_requested }}</strong></p>
+                </div>
                 <p id="show-article-div-{{ task.task_code }}"><a id="show-article-{{ task.task_code }}" class="show-article" href="#">[Show Article]</a></p>
                 <p id="hide-article-div-{{ task.task_code }}" style="display: none; "><a id="hide-article-{{ task.task_code }}" class="hide-article" href="#">[Hide Article]</a></p>
 
-                <div style="display: none;" id="article-{{ task.task_code }}" class="article show-article">
-                    {{ task.task_article|safe }}
+
+                <div style="display: none;" id="article-{{ task.task_code }}" class="show-article">
+                <textarea id="admin-article-{{ task.task_code }}" class="tinymce-editor">
+                {{ task.task_article|safe }}
+                </textarea>
                 </div>
 
             </div>

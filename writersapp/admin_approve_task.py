@@ -11,12 +11,17 @@ class AdminApproveTask:
     def __init__(self):
         pass
 
-    def admin_approve_task(self, task_code):
+    def admin_approve_task(self, task_code, article):
         try:
             active_task_exists = ActiveTasks.objects.filter(t_code=task_code).exists()
             if active_task_exists:
                 Tasks.objects.filter(t_task_code=task_code).update(t_status='adminwriterapproved')
                 ActiveTasks.objects.filter(t_code=task_code).update(t_status='adminwriterapproved')
+
+                active_task_obj = ActiveTasks.objects.get(t_code=task_code)
+                active_task_obj.t_article = article
+                active_task_obj.save()
+
                 data = {"status": "success", "data": {"message": task_code}}
                 return HttpResponse(json.dumps(data), content_type='text/json')
             else:

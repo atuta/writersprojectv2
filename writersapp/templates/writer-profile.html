@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+<section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+              <img src="{% static 'img/profile-img.jpg' %}" alt="Profile" class="rounded-circle">
+              <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+              <h3>{{ user.email }}</h3>
+              <div class="social-links mt-2">
+                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <H5 class="card-title">{{ user_details.first_name }} {{ user_details.last_name }}
+                {% if user_details.userrole == '4' %}
+                <span class="orange" style="margin-left: 50px;"><i class="bi bi-stars ms-1"></i>{{ user_details.rating_stars }}</span>
+                {% endif %}
+              </H5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Phone</div>
+                    <div class="col-lg-9 col-md-8">{{ user.phone }}</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8">{{ user.email }}</div>
+                  </div>
+
+            </div>
+            <div class="card-footer">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="user-status" checked>
+                <label class="form-check-label" for="user-status">
+                  Active
+                </label>
+                <a href="#"><i class="bi bi-person-x-fill ms-1"></i> Archive User</a>
+                {% if user_details.userrole == '4' %}
+                <span class="orange" style="margin-left: 50px; float: right;"><i class="bi bi-stars ms-1"></i>{{ user_details.rating_stars }}</span>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+{% endblock %}

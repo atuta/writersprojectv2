@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import json
 
 from .config import EMAIL_URL
-from .models import WritersApplications, CustomUser
+from .models import WritersApplications, CustomUser, EmailTemplates
 from django.utils.crypto import get_random_string
 from .costs import *
 import decimal
@@ -28,12 +28,15 @@ class ApproveApplication:
             user_obj.is_active = True
             user_obj.save()
 
+            try:
+                email_template_obj = EmailTemplates.objects.get(e_cid='3')
+                email_template = email_template_obj.e_mail
+            except Exception as e:
+                email_template = ''
+
             url = EMAIL_URL
             data = {'re_subject': 'You application has been approved!',
-                    're_message': 'Hello ' + application_obj.a_first_name + ',<br>'
-                                                         '<p><h2>Welcome to the Writers Community</h2> '
-                                                         '<br>Your application to become a writer has been approved!'
-                                                         '</p>',
+                    're_message': 'Hello ' + application_obj.a_first_name + ',<br>' + email_template,
                     're_to': email}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             requests.post(url, data=json.dumps(data), headers=headers)

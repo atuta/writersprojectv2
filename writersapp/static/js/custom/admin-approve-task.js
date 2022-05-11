@@ -2,11 +2,12 @@ $().ready(function() {
    $(document).on('click', '.admin-approve-task', function(event) {
             var id = this.id;
             var task_code = id.replace("admin-approve-task-", "");
-
+            //console.log(task_code); return false;
+            var article = tinymce.get("admin-article-" + task_code).getContent();
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code;
+			var dataString =  'task_code=' + task_code + '&article=' + encodeURIComponent(article);
 
-			// console.log(task_code); return false;
+            //console.log(dataString); return false;
 
             try{
 			$.ajax({
@@ -19,7 +20,7 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 //console.log(status);
+						 console.log(data);
 						 if(status === 'success'){
                             swal({
                                 title: "Success!",

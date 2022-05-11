@@ -1,4 +1,5 @@
 {% load static %}
+{% if user.is_authenticated %}
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -52,7 +53,7 @@
         </ul>
       </li><!-- End Forms Nav -->
 
-            <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#admin-writers" data-bs-toggle="collapse" href="#">
           <i class="bi bi-journal-text"></i><span>Writers</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -60,6 +61,55 @@
           <li>
             <a href="{% url 'pending-writers-applications' %}">
               <i class="bi bi-circle"></i><span>Pending Writers Approval</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#email-templates" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>Email Templates</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="email-templates" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="/writersapp/email-template/1">
+              <i class="bi bi-circle"></i><span>Writer Registration</span>
+            </a>
+          </li>
+           <li>
+            <a href="/writersapp/email-template/2">
+              <i class="bi bi-circle"></i><span>Writer Acceptance</span>
+            </a>
+          </li>
+           <li>
+            <a href="/writersapp/email-template/3">
+              <i class="bi bi-circle"></i><span>Writer Decline</span>
+            </a>
+          </li>
+           <li>
+            <a href="/writersapp/email-template/4">
+              <i class="bi bi-circle"></i><span>Client Application</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#users" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>System Users</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="users" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+           <li>
+            <a href="{% url 'admins' %}">
+              <i class="bi bi-circle"></i><span>Admins</span>
+            </a>
+          </li>
+            <li>
+            <a href="{% url 'writers' %}">
+              <i class="bi bi-circle"></i><span>Writers</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'clients' %}">
+              <i class="bi bi-circle"></i><span>Clients</span>
             </a>
           </li>
         </ul>
@@ -197,3 +247,4 @@
     </ul>
 
   </aside><!-- End Sidebar-->
+{% endif %}

@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+    <div class="col-lg-12">
+
+<div id="card-{{ data.t_task_code }}" class="card">
+
+<div class="card-body">
+<h5 class="card-title">
+Email Template</button>
+</h5>
+<!-- TinyMCE Editor -->
+<textarea id="email-body" class="tinymce-editor">{{ email_body }}</textarea><!-- End TinyMCE Editor -->
+<div class="card-footer">
+    <input id="email-template-category" type="hidden" value="{{ email_category_id }}">
+    <button id="btn-save-email" type="button" class="btn btn-outline-primary"><i class="bi bi-save me-1"></i> Save Template</button>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

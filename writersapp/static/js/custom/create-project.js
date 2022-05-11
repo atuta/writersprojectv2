@@ -20,7 +20,7 @@ $("#btn-next").css("display", "none");
 
             //title, category, language, description, owner
             var dataString =  'title=' + project_title + '&category=' + project_category + '&language='
-            + project_language + '&description=' + project_description;
+            + project_language + '&description=' + encodeURIComponent(project_description);
             var csrftoken = readCookie('csrftoken');
             $.ajax({
                     url: '/writersapp/save-project/',

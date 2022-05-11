@@ -6,8 +6,8 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Writers</h5>
-
+              <h5 class="card-title">Admins</h5>
+                <a href="{% url 'add-admin' %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-person-plus-fill me-1"></i> Add New</button></a>
                 <table class="table datatable">
                 <thead>
                   <tr>
@@ -18,12 +18,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                {% for writer in writers %}
+                {% for admin in admins %}
                   <tr>
-                    <td style="width: 40%; vertical-align: bottom;"><a href="{% url 'writer-profile' writer.email %}">{{ writer.first_name }} {{ writer.last_name }}</a></td>
-                    <td style="vertical-align: bottom;">{{ writer.email }}</td>
-                    <td style="vertical-align: bottom;">{{ writer.phone }}</td>
-                    <td style="vertical-align: bottom;">{{ writer.date_joined }}</td>
+                    <td style="width: 40%; vertical-align: bottom;">{{ admin.first_name }} {{ writer.last_name }}</th>
+                    <td style="vertical-align: bottom;">{{ admin.email }}</td>
+                    <td style="vertical-align: bottom;">{{ admin.phone }}</td>
+                    <td style="vertical-align: bottom;">{{ admin.date_joined }}</td>
                   </tr>
                 {% endfor %}
                 </tbody>

@@ -1,12 +1,23 @@
 $().ready(function() {
+
+tinymce.activeEditor.on('KeyUp', function(e) {
+    console.debug("keyup");
+});
+
    $(document).on('click', '#btn-save-do-task', function(event) {
    //$( "#frm-login" ).submit(function( event ) {
             var task_code          = $("input#task-code").val();
             //var article            = $("#article").html();
             var article = tinymce.get("article").getContent();
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code + '&article=' + encodeURIComponent(article);
-            //console.log(article);
+
+			// get word count
+			theEditor = tinymce.activeEditor;
+            wordCount = theEditor.plugins.wordcount.getCount();
+            //console.log(wordCount);
+			var dataString =  'task_code=' + task_code + '&article=' + encodeURIComponent(article) +
+			'&words=' + wordCount;
+
             try{
 			$.ajax({
 				type: "POST",

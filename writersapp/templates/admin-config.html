@@ -16,11 +16,16 @@
                   <label for="words-per-hour" class="form-label">Words Per Hour</label>
                   <input type="number" class="form-control" id="words-per-hour" value="{{ words_per_hour }}">
                 </div>
+
                 <div class="col-12">
                   <label for="buffer-in-hours" class="form-label">Buffer (In Hours)</label>
                   <input type="number" class="form-control" id="buffer-in-hours" value="{{ buffer_in_hours }}">
                 </div>
 
+                <div class="col-12">
+                <label for="signup-article-title" class="form-label">Sign Up Article Title</label>
+                    <textarea class="form-control" id="signup-article-title" rows="7">{{ signup_article_title }}</textarea>
+                </div>
                 <div class="text-left">
                   <hr>
                   <button type="submit" class="btn btn-outline-success">Submit</button>

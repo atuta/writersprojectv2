@@ -9,7 +9,7 @@ class LogTask:
     def __init__(self):
         pass
 
-    def log_task(self, task_code, article, author):
+    def log_task(self, task_code, article, words, author):
         try:
             # task_exists = ActiveTasks.objects.filter(t_code=task_code).exists()
             task_total_cost = task_cost(task_code)
@@ -17,11 +17,13 @@ class LogTask:
             try:
                 active_tasks_obj = ActiveTasks.objects.get(t_code=task_code)
                 active_tasks_obj.t_article = article
+                active_tasks_obj.t_article_word_count = words
                 active_tasks_obj.save()
             except ActiveTasks.DoesNotExist as e:
                 action = ActiveTasks(
                     t_code=task_code,
                     t_article=article,
+                    t_article_word_count=words,
                     t_writer_reward=task_total_cost,
                     t_author=author
                 )
