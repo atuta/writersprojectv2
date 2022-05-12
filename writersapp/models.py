@@ -56,6 +56,7 @@ class CustomUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_verified = models.CharField(max_length=10, default="no", null=True)
+    is_archived = models.CharField(max_length=10, default="no", null=True)
     otp_string = models.CharField(max_length=120, null=True)
     c_wallet_balance = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     date_joined = models.DateTimeField(verbose_name="Date Joined", auto_now_add=True)

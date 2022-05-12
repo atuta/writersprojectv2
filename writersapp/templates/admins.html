@@ -20,7 +20,7 @@
                 <tbody>
                 {% for admin in admins %}
                   <tr>
-                    <td style="width: 40%; vertical-align: bottom;">{{ admin.first_name }} {{ writer.last_name }}</th>
+                    <td style="vertical-align: bottom;"><a href="{% url 'admin-profile' admin.email %}">{{ admin.first_name }} {{ admin.last_name }}</a></th>
                     <td style="vertical-align: bottom;">{{ admin.email }}</td>
                     <td style="vertical-align: bottom;">{{ admin.phone }}</td>
                     <td style="vertical-align: bottom;">{{ admin.date_joined }}</td>

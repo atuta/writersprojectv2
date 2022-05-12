@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Online Users</h5>
+
+                <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for user in online_users %}
+                  <tr>
+                    <td style="vertical-align: bottom;"><span style="font-size: 10px;"><i class="bi bi-circle-fill ms-1 green"></i></span> {{ user }}</td>
+
+                    {% if user.userrole == '2' %}
+                    <td style="vertical-align: bottom;">Admin</td>
+                    {% endif%}
+                    {% if user.userrole == '3' %}
+                    <td style="vertical-align: bottom;">Client</td>
+                    {% endif%}
+                    {% if user.userrole == '4' %}
+                    <td style="vertical-align: bottom;">Writer</td>
+                    {% endif%}
+                    <td style="vertical-align: bottom;">{{ user.email }}</td>
+                    <td style="vertical-align: bottom;"></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+          </div><!-- End Card with header and footer -->
+    </div><!-- End Right side columns -->
+      </div>
+</div>
+{% endblock %}

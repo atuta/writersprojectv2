@@ -38,6 +38,7 @@ from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
 from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
+from .update_user_archive_status import UpdateUserArchiveStatus
 from .update_user_status import UpdateUserStatus
 from .create_admin import CreateAdmin
 from .create_account import CreateCustomUser
@@ -45,6 +46,8 @@ from .models import Categories, Projects, Tasks, ActiveTasks, Countries, Writers
     CustomUser, PaymentTransactions, Configs, EmailTemplates
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
@@ -221,6 +224,16 @@ def view_submit_project(request):
     project_code = request.POST.get("project_code")
 
     response = SubmitProject.submit_project('', project_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_update_user_archive_status(request):
+    email = request.POST.get("email")
+    status = request.POST.get("status")
+
+    response = UpdateUserArchiveStatus.update_user_archive_status('', email, status)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -948,36 +961,70 @@ def view_verify_email(request, otp_string):
 
 @login_required
 def view_admins(request):
-    admins_qs = CustomUser.objects.filter(userrole='2')
+    admins_qs = CustomUser.objects.filter(userrole='2', is_archived='no')
     return render(request, "admins.html", context={"admins": admins_qs, "page_title": "Admins"})
 
 
 @login_required
 def view_clients(request):
-    clients_qs = CustomUser.objects.filter(userrole='3')
+    clients_qs = CustomUser.objects.filter(userrole='3', is_archived='no')
     return render(request, "clients.html", context={"clients": clients_qs, "page_title": "Clients"})
 
 
 @login_required
 def view_writers(request):
-    writers_qs = CustomUser.objects.filter(userrole='4')
+    writers_qs = CustomUser.objects.filter(userrole='4', is_archived='no')
     return render(request, "writers.html", context={"writers": writers_qs, "page_title": "Writers"})
 
 
 @login_required
 def view_add_admin(request):
     countries = list(Countries.objects.values())
-    return render(request, "add-admin.html", context={"countries": countries,"page_title": "Add Admin"})
+    return render(request, "add-admin.html", context={"countries": countries, "page_title": "Add Admin"})
+
+
+@login_required
+def page_admin_profile(request, email):
+    try:
+        user_obj = CustomUser.objects.get(email=email)
+    except Exception as e:
+        user_obj = ''
+    return render(request, "admin-profile.html", context={"user_details": user_obj, "page_title": "Admin Profile"})
+
+
+@login_required
+def page_client_profile(request, email):
+    try:
+        user_obj = CustomUser.objects.get(email=email)
+    except Exception as e:
+        user_obj = ''
+    return render(request, "client-profile.html", context={"user_details": user_obj, "page_title": "Client Profile"})
 
 
 @login_required
 def page_writer_profile(request, email):
-
     try:
         user_obj = CustomUser.objects.get(email=email)
     except Exception as e:
-        user_qs = ''
+        user_obj = ''
     return render(request, "writer-profile.html", context={"user_details": user_obj, "page_title": "Writer Profile"})
+
+
+@login_required
+def view_online_users(request):
+    # Query all non-expired sessions
+    # use timezone.now() instead of datetime.now() in latest versions of Django
+    sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    uid_list = []
+
+    # Build a list of user ids from that query
+    for session in sessions:
+        data = session.get_decoded()
+        uid_list.append(data.get('_auth_user_id', None))
+
+    # Query all logged in users based on id list
+    online_users = CustomUser.objects.filter(id__in=uid_list)
+    return render(request, "online-users.html", context={"online_users": online_users, "page_title": "Online Users"})
 
 
 @login_required

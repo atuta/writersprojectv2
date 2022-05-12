@@ -29,7 +29,7 @@ class ApproveApplication:
             user_obj.save()
 
             try:
-                email_template_obj = EmailTemplates.objects.get(e_cid='3')
+                email_template_obj = EmailTemplates.objects.get(e_cid='2')
                 email_template = email_template_obj.e_mail
             except Exception as e:
                 email_template = ''

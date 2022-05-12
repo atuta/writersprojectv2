@@ -20,7 +20,7 @@
                 <tbody>
                 {% for writer in writers %}
                   <tr>
-                    <td style="width: 40%; vertical-align: bottom;"><a href="{% url 'writer-profile' writer.email %}">{{ writer.first_name }} {{ writer.last_name }}</a></td>
+                    <td style="vertical-align: bottom;"><a href="{% url 'writer-profile' writer.email %}">{{ writer.first_name }} {{ writer.last_name }}</a></td>
                     <td style="vertical-align: bottom;">{{ writer.email }}</td>
                     <td style="vertical-align: bottom;">{{ writer.phone }}</td>
                     <td style="vertical-align: bottom;">{{ writer.date_joined }}</td>

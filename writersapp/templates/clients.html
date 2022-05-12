@@ -20,7 +20,7 @@
                 <tbody>
                 {% for client in clients %}
                   <tr>
-                    <td style="width: 40%; vertical-align: bottom;">{{ client.first_name }} {{ client.last_name }}</th>
+                    <td style="vertical-align: bottom;"><a href="{% url 'client-profile' client.email %}">{{ client.first_name }} {{ client.last_name }}</a></td>
                     <td style="vertical-align: bottom;">{{ client.email }}</td>
                     <td style="vertical-align: bottom;">{{ client.phone }}</td>
                     <td style="vertical-align: bottom;">{{ client.date_joined }}</td>

@@ -3,8 +3,9 @@ from django.urls import path, include
 from . import views
 from . import paypal_view
 
+# app_name = 'writersapp'
 urlpatterns = [
-    path('', views.dashboard, name='home'),
+    # path('', views.dashboard, name='home'),
     path('writers-dashboard', views.dashboard, name='writers-dashboard'),
     path('paypal/', paypal_view.process_payment, name='paypal'),
     path('logout/', views.do_logout, name='logout'),
@@ -82,8 +83,12 @@ urlpatterns = [
     path('verify-email/<str:otp_string>/', views.view_verify_email, name='verify-email'),
     path('email-template/<str:category>/', views.email_template, name='email-template'),
     path('topup-credit/', views.topup_credit, name='topup-credit'),
+    path('update-user-archive-status/', views.view_update_user_archive_status, name='update-user-archive-status'),
     path('update-user-status/', views.view_update_user_status, name='update-user-status'),
     path('add-admin/', views.view_add_admin, name='add-admin'),
+    path('admin-profile/<str:email>/', views.page_admin_profile, name='admin-profile'),
+    path('client-profile/<str:email>/', views.page_client_profile, name='client-profile'),
     path('writer-profile/<str:email>/', views.page_writer_profile, name='writer-profile'),
+    path('online-users/', views.view_online_users, name='online-users'),
     path('create-account/', views.view_create_account, name='create-account'),
 ]
