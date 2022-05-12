@@ -30,8 +30,9 @@
                 <a href="{% url 'project-tasks' project.p_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm me-1"></i> View Tasks</button></a>
                 {% if project.p_status == 'clientdraft'  %}
                 <a href="{% url 'add-task' project.p_code %}"><button type="button" class="btn btn-outline-secondary"><i class="bi bi-folder-plus ms-1"></i> Add a Task</button></a>
-                <a href="{% url 'checkout' project.p_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle ms-1"></i> Submit Project</button></a>
-                <!--<button id="{{ project.p_code }}" type="button" class="btn btn-outline-success submit-project"><i class="bi bi-check-circle ms-1"></i> Submit Project</button>-->
+                <button id="{{ project.p_code }}" type="button" class="btn btn-info submit-project"><i class="bi bi-check-circle ms-1"></i> Wallet Checkout</button>
+                <a href="{% url 'checkout' project.p_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle ms-1"></i> Paypal Checkout</button></a>
+
                 {% endif %}
                 {% endif %}
             </div>

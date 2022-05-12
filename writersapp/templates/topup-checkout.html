@@ -1,0 +1,86 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+<div class="col-lg-6">
+          <div id="card-{{ topup_email }}" class="card">
+            <div class="card-body">
+
+              <h5 class="card-title">Paypal Checkout</h5>
+                {% if topup_amount >= 5 %}
+                <p style="font-size: 30px; font-weight: bold;">${{ topup_amount|floatformat:2 }}</p>
+
+    <div id="paypal-button-container"></div>
+
+      <script src="https://www.paypal.com/sdk/js?client-id=AWHDW_t7Hh39dkOPGNPBfUs0d_LJVSYZ116cW_aJ8_Nk71b8oKxMo50RvEmhygYWG5Ldm3GV92AlpReV&currency=USD"></script>
+
+      <script>
+        paypal.Buttons({
+
+             style: {
+                color:  'blue',
+                shape:  'rect',
+                label:  'pay',
+                height: 40
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: {{ topup_amount }}
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                completeOrder()
+                    swal({
+                            title: "Success!",
+                            text: "Payment received successfully. Your wallet balance has been updated.",
+                            icon: "success",
+                            });
+                });
+            }
+        }).render('#paypal-button-container');
+
+
+        function completeOrder(){
+        var url = "{% url 'topup-complete' %}"
+        var topup_amount = '{{ topup_amount }}'
+        var topup_email = '{{ topup_email }}'
+
+        var csrftoken = readCookie('csrftoken');
+
+        fetch(url,
+        { method: 'POST',
+            headers: {
+            'Content-type': 'application/json',
+            'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({"topup_email": topup_email, "topup_amount": topup_amount})
+            }
+        )
+        }
+    </script>
+{% else %}
+    <div class="alert alert-primary fade show" role="alert">
+    <h4 class="alert-heading">Amount is too little!</h4><hr>
+    <p class="mb-0">The minimum allowed is USD 5.</p>
+    </div>
+{% endif %}
+
+
+            </div>
+          </div><!-- End Card with header and footer -->
+
+
+    </div><!-- End Right side columns -->
+    </div>
+{% endblock %}

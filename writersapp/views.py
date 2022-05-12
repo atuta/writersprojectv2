@@ -18,6 +18,7 @@ from .admin_writer_return import AdminWriterReturn
 from .admin_writer_reject import AdminWriterReject
 from .admin_approve_task import AdminApproveTask
 from .writer_submit_task import WriterSubmitTask
+from .wallet_submit_project import WalletSubmitProject
 from .submit_project import SubmitProject
 from .update_task_status import UpdateTaskStatus
 from .edit_task import EditTask
@@ -36,6 +37,7 @@ from .my_admin_approved_tasks import MyAdminApprovedTasks
 from .my_revisions import MyRevisions
 from .my_drafts import MyDrafts
 from .project_tasks import ProjectTasks
+from .topup_wallet import TopupWallet
 from .pending_writer_applications import PendingWriterApplications
 from .my_projects import MyProjects
 from .update_user_archive_status import UpdateUserArchiveStatus
@@ -215,6 +217,14 @@ def view_admin_approve_task(request):
 def view_writer_submit_task(request):
     task_code = request.POST.get("task_code")
     response = WriterSubmitTask.writer_submit_task('', task_code)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_wallet_submit_project(request):
+    project_code = request.POST.get("project_code")
+    response = WalletSubmitProject.wallet_submit_project('', project_code)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -580,6 +590,13 @@ def page_my_tasks(request):
 
 
 @login_required
+def page_client_wallet(request):
+    email = request.user.email
+    transactions_qs = PaymentTransactions.objects.filter(p_email=email).order_by('-c_datetime')
+    return render(request, "client-wallet.html", context={"page_title": "My Wallet", "transactions": transactions_qs})
+
+
+@login_required
 def page_writer_wallet(request):
     email = request.user.email
     transactions_qs = PaymentTransactions.objects.filter(p_email=email).order_by('-c_datetime')
@@ -861,6 +878,15 @@ def password_change_success(request):
 
 
 @login_required
+def topup_complete(request):
+    body = json.loads(request.body)
+    email = body['topup_email']
+    amount = body['topup_amount']
+    TopupWallet.topup_wallet('', email, amount)
+    return render(request, "topup-complete.html", {})
+
+
+@login_required
 def payment_complete(request):
     body = json.loads(request.body)
     project_code = body['project_code']
@@ -960,6 +986,12 @@ def view_verify_email(request, otp_string):
 
 
 @login_required
+def view_archived_users(request):
+    archived_qs = CustomUser.objects.filter(is_archived='yes')
+    return render(request, "archived-users.html", context={"archives": archived_qs, "page_title": "Archived Users"})
+
+
+@login_required
 def view_admins(request):
     admins_qs = CustomUser.objects.filter(userrole='2', is_archived='no')
     return render(request, "admins.html", context={"admins": admins_qs, "page_title": "Admins"})
@@ -1028,8 +1060,17 @@ def view_online_users(request):
 
 
 @login_required
+def page_topup_checkout(request):
+    topup_amount = float(request.POST.get('topup-amount'))
+    topup_email = str(request.POST.get('topup-email'))
+    # print(topup_amount)
+    return render(request, "topup-checkout.html", context={"topup_amount": topup_amount, "topup_email": topup_email,
+                                                           "page_title": "Topup Wallet"})
+
+
+@login_required
 def topup_credit(request):
-    return render(request, "topup-credit.html", context={"page_title": "Topup Credit"})
+    return render(request, "topup-credit.html", context={"page_title": "Topup Wallet"})
 
 
 def login_page(request):

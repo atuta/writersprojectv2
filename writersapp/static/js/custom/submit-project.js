@@ -8,7 +8,7 @@ $().ready(function() {
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/submit-project/",
+				url: "/writersapp/wallet-submit-project/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},
@@ -34,6 +34,13 @@ $().ready(function() {
                                     icon: "error"
                                     });
 
+                             }
+                             else if(real_data.message === 'insufficient_balance'){
+                              swal({
+                                    title: "Failed!",
+                                    text: "You do not have sufficient credit.",
+                                    icon: "error"
+                                    });
                              }else{
                                  swal({
                                     title: "Failed!",

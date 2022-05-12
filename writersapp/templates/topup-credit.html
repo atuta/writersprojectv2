@@ -1,11 +1,31 @@
 {% extends "index.html" %}
+{% load humanize %}
 {% block content %}
 <div class="row">
-<div class="col-lg-12">
- <div class="alert alert-primary fade show" role="alert">
-<h4 class="alert-heading">Feature Unavailable!</h4><hr>
-<p class="mb-0">This feature will be available soon</p>
-</div>
-</div>
-</div>
+
+        <!-- Left side columns -->
+<div class="col-lg-6">
+          <div class="card">
+
+            <form id="frm-topup-wallet" method="post" action="/writersapp/topup-checkout/">
+            <div class="card-body">
+
+            <h5 class="card-title">Top Up Wallet</h5>
+
+            <div class="col-md-12">
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="topup-amount" name="topup-amount" placeholder="First Name" autocomplete="off" required>
+                  <label for="topup-amount">Amount in USD</label>
+                </div>
+              </div>
+            <input id="topup-email" name="topup-email" type="hidden" value="{{ user.email }}">
+            <button type="submit" class="btn btn-secondary mt-2"><i class="bi bi-check-circle me-1"></i> Proceed</button>
+            </div>
+            </form>
+
+          </div><!-- End Card with header and footer -->
+
+
+    </div><!-- End Right side columns -->
+    </div>
 {% endblock %}

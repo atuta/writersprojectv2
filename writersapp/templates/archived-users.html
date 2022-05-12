@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Archived Users</h5>
+                <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Join Date</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for archive in archives %}
+                  <tr>
+                    <td style="vertical-align: bottom;">{{ archive.first_name }} {{ archive.last_name }}</th>
+                    <td style="vertical-align: bottom;">{{ archive.email }}</td>
+                    <td style="vertical-align: bottom;">{{ archive.phone }}</td>
+                    <td style="vertical-align: bottom;">{{ archive.date_joined }}</td>
+                    <td style="vertical-align: bottom;"><button type="button" id="{{ archive.email }}" class="btn btn-outline-primary restore-user"><i class="bi bi-save me-1"></i> Restore</button></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+          </div><!-- End Card with header and footer -->
+    </div><!-- End Right side columns -->
+      </div>
+</div>
+{% endblock %}

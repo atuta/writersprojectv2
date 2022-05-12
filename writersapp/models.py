@@ -134,6 +134,7 @@ class ActiveTasks(models.Model):
 class PaymentTransactions(models.Model):
     p_id = models.AutoField(primary_key=True)
     p_taskcode = models.CharField(max_length=70, blank=True)
+    p_projectcode = models.CharField(max_length=70, blank=True)
     p_email = models.CharField(max_length=100, blank=True)
     p_transid = models.CharField(max_length=100, blank=True)
     c_usd_amount = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
