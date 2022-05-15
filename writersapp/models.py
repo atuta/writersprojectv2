@@ -56,6 +56,7 @@ class CustomUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_verified = models.CharField(max_length=10, default="no", null=True)
+    writer_article = models.CharField(max_length=10, default="no", null=True)
     is_archived = models.CharField(max_length=10, default="no", null=True)
     otp_string = models.CharField(max_length=120, null=True)
     c_wallet_balance = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
@@ -116,6 +117,21 @@ class Countries(models.Model):
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
 
+class AppraisalActiveTasks(models.Model):
+    t_id = models.AutoField(primary_key=True)
+    t_code = models.CharField(max_length=70, blank=True)
+    t_article = models.TextField(blank=True)
+    t_article_word_count = models.TextField(max_length=20, blank=True)
+    t_writer_reward = models.DecimalField(max_digits=10, decimal_places=5, default=0, blank=True)
+    t_author = models.CharField(max_length=100, blank=True)
+    t_status = models.CharField(max_length=50, blank=True, default='writerdraft')
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    # statuses: draft,submitted, inreview, approved, returned, disapproved
+    class Meta:
+        ordering = ['t_id']
+
+
 class ActiveTasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_code = models.CharField(max_length=70, blank=True)
@@ -127,6 +143,59 @@ class ActiveTasks(models.Model):
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     # statuses: draft,submitted, inreview, approved, returned, disapproved
+    class Meta:
+        ordering = ['t_id']
+
+
+class ApprisalTasks(models.Model):
+    t_id = models.AutoField(primary_key=True)
+    t_task_code = models.CharField(max_length=70, blank=True)
+    t_title = models.CharField(max_length=500, blank=True)
+    t_task_category = models.CharField(max_length=100, blank=True)
+    t_word_count = models.CharField(max_length=100, blank=True)
+    t_wc_description = models.CharField(max_length=100, blank=True)
+    t_keywords = models.CharField(max_length=500, blank=True)
+    t_keyword_repetition = models.CharField(max_length=20, blank=True)
+    t_instructions = models.TextField(blank=True)
+    t_doc = models.CharField(max_length=100, blank=True)
+    t_status = models.CharField(max_length=50, blank=True, default='clientdraft')
+    t_remarks = models.TextField(blank=True)
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['t_id']
+
+
+class Tasks(models.Model):
+    t_id = models.AutoField(primary_key=True)
+    t_p_code = models.CharField(max_length=70, blank=True)
+    t_task_code = models.CharField(max_length=70, blank=True)
+    t_title = models.CharField(max_length=500, blank=True)
+    t_project_category = models.CharField(max_length=100, blank=True)
+    t_word_count = models.CharField(max_length=100, blank=True)
+    t_wc_description = models.CharField(max_length=100, blank=True)
+    t_keywords = models.CharField(max_length=500, blank=True)
+    t_keyword_repetition = models.CharField(max_length=20, blank=True)
+    t_instructions = models.TextField(blank=True)
+    t_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_paid = models.CharField(max_length=10, default='no', blank=True)
+    t_doc = models.CharField(max_length=100, blank=True)
+    p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
+    p_extra_proofreading = models.CharField(max_length=20, blank=True, default='no')
+    p_priority_order = models.CharField(max_length=20, blank=True, default='no')
+    p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
+    t_status = models.CharField(max_length=50, blank=True, default='clientdraft')
+    t_remarks = models.TextField(blank=True)
+    t_stars = models.CharField(max_length=10, blank=True)
+    t_owner = models.CharField(max_length=100, blank=True)
+    t_owner_names = models.CharField(max_length=150, blank=True)
+    t_allocated_to = models.CharField(max_length=100, blank=True)
+    t_urgent = models.CharField(max_length=10, blank=True)
+    t_deadline = models.CharField(max_length=50, blank=True)
+    t_writer_deadline = models.CharField(max_length=50, blank=True)
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
     class Meta:
         ordering = ['t_id']
 
@@ -168,40 +237,6 @@ class ProjectOptions(models.Model):
 
     class Meta:
         ordering = ['p_id']
-
-
-class Tasks(models.Model):
-    t_id = models.AutoField(primary_key=True)
-    t_p_code = models.CharField(max_length=70, blank=True)
-    t_task_code = models.CharField(max_length=70, blank=True)
-    t_title = models.CharField(max_length=500, blank=True)
-    t_project_category = models.CharField(max_length=100, blank=True)
-    t_word_count = models.CharField(max_length=100, blank=True)
-    t_wc_description = models.CharField(max_length=100, blank=True)
-    t_keywords = models.CharField(max_length=500, blank=True)
-    t_keyword_repetition = models.CharField(max_length=20, blank=True)
-    t_instructions = models.TextField(blank=True)
-    t_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
-    t_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
-    t_paid = models.CharField(max_length=10, default='no', blank=True)
-    t_doc = models.CharField(max_length=100, blank=True)
-    p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
-    p_extra_proofreading = models.CharField(max_length=20, blank=True, default='no')
-    p_priority_order = models.CharField(max_length=20, blank=True, default='no')
-    p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
-    t_status = models.CharField(max_length=50, blank=True, default='clientdraft')
-    t_remarks = models.TextField(blank=True)
-    t_stars = models.CharField(max_length=10, blank=True)
-    t_owner = models.CharField(max_length=100, blank=True)
-    t_owner_names = models.CharField(max_length=150, blank=True)
-    t_allocated_to = models.CharField(max_length=100, blank=True)
-    t_urgent = models.CharField(max_length=10, blank=True)
-    t_deadline = models.CharField(max_length=50, blank=True)
-    t_writer_deadline = models.CharField(max_length=50, blank=True)
-    t_datetime = models.DateTimeField(auto_now=True, null=True)
-
-    class Meta:
-        ordering = ['t_id']
 
 
 class Projects(models.Model):
@@ -262,6 +297,38 @@ class Articles(models.Model):
 
     class Meta:
         ordering = ['a_id']
+
+
+class BlacklistedEmails(models.Model):
+    b_id = models.AutoField(primary_key=True)
+    b_email = models.CharField(max_length=70, blank=True)
+    m_from_name = models.CharField(max_length=150, blank=True)
+    m_to_email = models.CharField(max_length=70, blank=True)
+    m_to_name = models.CharField(max_length=150, blank=True)
+    m_subject = models.CharField(max_length=200, blank=True)
+    m_body = models.TextField(blank=True)
+    m_read = models.CharField(max_length=10, blank=True, default='no')
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    # statuses: draft,submitted, inreview, approved, returned, disapproved
+    class Meta:
+        ordering = ['b_id']
+
+
+class Messages(models.Model):
+    m_id = models.AutoField(primary_key=True)
+    m_from_email = models.CharField(max_length=70, blank=True)
+    m_from_name = models.CharField(max_length=150, blank=True)
+    m_to_email = models.CharField(max_length=70, blank=True)
+    m_to_name = models.CharField(max_length=150, blank=True)
+    m_subject = models.CharField(max_length=200, blank=True)
+    m_body = models.TextField(blank=True)
+    m_read = models.CharField(max_length=10, blank=True, default='no')
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    # statuses: draft,submitted, inreview, approved, returned, disapproved
+    class Meta:
+        ordering = ['m_id']
 
 
 class Support(models.Model):

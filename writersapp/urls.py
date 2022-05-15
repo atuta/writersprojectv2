@@ -5,8 +5,9 @@ from . import paypal_view
 
 # app_name = 'writersapp'
 urlpatterns = [
-    # path('', views.dashboard, name='home'),
+    path('', views.dashboard, name='home'),
     path('writers-dashboard', views.dashboard, name='writers-dashboard'),
+    path('send-message/', views.view_send_message, name='send-message'),
     path('paypal/', paypal_view.process_payment, name='paypal'),
     path('logout/', views.do_logout, name='logout'),
     path('do-task/<str:task_code>/', views.do_task, name='do-task'),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('save-project-options/', views.view_save_project_options, name='save-project-options'),
     path('upload-file/', views.upload_files, name='upload-file'),
     path('page-edit-task/<str:task_code>/', views.page_edit_task, name='page-edit-task'),
+    path('save-appraisal-task/', views.view_save_appraisal_task, name='save-appraisal-task'),
     path('save-task/', views.view_save_task, name='save-task'),
     path('assign-task/', views.view_asign_task, name='assign-task'),
     path('log-task/', views.view_log_task, name='log-task'),
@@ -73,8 +75,10 @@ urlpatterns = [
     path('password-change-success/', views.password_change_success, name='password-change-success'),
     path('writer-signup/', views.writer_signup_page, name='writer-signup'),
     path('signup/', views.signup_page, name='signup'),
+    path('reset-password/', views.reset_password_page, name='reset-password'),
     path('login/', views.login_page, name='login'),
     path('custom-login/', views.view_custom_login, name='custom-login'),
+    path('writer-appraisal-task/', views.writer_appraisal_task_page, name='writer-appraisal-task'),
     path('reject-application/', views.view_reject_application, name='reject-application'),
     path('approve-application/', views.view_approve_application, name='approve-application'),
     path('upgrade-to-writer/', views.upgrade_to_writer, name='upgrade-to-writer'),
@@ -95,5 +99,7 @@ urlpatterns = [
     path('client-profile/<str:email>/', views.page_client_profile, name='client-profile'),
     path('writer-profile/<str:email>/', views.page_writer_profile, name='writer-profile'),
     path('online-users/', views.view_online_users, name='online-users'),
+    path('reset-password-api/', views.view_reset_password, name='reset-password-api'),
+    path('send-password-reset-code/', views.view_send_password_reset_code, name='send-password-reset-code'),
     path('create-account/', views.view_create_account, name='create-account'),
 ]

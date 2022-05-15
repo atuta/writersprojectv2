@@ -1,0 +1,28 @@
+<!-- Disabled Backdrop Modal -->
+<div class="modal fade" id="modal-message" tabindex="-1" data-bs-backdrop="false">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Send To: <span id="send-to-email-display"></span></h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+    <div class="col-md-12">
+    <div class="form-floating">
+    <input style="border-botton: 1px;" type="text" class="form-control" id="message-subject" placeholder="Subject" maxlength="180" autocomplete="off" autofocus>
+    <label for="message-subject">Subject</label>
+    </div>
+    </div>
+
+<div style="margin-bottom: 10px;" class="col-md-12">
+<textarea style="height: 120px;" class="form-control mt-3" placeholder="Message..." id="message-body" name="message-body"></textarea>
+</div>
+    </div>
+    <div class="modal-footer">
+      <input id="to-email" value="" type="hidden">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-success btn-send-message"><i class="bi bi-box-arrow-in-right ms-1"></i> Send</button>
+    </div>
+  </div>
+</div>
+</div><!-- End Disabled Backdrop Modal-->

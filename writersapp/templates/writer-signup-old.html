@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  {% include "head.html" %}
+</head>
+
+<body>
+<div style="display: none;" class="loading">Loading&#8230;</div>
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="/cl/" class="logo d-flex align-items-center w-auto">
+                  <img src="{% static 'img/logo.png' %}" alt="">
+                  <!--<span class="d-none d-lg-block">Content Lancers</span>-->
+                </a>
+              </div><!-- End Logo -->
+
+
+
+
+ <form id="frm-create-writer-account" class="row g-3 needs-validation" action="#" method="post" novalidate>
+            <div class="col-md-12">
+            <div id="writer-signup-card" class="card">
+<div class="card-body">
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Creat a Writer Account</h5>
+                    <p class="text-center small">Enter your details</p>
+                  </div>
+
+
+                  {% csrf_token %}
+
+                    <div id="writer-signup-first">
+
+                    <div class="col-md-12">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="first-name" placeholder="First Name" autocomplete="off">
+                        <label for="first-name">First Name</label>
+                      </div>
+                    </div>
+
+                  <div class="col-md-12 mt-2">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="last-name" placeholder="Last Name" autocomplete="off">
+                      <label for="last-name">Last Name</label>
+                    </div>
+                  </div>
+                    <div class="col-md-12 mt-2">
+                  <div class="form-floating">
+                    <select class="form-select" id="country" aria-label="State">
+                      <option value="" selected>Choose Country...</option>
+                      {% for country in countries %}
+                      <option value="{{ country.c_pcode }}">{{ country.c_name }}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="country">Country</label>
+                  </div>
+
+                </div>
+                  <div class="col-md-12 mt-2">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="phone" placeholder="Phone" autocomplete="off">
+                      <label for="phone">Phone</label>
+                    </div>
+                  </div>
+                    <div class="col-md-12 mt-2">
+                    <div class="form-floating">
+                      <input type="email" class="form-control" id="email" placeholder="Email" autocomplete="off">
+                      <label for="phone">Email</label>
+                    </div>
+                      <hr>
+                  </div>
+
+                    <div class="col-md-12 mt-2">
+                    <div class="form-floating">
+                      <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
+                      <label for="password">Password</label>
+                    </div>
+                  </div>
+                    <div class="col-md-12 mt-2">
+                    <div class="form-floating">
+                      <input type="password" class="form-control" id="confirm-password" placeholder="Confirm Password" autocomplete="off">
+                      <label for="confirm-password">Confirm Password</label>
+                    </div>
+                  </div>
+                    <div class="col-12 mt-2">
+                        <div class="alert alert-danger fade show" role="alert">
+                        <h4 class="alert-heading">Important!</h4><hr>
+                        <p class="mb-0">In the next level you will be required to submit an article with 10 minutes as an aptitude test. .</p>
+                        </div>
+                      <button id="writer-signup-proceed" class="btn btn-secondary w-100" type="button">Proceed</button>
+                    </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            </div>
+
+
+              <div class="col-md-12">
+
+<div style="display: nones; " id="writer-signup-second">
+                    <div class="col-md-12 mt-2">
+                  <div class="form-floating">
+                    <select class="form-select" id="preferred-language" aria-label="State">
+                      <option value="" selected>Choose Language...</option>
+                      <optgroup label="Common Languanges">
+                      <option value="EN-US">English (American)</option>
+                      <option value="EN-GB">English (British)</option>
+                      <option value="EN-AU">English (Australian)</option>
+                      <option value="EN-CA">English (Canadian)</option>
+                      </optgroup>
+                      <optgroup label="Other Languages">
+                      <option value="EN-IN">English (Indian)</option>
+                      <option value="EN-PH">English (Philippine)</option>
+                      <option value="EN-UG">English (Ugandan)</option>
+                      <option value="EN-NL">Dutch (Netherlands)</option>
+                      <option value="EN-FI">Finnish (Finland)</option>
+                      <option value="EN-BE">Flemish (Belgium)</option>
+                      </optgroup>
+                    </select>
+                    <label for="preferred-language">Your Preferred Language</label>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                <div style="margin-bottom: 10px;">{{ article_title }}. <br>
+                Limit this to 850 words.</div>
+                <textarea id="application-article" class="tinymce-editor"></textarea>
+                </div>
+
+                <div class="col-12 mt-2">
+                <p class="small mb-0">Do you have an account? <a href="{% url 'login' %}">Login</a></p>
+                </div>
+                <div class="col-12 mt-2">
+                    <input id="userrole" type="hidden" value="4">
+                <button class="btn btn-secondary w-100" type="submit">Sign Up</button>
+                </div>
+                </div>
+
+            </div>
+      </form>
+
+
+
+
+
+             {% include "credits.html" %}
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+ {% include "js-files.html" %}
+</body>
+
+</html>

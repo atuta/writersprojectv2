@@ -88,7 +88,7 @@ class SaveTask:
                 t_usd_cost=task_usd_cost,
                 t_deadline=deadline,
                 t_writer_deadline=writer_deadline,
-                t_usd_payout=(task_usd_cost * payout_perc) * 10
+                t_usd_payout=(task_usd_cost * payout_perc)
             )
             action.save()
             data = {"status": "success", "data": {"message": task_code}}

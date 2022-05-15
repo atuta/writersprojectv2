@@ -12,6 +12,7 @@ from .reject_application import RejectApplication
 from .save_email_template import SaveEmailTemplate
 from .approve_application import ApproveApplication
 from .pick_task import PickTask
+from .send_message import SendMessage
 from .client_writer_reject import ClientWriterReject
 from .client_writer_return import ClientWriterReturn
 from .admin_writer_return import AdminWriterReturn
@@ -22,6 +23,7 @@ from .wallet_submit_project import WalletSubmitProject
 from .submit_project import SubmitProject
 from .update_task_status import UpdateTaskStatus
 from .edit_task import EditTask
+from .save_appraisal_task import SaveAppraisalTask
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
 from .assign_task import AssignTask
@@ -43,6 +45,8 @@ from .my_projects import MyProjects
 from .update_user_archive_status import UpdateUserArchiveStatus
 from .update_user_status import UpdateUserStatus
 from .create_admin import CreateAdmin
+from .reset_password import ResetPassword
+from .send_password_reset_code import SendPasswordResetCode
 from .create_account import CreateCustomUser
 from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, \
     CustomUser, PaymentTransactions, Configs, EmailTemplates
@@ -71,6 +75,18 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_send_message(request):
+    from_email = request.user.email
+    to_email = request.POST.get("to_email")
+    subject = request.POST.get("message_subject")
+    body = request.POST.get("message_body")
+
+    response = SendMessage.send_message('', from_email, to_email, subject, body)
+    return HttpResponse(response, content_type='text/json')
 
 
 @api_view(['POST', 'GET'])
@@ -292,6 +308,24 @@ def view_edit_task(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_save_appraisal_task(request):
+    task_code = request.POST.get("task_code")
+    task_category = request.POST.get("task_category")
+    task_title = request.POST.get("task_title")
+    word_count = request.POST.get("word_count")
+    word_count_description = request.POST.get("word_count_description")
+    keywords = request.POST.get("keywords")
+    keyword_repetition = request.POST.get("keyword_repetition")
+    task_instructions = request.POST.get("task_instructions")
+
+    response = SaveAppraisalTask.save_appraisal_task('', task_code, task_category, task_title, word_count,
+                                                     word_count_description, keywords, keyword_repetition,
+                                                     task_instructions)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_save_task(request):
     project_code = request.POST.get("project_code")
     task_title = request.POST.get("task_title")
@@ -418,9 +452,6 @@ def view_create_account(request):
     language = request.POST.get("language")
     if not language:
         language = 'EN-US'
-    if userrole == '4' and article != '' and not user_exists:
-        SaveWriterApplication.save_writer_application('', email, article, country, first_name,
-                                                      last_name, language)
 
     response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, language,
                                                    userrole, password)
@@ -974,8 +1005,9 @@ def view_verify_email(request, otp_string):
     try:
         otp_obj = CustomUser.objects.get(otp_string=otp_string)
         otp_obj.is_verified = 'yes'
+        otp_obj.is_active = True
         otp_obj.otp_string = ''
-        otp_obj.save();
+        otp_obj.save()
         status = 'success'
     except Exception as e:
         status = 'fail'
@@ -1071,6 +1103,31 @@ def page_topup_checkout(request):
 @login_required
 def topup_credit(request):
     return render(request, "topup-credit.html", context={"page_title": "Topup Wallet"})
+
+
+def view_reset_password(request):
+    email = request.POST.get("email")
+    reset_code = request.POST.get("reset_code")
+    new_password = request.POST.get("new_password")
+
+    response = ResetPassword.reset_password('', email, reset_code, new_password)
+    return HttpResponse(response, content_type='text/json')
+
+
+def view_send_password_reset_code(request):
+    email = request.POST.get("email")
+    response = SendPasswordResetCode.send_password_reset_code('', email)
+    return HttpResponse(response, content_type='text/json')
+
+
+def writer_appraisal_task_page(request):
+    categories = list(Categories.objects.values())
+    return render(request, "writer-appraisal-task.html",
+                  context={"categories": categories, "page_title": "Writer Appraisal Task"})
+
+
+def reset_password_page(request):
+    return render(request, "reset-password.html", {})
 
 
 def login_page(request):

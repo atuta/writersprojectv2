@@ -1,6 +1,7 @@
 $().ready(function() {
 
    $(document).on('click', '#writer-signup-proceed', function(event) {
+            setTimeout(sinup_timer, 3000);
 
             var first_name          = $("#first-name").val();
             var last_name           = $("#last-name").val();
@@ -124,24 +125,8 @@ $().ready(function() {
     });
     });
 
-    function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
+  function sinup_timer() {
+  alert('Hello');
+}
 
 
-	function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-    }

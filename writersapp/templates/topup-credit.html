@@ -8,6 +8,7 @@
           <div class="card">
 
             <form id="frm-topup-wallet" method="post" action="/writersapp/topup-checkout/">
+                {% csrf_token %}
             <div class="card-body">
 
             <h5 class="card-title">Top Up Wallet</h5>

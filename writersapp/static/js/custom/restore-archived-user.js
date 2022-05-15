@@ -1,5 +1,4 @@
 $().ready(function() {
-console.log('here');
    $(document).on('click', '.restore-user', function(event) {
             var email = this.id;
 

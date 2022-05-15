@@ -20,9 +20,7 @@ class CreateCustomUser:
                 data = {"status": "fail", "data": {"message": "user_exists"}}
                 return HttpResponse(json.dumps(data), content_type='text/json')
 
-            status = True
-            if userrole == '4':
-                status = False
+            status = False
 
             if userrole == '3':
                 try:
@@ -52,14 +50,14 @@ class CreateCustomUser:
             action.set_password(password)
             action.save()
             url = EMAIL_URL
-            data = {'re_subject': 'Your writers account has been created!',
+            data = {'re_subject': 'Your account at ContentLancers has been created!',
                     're_message': 'Hello ' + firstname + ',<br>' + email_template,
                     're_to': email}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             requests.post(url, data=json.dumps(data), headers=headers)
 
             verification_data = {'re_subject': 'Email Verification!',
-                                 're_message': 'Hello ' + firstname + ',<br> kindly verify your email<br>'
+                                 're_message': 'Hello ' + firstname + ',<br> Kindly verify your email<br>'
                                                + '<p><a href="http://127.0.0.1:8000/writersapp/verify-email/'
                                                + otp_string + '">'
                                                 '<button type="button" '
