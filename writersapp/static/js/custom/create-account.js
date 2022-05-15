@@ -7,11 +7,12 @@ $().ready(function() {
             var email               = $("#email").val();
             var userrole            = $("#userrole").val();
             var country             = $("select#country").val();
+            var preferred_language  = $("select#preferred-language").val();
             var password            = $("#password").val();
             var confirm_password    = $("#confirm-password").val();
 
             if(first_name === '' || last_name === '' || phone === '' || email === ''
-            || country === '' || password === '' || confirm_password === ''){
+            || country === '' || preferred_language === '' || password === '' || confirm_password === ''){
 
                     swal({
                         title: "Missing fields!",
@@ -32,7 +33,7 @@ $().ready(function() {
 
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'first_name=' + first_name + '&last_name=' + last_name + '&phone=' + encodeURIComponent(phone)
-			+ '&email=' + email + '&userrole=' + userrole + '&country=' + country + '&password=' + password;
+			+ '&email=' + email + '&userrole=' + userrole + '&country=' + country +  '&language=' + preferred_language +  '&password=' + password;
 
 			  // console.log(dataString); return false;
 

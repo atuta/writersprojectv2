@@ -1,0 +1,23 @@
+<div class="modal fade" id="modal-task-instructions" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ task.t_title }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <h4>Instructions</h4>
+            <p>{{ task.t_instructions|safe }}</p>
+
+            <p><strong>Number of words: </strong>{{ task.t_word_count }} words ( {{ task.t_wc_description }} )</p>
+
+            <h4 class="mt-5">Keywords</h4>
+                <p>{{ task.t_keywords }}</p>
+                <p><strong>Keyword Repetition: </strong>{{ task.t_keyword_repetition }} </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Close Instructions</button>
+        </div>
+      </div>
+    </div>
+  </div>

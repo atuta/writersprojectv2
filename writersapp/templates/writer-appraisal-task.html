@@ -15,7 +15,7 @@
 
                 <div class="col-md-12">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="task-title" placeholder="Task Title" maxlength="180" autocomplete="off">
+                    <input type="text" class="form-control" id="task-title" value="{{ task.t_title }}" placeholder="Task Title" maxlength="180" autocomplete="off">
                     <label for="task-title">Task Title (180 characters max)</label>
                   </div>
                 </div>
@@ -24,7 +24,12 @@
               <div class="col-md-4">
               <div class="form-floating">
               <select class="form-select" id="task-category" aria-label="State">
+                {% if task.t_task_category != '' %}
+                <option value="{{ task.t_task_category }}" selected>{{ task.t_task_category }}</option>
+                {% else %}
                 <option value="" selected>Choose Category...</option>
+                {% endif %}
+
                 {% for category in categories %}
                 <option value="{{ category.c_name }}">{{ category.c_description }}</option>
                 {% endfor %}
@@ -37,7 +42,7 @@
                 <div class="col-md-3">
                 <div class="form-group">
                 <div style="margin-top: 30px; margin-bottom: 10px;"></div>
-                <input style="height: 50px;" type="text" class="form-control" id="word-count" name="word-count" placeholder="Word Count" autocomplete="off">
+                <input style="height: 50px;" type="text" class="form-control" id="word-count" name="word-count" value="{{ task.t_word_count }}" placeholder="Word Count" autocomplete="off">
                 </div>
                 </div>
 
@@ -46,28 +51,50 @@
                 <div style="margin-top: 35px; margin-bottom: 10px;"></div>
 
                 <div style="height: 50px; margin-top: 40px;">
+                {% if task.t_wc_description == 'plus_minus_10_perc' %}
                 <label class="radio-inline ms-3">
                 <input type="radio" id="plus-minus-10" name="wc-description" value="plus_minus_10_perc" checked> +/- 10%
                 </label>
+                {% else %}
+                <label class="radio-inline ms-3">
+                <input type="radio" id="plus-minus-10" name="wc-description" value="plus_minus_10_perc"> +/- 10%
+                </label>
+                {% endif %}
+                {% if task.t_wc_description == 'min' %}
+                <label class="radio-inline ms-3">
+                <input type="radio" id="min" name="wc-description" value="min" checked> Min
+                </label>
+                {% else %}
                 <label class="radio-inline ms-3">
                 <input type="radio" id="min" name="wc-description" value="min"> Min
                 </label>
+                {% endif%}
+                {% if task.t_wc_description == 'max' %}
+                <label class="radio-inline ms-3">
+                <input type="radio" id="max" name="wc-description" value="max" checked> Max
+                </label>
+                {% else %}
                 <label class="radio-inline ms-3">
                 <input type="radio" id="max" name="wc-description" value="max"> Max
                 </label>
+                {% endif%}
                 </div>
                 </div>
                 </div>
 
                 <div style="margin-bottom: 10px;" class="col-md-12">
                 <div>Keywords: Only enter keywords here; enter instructions in the Special Instructions field below. Separate keywords by a comma; do not use any other punctuation. Keywords are case sensitive.</div>
-                <textarea style="height: 80px;" class="form-control mt-2" placeholder="Keywords..." id="keywords" name="keywords"></textarea>
+                <textarea style="height: 80px;" class="form-control mt-2" placeholder="Keywords..." id="keywords" name="keywords">{{ task.t_keywords }}</textarea>
                 </div>
 
                   <div class="col-lg-4">
                     <div class="form-floating">
                     <select class="form-select" id="keyword-repetition" name="keyword-repetition" aria-label="State">
+                    {% if task.t_keyword_repetition != '' %}
+                    <option value="{{ task.t_keyword_repetition }}" selected>{{ task.t_keyword_repetition }}</option>
+                    {% else %}
                     <option value="" selected>Choose Keyword Repetition...</option>
+                    {% endif %}
                     <option>0</option>
                     <option>1</option>
                     <option>2</option>
@@ -88,12 +115,12 @@
                 <br><div>Instructions</div>
                     <!-- TinyMCE Editor -->
                 <textarea id="task-instructions" class="tinymce-editor">
-                {{ article }}
+                {{ task.t_instructions }}
                 </textarea>
                 </div>
 
-                <div style="margin-bottom: 50px;" class="col-md-12">
-                <div style="margin-bottom: 10px;"><em>(These intructions remain private until the author agrees to work on the document)</em></div>
+                <div class="col-md-12">
+                <div><em>(These intructions remain private until the author agrees to work on the document)</em></div>
                 </div>
                 <div class="card-footer">
                 <div class="text-left">

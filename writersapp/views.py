@@ -18,6 +18,7 @@ from .client_writer_return import ClientWriterReturn
 from .admin_writer_return import AdminWriterReturn
 from .admin_writer_reject import AdminWriterReject
 from .admin_approve_task import AdminApproveTask
+from .writer_submit_appraisal_task import WriterSubmitAppraisalTask
 from .writer_submit_task import WriterSubmitTask
 from .wallet_submit_project import WalletSubmitProject
 from .submit_project import SubmitProject
@@ -49,7 +50,7 @@ from .reset_password import ResetPassword
 from .send_password_reset_code import SendPasswordResetCode
 from .create_account import CreateCustomUser
 from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, \
-    CustomUser, PaymentTransactions, Configs, EmailTemplates
+    CustomUser, PaymentTransactions, Configs, EmailTemplates, ApprisalTasks
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.sessions.models import Session
@@ -225,6 +226,22 @@ def view_admin_approve_task(request):
     task_code = request.POST.get("task_code")
     article = request.POST.get("article")
     response = AdminApproveTask.admin_approve_task('', task_code, article)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_writer_submit_appraisal_task(request):
+    first_name = request.user.first_name
+    last_name = request.user.last_name
+    email = request.user.email
+    language = request.user.preferred_language
+    country = request.user.country
+    article = request.POST.get("article")
+    article_words = request.POST.get("article_words")
+
+    response = WriterSubmitAppraisalTask.writer_submit_appraisal_task('', first_name, last_name, email, article,
+                                                                      article_words, language, country)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -446,9 +463,6 @@ def view_create_account(request):
     country = request.POST.get("country")
     userrole = request.POST.get("userrole")
     password = request.POST.get("password")
-
-    article = request.POST.get("article")
-    user_exists = CustomUser.objects.filter(email=email).exists()
     language = request.POST.get("language")
     if not language:
         language = 'EN-US'
@@ -456,6 +470,20 @@ def view_create_account(request):
     response = CreateCustomUser.create_custom_user('', first_name, last_name, phone, email, country, language,
                                                    userrole, password)
     return HttpResponse(response, content_type='text/json')
+
+
+@login_required
+def do_appraisal_task(request):
+    try:
+        task_obj = ApprisalTasks.objects\
+            .get(t_task_code='833315adbf6a5d983f3fbbd431f5d515409eca116f516e4a6d811b7ca9ce2469')
+        task_title = task_obj.t_title
+        article = ""
+    except ApprisalTasks.DoesNotExist as e:
+        article = ""
+
+    return render(request, "do-appraisal-task.html", context={"task": task_obj,
+                                                              "page_title": task_title, "tag": "appraisal"})
 
 
 @login_required
@@ -1121,9 +1149,16 @@ def view_send_password_reset_code(request):
 
 
 def writer_appraisal_task_page(request):
+    try:
+        task_obj = ApprisalTasks.objects \
+            .get(t_task_code='833315adbf6a5d983f3fbbd431f5d515409eca116f516e4a6d811b7ca9ce2469')
+        task_title = task_obj.t_title
+    except ApprisalTasks.DoesNotExist as e:
+        task_title = "No task found!"
     categories = list(Categories.objects.values())
     return render(request, "writer-appraisal-task.html",
-                  context={"categories": categories, "page_title": "Writer Appraisal Task"})
+                  context={"categories": categories, "task": task_obj,
+                           "task_title": task_title, "page_title": "Writer Appraisal Task"})
 
 
 def reset_password_page(request):

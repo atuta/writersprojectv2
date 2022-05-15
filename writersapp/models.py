@@ -88,6 +88,7 @@ class WritersApplications(models.Model):
     a_last_name = models.CharField(max_length=100, blank=True)
     a_country = models.CharField(max_length=100, blank=True)
     a_article = models.TextField(blank=True)
+    a_word_count = models.CharField(max_length=10, blank=True)
     a_language = models.CharField(max_length=100, blank=True)
     a_status = models.CharField(max_length=20, default='pending')
     a_datetime = models.DateTimeField(auto_now=True, null=True)
