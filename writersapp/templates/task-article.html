@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+
+        <!-- Left side columns -->
+<div class="col-lg-12">
+          <div>
+            <div>
+              <h5 class="card-title">{{ task_title }}</h5>
+                <p class="small">Created on {{ article.t_datetime }}</p>
+                <p>Article Words  <strong>{{ article.t_article_word_count }}</strong></p>
+                <p><strong>Article:</strong></p>
+                <div class="article">
+                    {{ article.t_article|safe }}
+                </div>
+            </div>
+          </div><!-- End Card with header and footer -->
+</div>
+</div>
+{% endblock %}

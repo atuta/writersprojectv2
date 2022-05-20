@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Inbox</h5>
+
+                <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th style="width: 30%;" scope="col">Subject</th>
+                    <th scope="col">Message</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for message in messages %}
+                  <tr>
+                    <td style="vertical-align: top; width: 30%;">
+                      <strong>{{ message.m_subject }}</strong>
+                      <p><em>{{ message.t_datetime|timesince }} ago</em></p>
+                    </td>
+                    <td style="vertical-align: top;">
+                      {{ message.m_body }}
+                      <p style="margin-top: 20px;"><em>{{ message.t_datetime|timesince }} ago</em></p>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+          </div><!-- End Card with header and footer -->
+    </div><!-- End Right side columns -->
+      </div>
+</div>
+{% endblock %}

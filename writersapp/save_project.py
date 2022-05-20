@@ -23,5 +23,5 @@ class SaveProject:
             data = {"status": "success", "data": {"message": project_code}}
             return HttpResponse(json.dumps(data), content_type='text/json')
         except Exception as e:
-            data = {"status": "fail", "data": {"message": "fail"}}
+            data = {"status": "fail", "data": {"message": str(e)}}
             return HttpResponse(json.dumps(data), content_type='text/json')

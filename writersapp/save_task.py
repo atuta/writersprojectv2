@@ -88,6 +88,7 @@ class SaveTask:
                 t_usd_cost=task_usd_cost,
                 t_deadline=deadline,
                 t_writer_deadline=writer_deadline,
+                t_writer_deadline_secs=admin_deadline_seconds,
                 t_usd_payout=(task_usd_cost * payout_perc)
             )
             action.save()

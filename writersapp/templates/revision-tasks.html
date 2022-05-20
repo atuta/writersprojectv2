@@ -14,12 +14,12 @@
                 <p class="small">Created on {{ task.task_date }}</p>
 
                 <h3>Instructions</h3>
-                <p>{{ task.task_instructions }}</p>
+                <p>{{ task.task_instructions|safe }}</p>
                 <p><strong>USD  {{ task.payout|floatformat:2 }}</strong></p>
             </div>
 
             <div class="card-footer">
-                <a href="{% url 'do-task' task.task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Do Task</button></a>
+                <a href="{% url 'do-task' task.task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Revise Task</button></a>
 
             </div>
           </div><!-- End Card with header and footer -->

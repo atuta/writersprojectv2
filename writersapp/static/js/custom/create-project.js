@@ -35,6 +35,7 @@ $("#btn-next").css("display", "none");
                     },
                     complete: function() { $(".loading").hide(); },
                     success: function( data ){
+                    //console.log(data)
                         var resp_data 	= JSON.parse(JSON.stringify(data));
                         var real_data = resp_data.data;
                         var status = resp_data.status;

@@ -4,7 +4,11 @@
 <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-12">
-        <table class="table datatable">
+          <div>
+            <div>
+              <h5>Draft Projects</h5>
+
+                <table class="table datatable">
                 <thead>
                   <tr>
                     <th style="width: 50%;" scope="col">Title</th>
@@ -16,18 +20,21 @@
                 </thead>
                 <tbody>
                 {% for project in projects %}
+                {% if project.p_usd_cost > 5 %}
                   <tr id="project-{{ project.p_code }}">
                     <td style="width: 40%; vertical-align: bottom;">{{ project.p_title }}</th>
                     <td style="vertical-align: bottom;">{{ project.p_owner }}</td>
                     <td style="vertical-align: bottom;"><strong>USD {{ project.p_usd_cost|floatformat:2 }}</strong></td>
                     <td style="vertical-align: bottom;">{{ project.p_datetime|timesince }} ago</td>
-                    <td style="vertical-align: bottom;">
-                        <a href="{% url 'project-tasks' project.p_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-alarm me-1"></i> View Tasks</button></a>
-                    </td>
+                    <td style="vertical-align: bottom;"><button id="{{ project.p_code }}" type="button" class="btn btn-outline-primary free-submit-project"><i class="bi bi-arrow-bar-right me-1"></i> Free Submit</button></td>
                   </tr>
+                {% endif %}
                 {% endfor %}
                 </tbody>
               </table>
+
+          </div><!-- End Card with header and footer -->
     </div><!-- End Right side columns -->
+      </div>
 </div>
 {% endblock %}

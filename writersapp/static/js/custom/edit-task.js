@@ -25,7 +25,8 @@ $(document).on('click', '#btn-edit-task', function( event ) {
         var deadline = $('#deadline').val().replace(/.*(\/|\\)/, '');
         var keywords = $('#keywords').val();
         var keyword_repetition = $('select#keyword-repetition').val();
-        var task_instructions = $('#task-instructions').val();
+        //var task_instructions = $('#task-instructions').val();
+        var task_instructions = tinymce.get("task-instructions").getContent();
         var doc = $('input[type=file]').val().replace(/.*(\/|\\)/, '')
 
         var writer_level = $('input[name="writer-level"]:checked').val();
@@ -59,7 +60,7 @@ $(document).on('click', '#btn-edit-task', function( event ) {
 
         if(task_title === '' || word_count === '' || word_count_description === ''
         || keywords === '' || keyword_repetition === '' || task_instructions === ''
-        ||writer_level == '' || extra_proofreading == '' || priority_order == '' || favourite_writers == ''){
+        || writer_level == ''){
             swal({
                 title: "Missing fields!",
                 text: "Fill all required fileds",
@@ -74,6 +75,8 @@ $(document).on('click', '#btn-edit-task', function( event ) {
               + '&task_instructions=' + encodeURIComponent(task_instructions) + '&doc=' + doc + '&writer_level='
                 + writer_level + '&extra_proofreading=' + extra_proofreading
                 + '&priority_order=' + priority_order + '&favourite_writers=' + favourite_writers + '&deadline=' + encodeURIComponent(deadline);
+
+                //console.log(dataString);
             $.ajax({
                     url: '/writersapp/edit-task/',
                     type: 'post',

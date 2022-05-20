@@ -24,8 +24,8 @@ $().ready(function() {
                                 text: "Task submitted successfully",
                                 icon: "success"
                                 });
-
                             $('#card-' + task_code).hide();
+                            $(location).attr('href', '/writersapp/writer-dashboard/');
 						 }else{
 						 if(real_data.message === 'past_deadline'){
 						     swal({

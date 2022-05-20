@@ -4,6 +4,13 @@ $().ready(function() {
             var task_code = $('#accept-admin-approved-task-code').val();
             var stars = $('input[name="rating"]:checked').val();
 
+            if ($('#favourite-writer').is(":checked"))
+            {
+                var favourite = 'yes'
+            }else{
+                var favourite = 'no'
+            }
+
             if(stars === ''){
                 swal({
                 title: "Hold on!",
@@ -15,7 +22,7 @@ $().ready(function() {
              }
 
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code + '&stars=' + stars;
+			var dataString =  'task_code=' + task_code + '&stars=' + stars + '&favourite=' + favourite;
 
 			// console.log(dataString); return false;
 

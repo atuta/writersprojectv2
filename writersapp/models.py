@@ -49,6 +49,7 @@ class CustomUser(AbstractBaseUser):
     last_login = models.DateTimeField(verbose_name="Last Login", blank=True, null=True)
     is_superuser = models.BooleanField(default=False)
     username = models.CharField(max_length=120, null=True)
+    user_id = models.CharField(max_length=120, null=True)
     rating_stars = models.IntegerField(default=0, null=True)
     userrole = models.CharField(max_length=20, default="3", null=True)
     first_name = models.CharField(max_length=120, null=True)
@@ -59,6 +60,7 @@ class CustomUser(AbstractBaseUser):
     writer_article = models.CharField(max_length=10, default="no", null=True)
     is_archived = models.CharField(max_length=10, default="no", null=True)
     otp_string = models.CharField(max_length=120, null=True)
+    appraisal_task_deadline = models.CharField(max_length=100, null=True, default='')
     c_wallet_balance = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     date_joined = models.DateTimeField(verbose_name="Date Joined", auto_now_add=True)
     preferred_language = models.CharField(max_length=100, default='EN-US', blank=True)
@@ -98,7 +100,7 @@ class Configs(models.Model):
     c_id = models.AutoField(primary_key=True)
     words_per_hour = models.CharField(max_length=50, blank=True)
     buffer_in_hours = models.CharField(max_length=50, blank=True)
-    signup_article_title = models.TextField(blank=True)
+    signup_article_title = models.TextField(blank=True, null=True, default='no_article')
     c_datetime = models.DateTimeField(auto_now=True, null=True)
 
 
@@ -167,6 +169,42 @@ class ApprisalTasks(models.Model):
         ordering = ['t_id']
 
 
+class MissedDeadlines(models.Model):
+    t_id = models.AutoField(primary_key=True)
+    t_p_code = models.CharField(max_length=70, blank=True)
+    t_task_code = models.CharField(max_length=70, blank=True)
+    t_title = models.CharField(max_length=500, blank=True)
+    t_project_category = models.CharField(max_length=100, blank=True)
+    t_word_count = models.CharField(max_length=100, blank=True)
+    t_wc_description = models.CharField(max_length=100, blank=True)
+    t_keywords = models.CharField(max_length=500, blank=True)
+    t_keyword_repetition = models.CharField(max_length=20, blank=True)
+    t_instructions = models.TextField(blank=True)
+    t_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
+    t_paid = models.CharField(max_length=10, default='no', blank=True)
+    t_doc = models.CharField(max_length=100, blank=True)
+    p_writer_level = models.CharField(max_length=100, blank=True, default='standard')
+    p_extra_proofreading = models.CharField(max_length=20, blank=True, default='no')
+    p_priority_order = models.CharField(max_length=20, blank=True, default='no')
+    p_favourite_writers = models.CharField(max_length=20, blank=True, default='no')
+    t_status = models.CharField(max_length=50, blank=True, default='clientdraft')
+    t_remarks = models.TextField(blank=True)
+    t_stars = models.CharField(max_length=10, blank=True)
+    t_owner = models.CharField(max_length=100, blank=True)
+    t_owner_names = models.CharField(max_length=150, blank=True)
+    t_allocated_to = models.CharField(max_length=100, blank=True)
+    t_blacklisted_emails = models.TextField(blank=True)
+    t_urgent = models.CharField(max_length=10, blank=True)
+    t_deadline = models.CharField(max_length=50, blank=True)
+    t_writer_deadline = models.CharField(max_length=50, blank=True)
+    t_writer_deadline_secs = models.CharField(max_length=50, blank=True)
+    t_datetime = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        ordering = ['t_id']
+
+
 class Tasks(models.Model):
     t_id = models.AutoField(primary_key=True)
     t_p_code = models.CharField(max_length=70, blank=True)
@@ -192,9 +230,11 @@ class Tasks(models.Model):
     t_owner = models.CharField(max_length=100, blank=True)
     t_owner_names = models.CharField(max_length=150, blank=True)
     t_allocated_to = models.CharField(max_length=100, blank=True)
+    t_blacklisted_emails = models.TextField(blank=True)
     t_urgent = models.CharField(max_length=10, blank=True)
     t_deadline = models.CharField(max_length=50, blank=True)
     t_writer_deadline = models.CharField(max_length=50, blank=True)
+    t_writer_deadline_secs = models.CharField(max_length=50, blank=True)
     t_datetime = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
@@ -249,7 +289,7 @@ class Projects(models.Model):
     p_description = models.TextField(blank=True)
     p_usd_cost = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
     p_usd_payout = models.DecimalField(max_digits=10, decimal_places=5, default=0, null=True)
-    p_owner = models.CharField(max_length=20, blank=True, )
+    p_owner = models.CharField(max_length=100, blank=True, )
     p_status = models.CharField(max_length=50, blank=True, default='clientdraft')
     p_datetime = models.DateTimeField(auto_now=True, null=True)
 
@@ -300,24 +340,21 @@ class Articles(models.Model):
         ordering = ['a_id']
 
 
-class BlacklistedEmails(models.Model):
-    b_id = models.AutoField(primary_key=True)
-    b_email = models.CharField(max_length=70, blank=True)
-    m_from_name = models.CharField(max_length=150, blank=True)
-    m_to_email = models.CharField(max_length=70, blank=True)
-    m_to_name = models.CharField(max_length=150, blank=True)
-    m_subject = models.CharField(max_length=200, blank=True)
-    m_body = models.TextField(blank=True)
-    m_read = models.CharField(max_length=10, blank=True, default='no')
-    t_datetime = models.DateTimeField(auto_now=True, null=True)
+class FavoriteWriters(models.Model):
+    f_id = models.AutoField(primary_key=True)
+    f_client_email = models.CharField(max_length=100, blank=True)
+    f_writer_email = models.CharField(max_length=100, blank=True)
+    f_writer_first_name = models.CharField(max_length=100, blank=True)
+    f_writer_lastname = models.CharField(max_length=100, blank=True)
+    f_datetime = models.DateTimeField(auto_now=True, null=True)
 
-    # statuses: draft,submitted, inreview, approved, returned, disapproved
     class Meta:
-        ordering = ['b_id']
+        ordering = ['f_id']
 
 
 class Messages(models.Model):
     m_id = models.AutoField(primary_key=True)
+    m_code = models.CharField(max_length=100, blank=True)
     m_from_email = models.CharField(max_length=70, blank=True)
     m_from_name = models.CharField(max_length=150, blank=True)
     m_to_email = models.CharField(max_length=70, blank=True)

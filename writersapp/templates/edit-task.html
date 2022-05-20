@@ -6,9 +6,9 @@
         <!-- Left side columns -->
 <div class="col-lg-12">
 
-        <div id="task-description" class="card">
-            <div class="card-body">
-              <h5 class="card-title">Describe your task</h5>
+        <div id="task-description">
+            <div>
+              <h5>Describe your task</h5>
 
               <!-- Floating Labels Form -->
               <form class="row g-3" id="frm-edit-task-description" action="#" method="post">
@@ -92,10 +92,12 @@
                 </div>
 
                 <div class="col-lg-12">
-                <br><div>Instructions</div>
+                <br>
+                <div>Instructions</div>
                 <div class="form-group">
-                <textarea style="height: 150px;" class="form-control mt-2" placeholder="Give task brief instructions here..." id="task-instructions" name="task-instructions">{{ task_data.t_instructions }}</textarea>
-                </div>
+                <!-- TinyMCE Editor -->
+                <textarea id="task-instructions" class="tinymce-editor">{{ task_data.t_instructions }}</textarea>
+                <!-- End TinyMCE Editor -->
                 </div>
 
                 <div style="margin-bottom: 50px;" class="col-md-12">
@@ -127,9 +129,10 @@
                               <input type="file" id="help-doc" name="help-doc" class="dropzone">
                             </div>
                           </div>
-                <div class="card-footer">
+                <div>
                 <div class="text-left">
-                <button id="btn-hold-edit-task" type="submit" class="btn btn-outline-success">Proceed to task options</button>
+                <button id="btn-hold-edit-task" type="submit" class="btn btn-outline-success mt-3">Proceed to task options</button>
+                </div>
                 </div>
                 </div>
               </form><!-- End floating Labels Form -->
@@ -140,9 +143,9 @@
 
 
 
-    <div id="task-options" style="display: none;" class="card">
-            <div class="card-body">
-              <h5 class="card-title">Task Options</h5>
+    <div id="task-options" style="display: none;">
+            <div>
+              <h5>Task Options</h5>
 
               <!-- Floating Labels Form -->
               <form class="row g-3" id="frm-edit-task-options" action="#" method="post">

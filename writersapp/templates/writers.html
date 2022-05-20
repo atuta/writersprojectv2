@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 {% load humanize %}
 {% block content %}
+{% include 'message-modal.html' %}
 <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-12">
@@ -15,6 +16,7 @@
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Join Date</th>
+                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -23,7 +25,8 @@
                     <td style="vertical-align: bottom;"><a href="{% url 'writer-profile' writer.email %}">{{ writer.first_name }} {{ writer.last_name }}</a></td>
                     <td style="vertical-align: bottom;">{{ writer.email }}</td>
                     <td style="vertical-align: bottom;">{{ writer.phone }}</td>
-                    <td style="vertical-align: bottom;">{{ writer.date_joined }}</td>
+                    <td style="vertical-align: bottom;">{{ writer.date_joined|timesince }}</td>
+                    <td style="vertical-align: bottom;"><a href="#"><i id="{{ writer.email }}" style="font-size: 25px;" class="bi bi-chat-square-text me-1 send-message"></i></a></td>
                   </tr>
                 {% endfor %}
                 </tbody>

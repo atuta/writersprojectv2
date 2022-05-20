@@ -1,22 +1,23 @@
 $().ready(function() {
-   $(document).on('click', '.actual-task-assign', function(event) {
+   $(document).on('click', '.btn-save-cost-settings', function(event) {
             var id = this.id
-            var splitted_id = id.split("-");
 
-            var task_code = $('#task-code-holder').val();
-            //var email = id.replace('actual-task-assign-', '');
-            var user_id = id.replace('actual-task-assign-', '');
-            var admin_payout = $('#admin-payout-' + user_id).val();
+            var basic = $('#basic').val()
+            var standard = $('#standard').val()
+            var expert = $('#expert').val()
+            var extra_proofreading = $('#extra-proofreading').val()
+            var priority_order = $('#priority-order').val()
+            var payout_perc = $('#payout-perc').val()
 
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code + '&user_id=' + user_id + '&admin_payout=' + admin_payout;
-
-			//console.log(dataString); return false;
+			var dataString =  'basic=' + basic + '&standard=' + standard + '&expert=' + expert
+			+ '&extra_proofreading=' + extra_proofreading + '&priority_order=' + priority_order
+			+ '&payout_perc=' + payout_perc;
 
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/assign-task/",
+				url: "/writersapp/save-cost-settings/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},
@@ -24,15 +25,13 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 //console.log(status);
+						 //console.log(data);
 						 if(status === 'success'){
                             swal({
                             title: "Success!",
-                            text: "Task was assigned successfully",
+                            text: "Action was successful",
                             icon: "success"
                             });
-                            $('#modal-writers-list').modal('hide')
-                            $('#card-' + task_code).fadeOut('5000');
 						 }else{
 						 swal({
                             title: "Failed!",

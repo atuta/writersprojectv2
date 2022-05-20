@@ -1,6 +1,5 @@
 $(document).ready(function (e) {
 $(document).on('click', '#btn-save-appraisal-task', function( event ) {
-
 		var task_code = $('#task-code').val();
         var task_title = $('#task-title').val();
         var task_category = $('select#task-category').val();
@@ -40,7 +39,7 @@ $(document).on('click', '#btn-save-appraisal-task', function( event ) {
                     success: function( data ){
                         var real_data = data.data;
                         var status = data.status;
-                        console.log(data)
+                        //console.log(data)
                         if(status === "success"){
 
                            swal({

@@ -24,6 +24,16 @@ class ResetPassword:
             user_obj.set_password(new_password)
             user_obj.save()
 
+            url = EMAIL_URL
+            data = {'re_subject': 'Your password has been reset!',
+                    're_message': 'Your password has been reset. If you are not the one who performed this action '
+                                  'kindly get to our technical support team urgently. If you are the one who '
+                                  'initiated this '
+                                  'action, no further action is needed.<br>Thank you',
+                    're_to': email}
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            requests.post(url, data=json.dumps(data), headers=headers)
+
             data = {"status": "success", "data": {"message": "password_reset"}}
             return HttpResponse(json.dumps(data), content_type='text/json')
         except Exception as e:

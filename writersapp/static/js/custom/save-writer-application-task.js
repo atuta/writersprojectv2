@@ -1,5 +1,4 @@
 $().ready(function() {
-
 	 $(document).on('click', '.submit-appraisal-task', function( event ) {
         var task_code = $('#task-code').val()
         var application_article = tinymce.get("article").getContent();
@@ -58,6 +57,23 @@ $().ready(function() {
                             });
 
                             return false;
+                           }else if(real_data.message === 'too_few_words'){
+
+                           swal({
+                            title: "Failed!",
+                            text: "Too few words!",
+                            icon: "error",
+                            });
+
+
+                           }else if(real_data.message === 'too_many_words'){
+
+                           swal({
+                            title: "Failed!",
+                            text: "Too many words!",
+                            icon: "error",
+                            });
+
                            } else{
                             swal({
                             title: "Failed!",

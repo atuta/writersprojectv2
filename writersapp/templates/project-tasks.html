@@ -3,54 +3,29 @@
 {% block content %}
 {% include "writers-list-modal.html" %}
 <div class="row">
-
         <!-- Left side columns -->
-        <div class="col-lg-12">
+    <div class="col-lg-12">
+<table class="table datatable">
+<thead>
+  <tr>
+    <th style="width: 50%;" scope="col">Title</th>
+    <th scope="col">Cost</th>
+    <th scope="col">Actions</th>
+  </tr>
+</thead>
+<tbody>
 {% for task in data.data %}
-          <div id="card-{{ task.fields.t_task_code }}" class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ task.fields.t_title }}</h5>
-                <p class="small">Created on {{ task.fields.t_datetime }}</p>
-
-                <h3>Instructions</h3>
-                <p>{{ task.fields.t_instructions }}</p>
-                <p><strong>Number of words: </strong>{{ task.fields.t_word_count }} words ( {{ task.fields.t_wc_description }} )</p>
-
-
-
-
-            <div style="display: none;" id="{{ task.fields.t_task_code }}">
-                 <h3 class="mt-5">Keywords</h3>
-                <p>{{ task.fields.t_keywords }}</p>
-                <p><strong>Keyword Repetition: </strong>{{ task.fields.t_keyword_repetition }} </p>
-
-                <h3 class="mt-5">Help Document</h3>
-
-                {% if task.fields.t_doc != "" %}
-                <div><a href="#">{{ task.fields.t_doc }}</a></div>
-                {% else %}
-                <div>No document!</div>
-                {% endif %}
-
-                <h3 class="mt-5">Other Options</h3>
-                    <ul class="list-group">
-                        <li class="list-group-item"><i class="bi bi-bookmarks me-1 text-primary"></i> Extra Proofreading: <strong>{{ task.fields.p_extra_proofreading|upper }}</strong></li>
-                        <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i> Favourite Writers: <strong>{{ task.fields.p_favourite_writers|upper }}</strong></li>
-                        <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i> Priority Order: <strong>{{ task.fields.p_priority_order|upper }}</strong></li>
-                        <li class="list-group-item"><i class="bi bi-app-indicator me-1 text-primary"></i> Expertise Level: <strong>{{ task.fields.p_writer_level|upper }}</strong></li>
-                </ul>
-            </div>
-            <div style="margin-top: 20px; font-weight: bold;">USD {{ task.fields.t_usd_cost|floatformat:2 }}</div>
-
-                <p style="margin-top: 15px;" id="id-more-{{ task.fields.t_task_code }}" class="task-show-more"><a href="">Show more...</a></p>
-                <p style="margin-top: 15px; display: none;" id="id-less-{{ task.fields.t_task_code }}" class="task-show-less"><a href="">Show less...</a></p>
-            </div>
-
-            <div class="card-footer">
-            {% if user.userrole == '3'  %}
+  <tr id="card-{{ task.fields.t_task_code }}">
+    <td style="width: 50%; vertical-align: bottom;">
+        {{ task.fields.t_title }}
+        <p class="small mt-3"><em>Created on {{ task.fields.t_datetime }}</span></em></p>
+    </td>
+    <td style="width: 50%; vertical-align: bottom;">USD {{ task.fields.t_usd_cost|floatformat:2 }}</td>
+    <td style="width: 50%; vertical-align: bottom;">
+        {% if user.userrole == '3'  %}
             {% if task.fields.t_status == 'clientdraft' %}
             <!--<button id="clientsubmitted-{{ task.fields.t_task_code }}" type="button" class="btn btn-outline-success update-task-status"><i class="bi bi-check-circle ms-1"></i> Submit Task</button>-->
-            <a href="{% url 'page-edit-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-square me-1"></i> Edit</button></a>
+            <a href="{% url 'page-edit-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-square me-1"></i> View / Edit</button></a>
             {% else %}
             <p>No action required</p>
             {% endif %}
@@ -60,8 +35,8 @@
             {% if user.userrole == '2'  %}
             {% if task.fields.t_status == 'clientsubmitted'  %}
             <button id="assign-task-{{ task.fields.t_task_code }}" type="button" class="btn btn-outline-primary assign-task"><i class="bi bi-calendar-check me-1"></i> Assign</button>
-            <button type="button" class="btn btn-outline-primary"><i class="bi bi-calendar-check me-1"></i> Return</button>
-            <button type="button" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Reject</button>
+<!--            <button type="button" class="btn btn-outline-primary"><i class="bi bi-calendar-check me-1"></i> Return</button>-->
+<!--            <button type="button" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Reject</button>-->
             {% else %}
             <p>No action needed</p>
             {% endif %}
@@ -70,9 +45,13 @@
             <a href="{% url 'do-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Do Task</button></a>
             <a href="{% url 'do-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Turn Down</button></a>
             {% endif %}
-            </div>
-          </div><!-- End Card with header and footer -->
+            <input id="payout-{{ task.fields.t_task_code }}" type="hidden" value="{{ task.fields.t_usd_payout|floatformat:2 }}">
+            <input id="favourite-needed-{{ task.fields.t_task_code }}" type="hidden" value="{{ task.fields.p_favourite_writers }}">
+    </td>
+  </tr>
 {% endfor %}
-    </div><!-- End Right side columns -->
-      </div>
+</tbody>
+</table>
+</div><!-- End Right side columns -->
+</div>
 {% endblock %}

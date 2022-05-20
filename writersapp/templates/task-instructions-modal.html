@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
            <h4>Instructions</h4>
-            <p>{{ data.t_instructions }}</p>
+            <p>{{ data.t_instructions|safe }}</p>
 
             <p><strong>Number of words: </strong>{{ data.t_word_count }} words ( {{ data.t_wc_description }} )</p>
 

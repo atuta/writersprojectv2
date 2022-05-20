@@ -2,9 +2,8 @@ $().ready(function() {
    $( "#frm-save-admin-settings" ).submit(function( event ) {
             var words_per_hour          = $("input#words-per-hour").val();
             var buffer_in_hours         = $("input#buffer-in-hours").val();
-            var signup_article_title     = $("#signup-article-title").val();
 
-            if(words_per_hour === '' || buffer_in_hours === '' || signup_article_title === ''){
+            if(words_per_hour === '' || buffer_in_hours === ''){
                     swal({
                         title: "Missing Fields!",
                         text: "All fields are required.",
@@ -15,7 +14,6 @@ $().ready(function() {
 
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'words_per_hour=' + words_per_hour + '&buffer_in_hours=' + buffer_in_hours
-			+ '&signup_article_title=' + encodeURIComponent(signup_article_title);
 
             try{
 			$.ajax({

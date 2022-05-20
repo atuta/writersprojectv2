@@ -19,7 +19,7 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 //console.log(data);
+						 console.log(data);
 						 if(status === 'success'){
                             swal({
                                 title: "Success!",
@@ -28,7 +28,21 @@ $().ready(function() {
                                 });
 
                             $('#card-' + task_code).hide();
-						 }else{
+						 }else if(real_data.message === 'blacklisted'){
+						    swal({
+                                title: "Failed!",
+                                text: "You are not allowed to pick this task again.",
+                                icon: "error"
+                                });
+                         }else if(real_data.message === 'not_favourite'){
+						    swal({
+                                title: "Failed!",
+                                text: "Sorry, the client prefers someone else. Try a task from a different client.",
+                                icon: "error"
+                                });
+                         }
+						 else{
+
                              swal({
                                 title: "Failed!",
                                 text: "This task might have been picked by someone else already.",

@@ -10,7 +10,8 @@ $(document).ready(function (e) {
 
         var keywords = $('#keywords').val();
         var keyword_repetition = $('select#keyword-repetition').val();
-        var task_instructions = $('#task-instructions').val();
+        //var task_instructions = $('#task-instructions').val();
+        var task_instructions = tinymce.get("task-instructions").getContent();
         var doc = $('input[type=file]').val().replace(/.*(\/|\\)/, '')
 
         //console.log(task_title+'#'+word_count+'#'+word_count_description+'#'+keywords+'#'+keyword_repetition+'#'+task_instructions);

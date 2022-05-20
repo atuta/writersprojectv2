@@ -1,4 +1,6 @@
 import json
+import datetime
+import time
 
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -8,10 +10,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+
+from .mark_all_as_read import MarkAllAsRead
 from .reject_application import RejectApplication
 from .save_email_template import SaveEmailTemplate
+from .save_cost_settings import SaveCostSettings
 from .approve_application import ApproveApplication
+from .admin_reavail_task import AdminRevailTask
 from .pick_task import PickTask
+from .mark_as_read import MarkAsRead
 from .send_message import SendMessage
 from .client_writer_reject import ClientWriterReject
 from .client_writer_return import ClientWriterReturn
@@ -50,7 +57,7 @@ from .reset_password import ResetPassword
 from .send_password_reset_code import SendPasswordResetCode
 from .create_account import CreateCustomUser
 from .models import Categories, Projects, Tasks, ActiveTasks, Countries, WritersApplications, \
-    CustomUser, PaymentTransactions, Configs, EmailTemplates, ApprisalTasks
+    CustomUser, PaymentTransactions, Configs, EmailTemplates, ApprisalTasks, Messages, Costs, FavoriteWriters
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.sessions.models import Session
@@ -159,9 +166,10 @@ def handle_uploaded_file(f):
 @csrf_exempt
 def view_asign_task(request):
     task_code = request.POST.get("task_code")
-    writer_email = request.POST.get("writer_email")
+    user_id = request.POST.get("user_id")
+    admin_payout = request.POST.get("admin_payout")
 
-    response = AssignTask.assign_task('', task_code, writer_email)
+    response = AssignTask.assign_task('', task_code, user_id, admin_payout)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -394,8 +402,9 @@ def view_admin_pay(request):
 def view_accept_admin_approved_task(request):
     task_code = request.POST.get("task_code")
     stars = request.POST.get("stars")
+    favourite = request.POST.get("favourite")
 
-    response = AcceptAdminApprovedTask.accept_admin_approved_task('', task_code, stars)
+    response = AcceptAdminApprovedTask.accept_admin_approved_task('', task_code, stars, favourite)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -404,9 +413,23 @@ def view_accept_admin_approved_task(request):
 def view_save_admin_settings(request):
     words_per_hour = request.POST.get("words_per_hour")
     buffer_in_hours = request.POST.get("buffer_in_hours")
-    signup_article_title = request.POST.get("signup_article_title")
 
-    response = SaveAdminSettings.save_admin_settings('', words_per_hour, buffer_in_hours, signup_article_title)
+    response = SaveAdminSettings.save_admin_settings('', words_per_hour, buffer_in_hours)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_mark_all_as_read(request):
+    response = MarkAllAsRead.mark_all_as_read('')
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_mark_as_read(request):
+    message_code = request.POST.get("message_code")
+    response = MarkAsRead.mark_as_read('', message_code)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -455,6 +478,21 @@ def view_create_admin(request):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_save_cost_settings(request):
+    basic = request.POST.get("basic")
+    standard = request.POST.get("standard")
+    expert = request.POST.get("expert")
+    extra_proofreading = request.POST.get("extra_proofreading")
+    priority_order = request.POST.get("priority_order")
+    payout_perc = request.POST.get("payout_perc")
+
+    response = SaveCostSettings.save_cost_settings('', basic, standard, expert, extra_proofreading, priority_order,
+                                                   payout_perc)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_create_account(request):
     first_name = request.POST.get("first_name")
     last_name = request.POST.get("last_name")
@@ -475,15 +513,41 @@ def view_create_account(request):
 @login_required
 def do_appraisal_task(request):
     try:
-        task_obj = ApprisalTasks.objects\
+        user_obj = CustomUser.objects.get(email=request.user.email)
+
+        seconds_now = (time.time())
+        appraisal_task_deadline = user_obj.appraisal_task_deadline
+
+        if appraisal_task_deadline is None or appraisal_task_deadline == '':
+            user_obj.appraisal_task_deadline = ((seconds_now + (5 * 60 * 60)) * 1000)  # add 5 hours
+            user_obj.save()
+
+        task_obj = ApprisalTasks.objects \
             .get(t_task_code='833315adbf6a5d983f3fbbd431f5d515409eca116f516e4a6d811b7ca9ce2469')
         task_title = task_obj.t_title
         article = ""
     except ApprisalTasks.DoesNotExist as e:
         article = ""
+    try:
+        user_obj2 = CustomUser.objects.get(email=request.user.email)
+        appraisal_dealine = user_obj2.appraisal_task_deadline
 
+        if not appraisal_dealine:
+            appraisal_dealine = 0
+
+        seconds_remaining = float(appraisal_dealine) - float(seconds_now)
+
+        if float(seconds_remaining) > 1:
+            appraisal_status = 'active'
+        else:
+            appraisal_status = 'expired'
+    except Exception as e:
+        appraisal_dealine = ''
+        appraisal_status = ''
     return render(request, "do-appraisal-task.html", context={"task": task_obj,
-                                                              "page_title": task_title, "tag": "appraisal"})
+                                                              "page_title": "Appraisal Task", "tag": "appraisal",
+                                                              "appraisal_status": appraisal_status,
+                                                              "appraisal_dealine": float(appraisal_dealine)})
 
 
 @login_required
@@ -507,20 +571,41 @@ def project_tasks(request, project_code):
         project_obj = Projects.objects.get(p_code=project_code)
         response = ProjectTasks.project_tasks_data('', project_code)
         project_title = project_obj.p_title
+        client_email = project_obj.p_owner
 
-        writers = list(CustomUser.objects.filter(userrole='4'))
+        favourites_qs = FavoriteWriters.objects.filter(f_client_email=client_email)
+
+        writers = list(CustomUser.objects.filter(userrole='4', is_verified='yes', writer_article='yes')
+                       .order_by('-rating_stars'))
     except Projects.DoesNotExist as e:
         response = {}
         project_title = "No task found!"
     return render(request, "project-tasks.html",
-                  context={"data": response, "writers": writers, "page_title": project_title})
+                  context={"data": response, "writers": writers,
+                           "favourites": favourites_qs, "page_title": project_title})
+
+
+@login_required
+def page_task_article(request, task_code):
+    try:
+        task_obj = Tasks.objects.get(t_task_code=task_code)
+        article_obj = ActiveTasks.objects.get(t_code=task_code)
+        article = article_obj
+        page_title = "Task Article"
+        task_title = task_obj.t_title
+    except Exception as e:
+        task_title = ''
+        article = ''
+        page_title = "No article found!"
+    return render(request, "task-article.html", context={"article": article, "task_title": task_title,
+                                                                    "page_title": page_title})
 
 
 @login_required
 def page_pending_admin_approvals(request):
     try:
         pending_approvals = PendingAdminApprovals.pending_admin_approvals('')
-        page_title = "Pending Admin Approvals"
+        page_title = "Pending Task Approvals"
     except Exception as e:
         page_title = "No pending approvals found!"
     return render(request, "pending-admin-approvals.html", context={"pendings": pending_approvals,
@@ -600,6 +685,13 @@ def page_edit_project(request, project_code):
 def upgrade_to_writer(request):
     # response = MyProjects.my_projects_data('', request.user.email)
     return render(request, "upgrade-to-writer.html", context={"page_title": "Become a Writer"})
+
+
+@login_required
+def page_admin_client_draft_projects(request):
+    projects_qs = Projects.objects.filter(p_status='clientdraft')
+    return render(request, "admin-client-draft-projects.html", context={"projects": projects_qs,
+                                                                        "page_title": "Draft Projects"})
 
 
 @login_required
@@ -949,7 +1041,7 @@ def topup_complete(request):
 def payment_complete(request):
     body = json.loads(request.body)
     project_code = body['project_code']
-    print('project_code:', project_code)
+    # print('project_code:', project_code)
     project_exists = Tasks.objects.filter(t_p_code=project_code).exists()
     if project_exists:
         Projects.objects.filter(p_code=project_code).update(p_status='clientsubmitted')
@@ -984,13 +1076,25 @@ def page_admin_config(request):
             buffer_in_hours = ''
             words_per_hour = ''
             signup_article_title = ''
+
+        costs = Costs.objects.values().order_by('c_id')
     except Exception as e:
         buffer_in_hours = ''
         words_per_hour = ''
-    return render(request, "admin-config.html", context={"buffer_in_hours": buffer_in_hours,
-                                                         "words_per_hour": words_per_hour,
-                                                         "signup_article_title": signup_article_title,
-                                                         "page_title": "System Configuration"})
+        costs = ''
+        print(str(e))
+    return render(request, "admin-config.html", context={
+        "costs": costs,
+        "buffer_in_hours": buffer_in_hours,
+        "words_per_hour": words_per_hour,
+        "signup_article_title": signup_article_title,
+        "page_title": "System Configuration"})
+
+
+def view_admin_reavail_task(request):
+    task_code = request.POST.get("task_code")
+    response = AdminRevailTask.admin_reavail_task('', task_code)
+    return HttpResponse(response, content_type='text/json')
 
 
 def view_save_email_template(request):
@@ -1120,6 +1224,14 @@ def view_online_users(request):
 
 
 @login_required
+def page_overdue_tasks(request):
+    seconds_now = time.time()
+    tasks_qs = Tasks.objects.filter(t_writer_deadline_secs__lte=seconds_now, t_status='writerdraft')
+    return render(request, "overdue-tasks.html", context={"tasks": tasks_qs,
+                                                          "page_title": "Overdue Tasks"})
+
+
+@login_required
 def page_topup_checkout(request):
     topup_amount = float(request.POST.get('topup-amount'))
     topup_email = str(request.POST.get('topup-email'))
@@ -1154,11 +1266,18 @@ def writer_appraisal_task_page(request):
             .get(t_task_code='833315adbf6a5d983f3fbbd431f5d515409eca116f516e4a6d811b7ca9ce2469')
         task_title = task_obj.t_title
     except ApprisalTasks.DoesNotExist as e:
+        task_obj = ""
         task_title = "No task found!"
     categories = list(Categories.objects.values())
     return render(request, "writer-appraisal-task.html",
                   context={"categories": categories, "task": task_obj,
                            "task_title": task_title, "page_title": "Writer Appraisal Task"})
+
+
+def messages_list_page(request):
+    email = request.user.email
+    messages_qs = Messages.objects.filter(m_to_email=email).order_by('-t_datetime')
+    return render(request, "messages-list.html", context={"messages": messages_qs, "page_title": "Messages"})
 
 
 def reset_password_page(request):

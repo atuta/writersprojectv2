@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+{% include "reject-task-modal.html" %}
+<div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Overdue Tasks</h5>
+
+                <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th style="width: 40%;" scope="col">Title</th>
+                    <th scope="col">Deadline (Client/Writer)</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for task in tasks %}
+                  <tr id="tr-{{ task.t_task_code }}">
+                    <td style="width: 40%; vertical-align: bottom;">
+                      {{ task.t_title }}
+                      <p class="orange small mt-3"><em>{{ task.t_word_count }} words / USD {{ task.t_usd_payout|floatformat:2 }}</em></p>
+                    </td>
+                    <td style="vertical-align: bottom;">
+                      Client: {{ task.t_deadline }} <br>
+                      Writer: {{ task.t_writer_deadline }}</td>
+                    <td style="vertical-align: bottom;">
+                      <button id="reavail-task-{{ task.t_task_code }}" type="button" class="btn btn-outline-primary reavail-task"><i class="bi bi-pencil-square me-1"></i> Avail</button> <br>
+<!--                      <button type="button" class="btn btn-outline-info mt-2"><i class="bi bi-arrow-up-right-circle-fill me-1"></i> Reassign</button>-->
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+          </div><!-- End Card with header and footer -->
+    </div><!-- End Right side columns -->
+      </div>
+</div>
+{% endblock %}

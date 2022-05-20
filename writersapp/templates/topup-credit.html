@@ -5,13 +5,13 @@
 
         <!-- Left side columns -->
 <div class="col-lg-6">
-          <div class="card">
+          <div>
 
             <form id="frm-topup-wallet" method="post" action="/writersapp/topup-checkout/">
                 {% csrf_token %}
-            <div class="card-body">
+            <div>
 
-            <h5 class="card-title">Top Up Wallet</h5>
+            <h5>Top Up Wallet</h5>
 
             <div class="col-md-12">
                 <div class="form-floating">
@@ -20,7 +20,7 @@
                 </div>
               </div>
             <input id="topup-email" name="topup-email" type="hidden" value="{{ user.email }}">
-            <button type="submit" class="btn btn-secondary mt-2"><i class="bi bi-check-circle me-1"></i> Proceed</button>
+            <button type="submit" class="btn btn-info mt-3"><i class="bi bi-check-circle me-1"></i> Proceed to checkout</button>
             </div>
             </form>
 

@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-writers-list" tabindex="-1">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Assign Task to a Writer</h5>
@@ -7,11 +7,28 @@
         </div>
         <div class="modal-body">
             <input type="hidden" id="task-code-holder" value="">
+            <div id="favourite-note-div" style="display: none;" class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+            Note: The client has paid to be allocated their favourite writers.
+            </div>
+            {% if favourites %}
+            <!-- Default List group -->
+            <div class="orange"><strong>Client's preferred writers</strong></div>
+              <ul class="list-group">
+                  {% for favourite in favourites %}
+                <li class="list-group-item">{{ favourite.f_writer_first_name }} {{ favourite.f_writer_lastname }}</li>
+                  {% endfor %}
+              </ul><!-- End Default List group -->
+            {% else %}
+            <div><em>This client has no preferred writers</em></div>
+            {% endif %}
+
            <table class="table table-hover">
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Rating</th>
+                    <th scope="col">Actual Payout</th>
+                    <th scope="col">Admin Payout</th>
                     <th style="text-align: right;" scope="col">Action</th>
                   </tr>
                 </thead>
@@ -19,12 +36,17 @@
                 {% for writer in writers %}
                   <tr>
                     <td>{{ writer.first_name }} {{ writer.last_name }}</td>
-                    <td>5 Stars</td>
-                      <td style="text-align: right;"><a id="actual-task-assign-{{ writer.email }}" class="actual-task-assign" href="#"><i class="bi bi-check-circle me-1"></i> Assign</a></td>
+                    <td><i class="bi bi-stars ms-1 orange"></i> {{ writer.rating_stars }}</td>
+                    <td><span class="actual-payout"></span></td>
+                    <td><input style="max-width: 100px;" type="text" class="form-control admin-payout" id="admin-payout-{{ writer.user_id }}" value=""></td>
+                    <td style="text-align: right;"><a id="actual-task-assign-{{ writer.user_id }}" class="actual-task-assign" href="#"><i class="bi bi-check-circle me-1"></i> Assign</a></td>
                   </tr>
                 {% endfor %}
                 </tbody>
               </table>
+        </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

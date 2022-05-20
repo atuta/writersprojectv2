@@ -3,6 +3,51 @@
 {% block content %}
 <div class="row">
 
+
+ <div class="col-lg-6">
+    <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Expertise Cost Settings</h5>
+
+              <!-- Multi Columns Form -->
+
+                <div class="col-md-12 mb-10">
+                  <label for="basic" class="form-label">Basic Plan</label>
+                  <input type="number" class="form-control" id="basic" value="{{costs.0.c_usd_cost}}">
+                </div>
+
+                <div class="col-12">
+                  <label for="standard" class="form-label">Standard Plan</label>
+                  <input type="number" class="form-control" id="standard" value="{{costs.1.c_usd_cost}}">
+                </div>
+                  <div class="col-12">
+                  <label for="expert" class="form-label">Expert Plan</label>
+                  <input type="number" class="form-control" id="expert" value="{{costs.2.c_usd_cost}}">
+                </div>
+
+                <h5 class="card-title">Additional Settings</h5>
+                  <div class="col-12">
+                  <label for="extra-proofreading" class="form-label">Extra Proofreading</label>
+                  <input type="number" class="form-control" id="extra-proofreading" value="{{costs.3.c_usd_cost}}">
+                </div>
+                  <div class="col-12">
+                  <label for="priority-order" class="form-label">Priority Order</label>
+                  <input type="number" class="form-control" id="priority-order" value="{{costs.4.c_usd_cost}}">
+                </div>
+                  <div class="col-12">
+                  <label for="payout-perc" class="form-label">Writer Payout</label>
+                  <input type="number" class="form-control" id="payout-perc" value="{{costs.5.c_usd_cost}}">
+                </div>
+                <div class="text-left">
+                  <hr>
+                  <button type="submit" class="btn btn-success btn-save-cost-settings">Save Section</button>
+                </div>
+
+
+            </div>
+          </div>
+
+</div><!-- End Right side columns -->
 <!-- Left side columns -->
 <div class="col-lg-6">
 
@@ -21,14 +66,9 @@
                   <label for="buffer-in-hours" class="form-label">Buffer (In Hours)</label>
                   <input type="number" class="form-control" id="buffer-in-hours" value="{{ buffer_in_hours }}">
                 </div>
-
-                <div class="col-12">
-                <label for="signup-article-title" class="form-label">Sign Up Article Title</label>
-                    <textarea class="form-control" id="signup-article-title" rows="7">{{ signup_article_title }}</textarea>
-                </div>
                 <div class="text-left">
                   <hr>
-                  <button type="submit" class="btn btn-outline-success">Submit</button>
+                  <button type="submit" class="btn btn-outline-success">Save Section</button>
                 </div>
               </form><!-- End Multi Columns Form -->
 

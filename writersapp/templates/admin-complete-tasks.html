@@ -20,7 +20,7 @@
                 <tbody>
                 {% for task in completes %}
                   <tr>
-                    <td style="width: 40%; vertical-align: bottom;">{{ task.t_title }}</th>
+                    <td style="width: 40%; vertical-align: bottom;"><a href="{% url 'task-article' task.t_task_code %}">{{ task.t_title }}</a></th>
                     <td style="vertical-align: bottom;">{{ task.t_word_count }}</td>
                     <td style="vertical-align: bottom;"><strong>USD {{ task.t_usd_payout|floatformat:2 }}</strong></td>
                     <td style="vertical-align: bottom;">{{ task.t_datetime }}</td>

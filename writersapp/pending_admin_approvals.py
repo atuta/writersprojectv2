@@ -28,7 +28,7 @@ class PendingAdminApprovals:
                         "words_requested": task_obj.t_word_count,
                         "article_words": len(article.split()),
                         "client_name": task_obj.t_owner_names,
-                        "task_deadline": task_obj.t_deadline,
+                        "task_deadline": task_obj.t_writer_deadline,
                         "task_date": task_obj.t_datetime
                     }
                     drafts.append(task)

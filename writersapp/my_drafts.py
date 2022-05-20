@@ -23,6 +23,7 @@ class MyDrafts:
                         "task_title": task_obj.t_title,
                         "task_instructions": task_obj.t_instructions,
                         "payout": task_obj.t_usd_payout,
+                        "deadline": task_obj.t_writer_deadline,
                         "task_date": task_obj.t_datetime
                     }
                     drafts.append(task)

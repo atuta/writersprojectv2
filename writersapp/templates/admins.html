@@ -1,13 +1,14 @@
 {% extends "index.html" %}
 {% load humanize %}
 {% block content %}
+{% include 'message-modal.html' %}
 <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Admins</h5>
-                <a href="{% url 'add-admin' %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-person-plus-fill me-1"></i> Add New</button></a>
+              <h5 class="card-title">Admins <a href="{% url 'add-admin' %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-person-plus-fill me-1"></i> Add Admin</button></a></h5>
+
                 <table class="table datatable">
                 <thead>
                   <tr>
@@ -15,15 +16,17 @@
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Join Date</th>
+                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
                 {% for admin in admins %}
                   <tr>
-                    <td style="vertical-align: bottom;"><a href="{% url 'admin-profile' admin.email %}">{{ admin.first_name }} {{ admin.last_name }}</a></th>
+                    <td style="vertical-align: bottom;"><a href="{% url 'admin-profile' admin.email %}">{{ admin.first_name }} {{ admin.last_name }}</a></td>
                     <td style="vertical-align: bottom;">{{ admin.email }}</td>
                     <td style="vertical-align: bottom;">{{ admin.phone }}</td>
                     <td style="vertical-align: bottom;">{{ admin.date_joined }}</td>
+                    <td style="vertical-align: bottom;"><a href="#"><i id="{{ admin.email }}" style="font-size: 25px;" class="bi bi-chat-square-text me-1 send-message"></i></a></td>
                   </tr>
                 {% endfor %}
                 </tbody>

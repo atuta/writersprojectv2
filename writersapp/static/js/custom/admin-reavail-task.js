@@ -1,22 +1,16 @@
 $().ready(function() {
-   $(document).on('click', '.actual-task-assign', function(event) {
+   $(document).on('click', '.reavail-task', function(event) {
             var id = this.id
-            var splitted_id = id.split("-");
-
-            var task_code = $('#task-code-holder').val();
-            //var email = id.replace('actual-task-assign-', '');
-            var user_id = id.replace('actual-task-assign-', '');
-            var admin_payout = $('#admin-payout-' + user_id).val();
+            var task_code = id.replace('reavail-task-', '');
 
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code + '&user_id=' + user_id + '&admin_payout=' + admin_payout;
-
+			var dataString =  'task_code=' + task_code;
 			//console.log(dataString); return false;
 
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/assign-task/",
+				url: "/writersapp/admin-reavail-task/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},
@@ -28,11 +22,12 @@ $().ready(function() {
 						 if(status === 'success'){
                             swal({
                             title: "Success!",
-                            text: "Task was assigned successfully",
+                            text: "Task was reavailed successfully",
                             icon: "success"
                             });
-                            $('#modal-writers-list').modal('hide')
-                            $('#card-' + task_code).fadeOut('5000');
+
+                         $('#tr-' + task_code).fadeOut('5000');
+
 						 }else{
 						 swal({
                             title: "Failed!",

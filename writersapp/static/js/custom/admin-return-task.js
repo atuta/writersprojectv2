@@ -47,8 +47,8 @@ $().ready(function() {
                                 text: "Task returned successfully",
                                 icon: "success"
                                 });
-
                             $('#card-' + task_code).hide();
+                            $(location).attr('href', '/writersapp/writer-dashboard/');
 						 }else{
                              swal({
                                 title: "Failed!",

@@ -36,6 +36,7 @@ class CreateCustomUser:
                     email_template = ''
             # print(email_template)
             otp_string = get_random_string(64, 'abcdef0123456789')
+            user_id = get_random_string(96, 'abcdef0123456789')
             action = CustomUser(
                 first_name=firstname,
                 last_name=lastname,
@@ -44,6 +45,7 @@ class CreateCustomUser:
                 country=country,
                 preferred_language=preferred_language,
                 username=email,
+                user_id=user_id,
                 otp_string=otp_string,
                 is_active=status,
                 userrole=userrole)
@@ -58,7 +60,7 @@ class CreateCustomUser:
 
             verification_data = {'re_subject': 'Email Verification!',
                                  're_message': 'Hello ' + firstname + ',<br> Kindly verify your email<br>'
-                                               + '<p><a href="http://127.0.0.1:8000/writersapp/verify-email/'
+                                               + '<p><a href="https://contentlancers.com/clapp/verify-email/'
                                                + otp_string + '">'
                                                 '<button type="button" '
                                                 'class="btn '

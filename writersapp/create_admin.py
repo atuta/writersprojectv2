@@ -27,6 +27,7 @@ class CreateAdmin:
                 email=email,
                 country=country,
                 username=email,
+                is_active=True,
                 is_verified='yes',
                 userrole='2')
             action.set_password(password)

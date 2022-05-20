@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import json
-from .models import Tasks, ActiveTasks, CustomUser, PaymentTransactions, Projects
+from .models import Tasks, ActiveTasks, CustomUser, PaymentTransactions, Projects, FavoriteWriters
 from .costs import *
 from django.utils.crypto import get_random_string
 
@@ -15,17 +15,31 @@ class AcceptAdminApprovedTask:
         except:
             return 0
 
-    def accept_admin_approved_task(self, task_code, stars):
+    def accept_admin_approved_task(self, task_code, stars, favourite):
         try:
             Tasks.objects.filter(t_task_code=task_code).update(t_status='complete', t_stars=stars)
             ActiveTasks.objects.filter(t_code=task_code).update(t_status='complete')
 
             task_obj = Tasks.objects.get(t_task_code=task_code)
             email = task_obj.t_allocated_to
+            client_email = task_obj.t_owner
             payout = float(task_obj.t_usd_payout)
             users_obj = CustomUser.objects.get(email=email)
             current_stars = AcceptAdminApprovedTask.make_int(users_obj.rating_stars)
             users_obj.rating_stars = current_stars + AcceptAdminApprovedTask.make_int(stars)
+
+            if favourite == 'yes':
+                favourite_writer_exists = FavoriteWriters \
+                    .objects.filter(f_client_email=client_email, f_writer_email=email).exists()
+
+                if not favourite_writer_exists:
+                    action = FavoriteWriters(
+                        f_client_email=client_email,
+                        f_writer_email=email,
+                        f_writer_first_name=users_obj.first_name,
+                        f_writer_lastname=users_obj.last_name
+                    )
+                    action.save()
 
             # update wallet balance
             current_wallet_balance = float(users_obj.c_wallet_balance)

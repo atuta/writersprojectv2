@@ -22,8 +22,8 @@ $().ready(function() {
             var message_body = $('#message-body').val()
 
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'to_email=' + to_email + '&message_subject=' + message_subject
-			+ '&message_body=' + message_body;
+			var dataString =  'to_email=' + to_email + '&message_subject=' + encodeURIComponent(message_subject)
+			+ '&message_body=' + encodeURIComponent(message_body);
 
 			//console.log(dataString); return false;
 

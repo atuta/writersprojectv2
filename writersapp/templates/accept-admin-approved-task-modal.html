@@ -15,8 +15,13 @@
             <input type="radio" name="rating" value="1" id="1-{{ task.task_code }}"><label for="1-{{ task.task_code }}">☆</label>
             </div>
 
+
         </div>
         <div class="modal-footer">
+            <div class="form-check form-switch me-5">
+            <input class="form-check-input" type="checkbox" id="favourite-writer">
+            <label class="form-check-label" for="favourite-writer">Mark as favorite writer</label>
+            </div>
             <input id="accept-admin-approved-task-code" type="hidden" value="">
           <button type="button" class="btn btn-outline-info btn-client-accept-and-rate-task">Rate & Accept</button>
         </div>

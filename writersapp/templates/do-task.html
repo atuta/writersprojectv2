@@ -6,10 +6,10 @@
         <!-- Left side columns -->
     <div class="col-lg-12">
 
-<div id="card-{{ data.t_task_code }}" class="card">
+<div id="card-{{ data.t_task_code }}">
      {% if data.t_status == 'writerdraft' or data.t_status == 'adminwriterreturned' or data.t_status == 'clientwriterreturned' %}
-            <div class="card-body">
-            <h5 class="card-title">
+            <div>
+            <h5>
             <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#modal-task-instructions">
             <i class="bi bi-info-circle ms-1"></i> View Instructions</button>
             <span style="font-size: 20px; font-style: bold;" id="word-count"></span>
@@ -29,8 +29,8 @@
                 <button style="display: none;" id="writer-submit-task-{{ data.t_task_code }}" type="button" class="btn btn-outline-success writer-submit-task"><i class="bi bi-arrow-return-right me-1"></i> Submit for Review</button>
             </div>
             {% else %}
-            <div class="card-body">
-                <h5 class="card-title">Task already submitted</h5>
+            <div>
+                <h5>Task already submitted</h5>
                 <p>This task has already been submitted</p>
                 <a href="{% url 'page-my-drafts' %}"><button type="button" class="btn btn-outline-primary"><i class="bi bi-save me-1"></i> Back to drafts</button></a>
             </div>
