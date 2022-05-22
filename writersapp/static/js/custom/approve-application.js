@@ -1,4 +1,15 @@
 $().ready(function() {
+    $(document).on('click', '.show-modal-2212121211', function(event) {
+        var id = this.id
+         console.log(id);
+        var application_id = id.replace('show-modal-', '');
+        $('#modal-writer-application-article').modal('show');
+        var article = $('#article-' + application_id).html();
+        $('#article-text').html(article);
+    });
+
+
+
    $(document).on('click', '.accept-application', function(event) {
             var id = this.id;
             var application_id  = id.replace('approve-', '');
@@ -9,7 +20,7 @@ $().ready(function() {
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/approve-application/",
+				url: "/clapp/approve-application/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},

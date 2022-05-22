@@ -13,8 +13,8 @@ $().ready(function() {
 				type: "POST",
 				url: "/writersapp/mark-as-read/",
 				headers: {'X-CSRFToken': csrftoken},
-				beforeSend: function() { $(".loading").show(); },
-                complete: function() { $(".loading").hide();},
+				beforeSend: function() {},
+                complete: function() {},
 				data: dataString,
 				success: function(data) {
 						 var status 	= data.status;

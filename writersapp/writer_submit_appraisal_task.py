@@ -18,7 +18,7 @@ class WriterSubmitAppraisalTask:
         task_code = '833315adbf6a5d983f3fbbd431f5d515409eca116f516e4a6d811b7ca9ce2469'
         try:
             try:
-                application_exists = WritersApplications.objects.filter(a_email=email).exists()
+                application_exists = WritersApplications.objects.filter(a_email=email, a_status='pending').exists()
             except Exception as e:
                 application_exists = False
 

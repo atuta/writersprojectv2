@@ -23,6 +23,7 @@ class AdminPay:
             email = task_obj.t_allocated_to
             payout = float(task_obj.t_usd_payout)
             users_obj = CustomUser.objects.get(email=email)
+            writer_names = users_obj.first_name + ' ' + users_obj.last_name
 
             # update wallet balance
             current_wallet_balance = float(users_obj.c_wallet_balance)
@@ -43,6 +44,28 @@ class AdminPay:
                 p_narration='Payment Sent'
             )
             action.save()
+
+            # log admin transaction
+            admin_email = 'gathogfrank@gmail.com'
+            admin_obj = CustomUser.objects.get(email=admin_email)
+
+            # update admin wallet balance
+            current_admin_wallet_balance = float(admin_obj.c_wallet_balance)
+            new_admin_wallet_balance = float(current_admin_wallet_balance) - float(payout)
+            admin_obj.c_wallet_balance = new_admin_wallet_balance
+            admin_obj.save()
+
+            # log admin transaction
+            admin_action = PaymentTransactions(
+                p_taskcode=task_code,
+                p_email=admin_email,
+                p_transid=transid,
+                c_usd_amount=float(payout),
+                c_moving_balance=new_admin_wallet_balance,
+                p_direction='out',
+                p_narration='Payment for task to ' + writer_names
+            )
+            admin_action.save()
 
             data = {"status": "success", "data": {"message": task_code}}
             return HttpResponse(json.dumps(data), content_type='text/json')

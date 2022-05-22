@@ -3,20 +3,18 @@ $().ready(function() {
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  '';
 
-			//console.log(dataString); return false;
-
             try{
 			$.ajax({
 				type: "POST",
 				url: "/writersapp/mark-all-as-read/",
 				headers: {'X-CSRFToken': csrftoken},
-				beforeSend: function() { $(".loading").show(); },
-                complete: function() { $(".loading").hide();},
+				beforeSend: function() {},
+                complete: function() {},
 				data: dataString,
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 console.log(status);
+						 //console.log(status);
 
 				 }
 				 });
@@ -24,7 +22,7 @@ $().ready(function() {
 			} catch (err){
 				console.log(err.message);
 			}
-    event.preventDefault();
+    //event.preventDefault();
     });
     });
 

@@ -1,6 +1,9 @@
+{% extends "home.html" %}
+{% load humanize %}
 {% load static %}
+{% block content %}
 <!-- ======= Services Section ======= -->
-    <section id="authors" class="services section-bg">
+    <section style="margin-top: 50px;" class="services section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -46,3 +49,7 @@ With our intuitive platform and cutting-edge technology, you are 100% independen
 
       </div>
     </section><!-- End Services Section -->
+
+{% include 'cta.html' %}
+
+{% endblock %}

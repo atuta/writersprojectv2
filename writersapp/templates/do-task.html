@@ -13,8 +13,9 @@
             <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#modal-task-instructions">
             <i class="bi bi-info-circle ms-1"></i> View Instructions</button>
             <span style="font-size: 20px; font-style: bold;" id="word-count"></span>
-            <span id="set-word-count" style="font-size: 20px; font-style: bold;">Words Required: {{ data.t_word_count }}</span></h5>
-
+            <span id="set-word-count" style="font-size: 20px; font-style: bold;">Words Required: {{ data.t_word_count }}</span>
+            </h5>
+            <h5 class="orange"><strong>Deadline: {{ data.t_writer_deadline }}</strong></h5>
             <!-- TinyMCE Editor -->
             <textarea id="article" class="tinymce-editor">
             {{ article }}

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse
 import json
 from .models import Tasks, Messages
@@ -10,15 +11,13 @@ class MarkAllAsRead:
     def __init__(self):
         pass
 
-    def mark_all_as_read(self, message_code):
+    def mark_all_as_read(self):
         try:
-            message_obj = Messages.objects.all()
-            message_obj.m_read = 'yes'
-            message_obj.save()
+            Messages.objects.all().update(m_read='yes')
 
-            data = {"status": "success", "data": {"message": message_code}}
+            data = {"status": "success", "data": {"message": "success"}}
             return HttpResponse(json.dumps(data), content_type='text/json')
         except Exception as e:
-            print(str(e) + message_code)
             data = {"status": "fail", "data": {"message": str(e)}}
+            print(data)
         return HttpResponse(json.dumps(data), content_type='text/json')

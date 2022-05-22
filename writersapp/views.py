@@ -5,6 +5,7 @@ import time
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import JsonResponse
+from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -65,7 +66,7 @@ from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 
 def change_password(request):
@@ -598,7 +599,7 @@ def page_task_article(request, task_code):
         article = ''
         page_title = "No article found!"
     return render(request, "task-article.html", context={"article": article, "task_title": task_title,
-                                                                    "page_title": page_title})
+                                                         "page_title": page_title})
 
 
 @login_required
@@ -745,6 +746,13 @@ def page_client_wallet(request):
     email = request.user.email
     transactions_qs = PaymentTransactions.objects.filter(p_email=email).order_by('-c_datetime')
     return render(request, "client-wallet.html", context={"page_title": "My Wallet", "transactions": transactions_qs})
+
+
+@login_required
+def page_admin_wallet(request):
+    email = request.user.email
+    transactions_qs = PaymentTransactions.objects.filter(p_email=email).order_by('-c_datetime')
+    return render(request, "admin-wallet.html", context={"page_title": "Admin Wallet", "transactions": transactions_qs})
 
 
 @login_required
@@ -1043,6 +1051,36 @@ def payment_complete(request):
     project_code = body['project_code']
     # print('project_code:', project_code)
     project_exists = Tasks.objects.filter(t_p_code=project_code).exists()
+
+    try:
+        project_obj = Projects.objects.get(p_code=project_code)
+        project_cost = project_obj.p_usd_cost
+    except Exception as e:
+        project_cost = 0
+
+    client_names = request.user.first_name + ' ' + request.user.last_name
+    admin_email = 'gathogfrank@gmail.com'
+    admin_obj = CustomUser.objects.get(email=admin_email)
+
+    # update admin wallet balance
+    current_wallet_balance = float(admin_obj.c_wallet_balance)
+    new_wallet_balance = current_wallet_balance + project_cost
+    admin_obj.c_wallet_balance = new_wallet_balance
+    admin_obj.save()
+
+    # log the transaction
+    transid = get_random_string(32, 'abcdef0123456789')
+    action = PaymentTransactions(
+        p_projectcode=project_code,
+        p_email='gathogfrank@gmail.com',
+        p_transid=transid,
+        c_usd_amount=project_cost,
+        c_moving_balance=new_wallet_balance,
+        p_direction='in',
+        p_narration='Project payment from ' + client_names
+    )
+    action.save()
+
     if project_exists:
         Projects.objects.filter(p_code=project_code).update(p_status='clientsubmitted')
         Tasks.objects.filter(t_p_code=project_code).update(t_status='clientsubmitted')
@@ -1272,6 +1310,13 @@ def writer_appraisal_task_page(request):
     return render(request, "writer-appraisal-task.html",
                   context={"categories": categories, "task": task_obj,
                            "task_title": task_title, "page_title": "Writer Appraisal Task"})
+
+
+def page_pending_payments(request):
+    total_owed = CustomUser.objects.filter(userrole='4').aggregate(Sum('c_wallet_balance'))['c_wallet_balance__sum']
+    non_paid_tasks_qs = Tasks.objects.filter(t_status='complete', t_paid='no')
+    return render(request, "pending-payments.html", context={"total_owed": total_owed, "non_paids": non_paid_tasks_qs,
+                                                             "page_title": "Pending Payments"})
 
 
 def messages_list_page(request):

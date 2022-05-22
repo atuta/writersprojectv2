@@ -362,7 +362,7 @@ class Messages(models.Model):
     m_subject = models.CharField(max_length=200, blank=True)
     m_body = models.TextField(blank=True)
     m_read = models.CharField(max_length=10, blank=True, default='no')
-    t_datetime = models.DateTimeField(auto_now=True, null=True)
+    t_datetime = models.DateTimeField(auto_now_add=True, null=True)
 
     # statuses: draft,submitted, inreview, approved, returned, disapproved
     class Meta:

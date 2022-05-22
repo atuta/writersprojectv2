@@ -1,6 +1,9 @@
+{% extends "home.html" %}
+{% load humanize %}
 {% load static %}
+{% block content %}
 <!-- ======= Pricing Section ======= -->
-    <section id="pricing" class="pricing">
+    <section style="margin-top: 50px;" class="pricing">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -14,7 +17,7 @@
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="box">
               <h3>Basic Plan</h3>
-              <h4><sup>$</sup>0.08<span>per word</span></h4>
+              <h4><sup>$</sup>{{ basic|floatformat:3 }}<span>per word</span></h4>
               <ul>
                 <li><i class="bx bx-check"></i> A La Carte Pricing.</li>
                 <li><i class="bx bx-check"></i> Affordable.</li>
@@ -27,9 +30,9 @@
           <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
             <div class="box featured">
               <h3>Standard Plan</h3>
-              <h4><sup>$</sup>0.08<span>per word</span></h4>
+              <h4><sup>$</sup>{{ standard|floatformat:3 }}<span>per word</span></h4>
               <ul>
-                <li><i class="bx bx-check"></i> Starting from $0.08 per word.</li>
+                <li><i class="bx bx-check"></i> Starting from ${{ standard|floatformat:3 }} per word.</li>
                 <li><i class="bx bx-check"></i> Standard content for general projects </li>
                 <li><i class="bx bx-check"></i> Basic editorial content.</li>
               </ul>
@@ -40,9 +43,9 @@
           <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
             <div class="box">
               <h3>Enterprice Plan</h3>
-              <h4><sup>$</sup>0.14<span>per word</span></h4>
+              <h4><sup>$</sup>{{ expert|floatformat:3 }}<span>per word</span></h4>
               <ul>
-                <li><i class="bx bx-check"></i> Starts from $0.14 per word.</li>
+                <li><i class="bx bx-check"></i> Starts from ${{ expert|floatformat:3 }} per word.</li>
                 <li><i class="bx bx-check"></i> Written by advanced authors.</li>
                 <li><i class="bx bx-check"></i> B2B Content Marketing.</li>
               </ul>
@@ -54,3 +57,4 @@
 
       </div>
     </section><!-- End Pricing Section -->
+{% endblock %}

@@ -16,6 +16,7 @@ class WalletSubmitProject:
             email = project_obj.p_owner
             cost = project_obj.p_usd_cost
             users_obj = CustomUser.objects.get(email=email)
+            client_names = users_obj.first_name + ' ' + users_obj.last_name
 
             # update wallet balance
             current_wallet_balance = float(users_obj.c_wallet_balance)
@@ -29,9 +30,9 @@ class WalletSubmitProject:
 
             users_obj.save()
 
-            # log the transaction
+            # log the client out transaction
             transid = get_random_string(32, 'abcdef0123456789')
-            action = PaymentTransactions(
+            client_action = PaymentTransactions(
                 p_projectcode=project_code,
                 p_email=email,
                 p_transid=transid,
@@ -40,7 +41,29 @@ class WalletSubmitProject:
                 p_direction='out',
                 p_narration='Project checkout'
             )
-            action.save()
+            client_action.save()
+
+            # log admin transaction
+            admin_email = 'gathogfrank@gmail.com'
+            admin_obj = CustomUser.objects.get(email=admin_email)
+
+            # update admin wallet balance
+            current_admin_wallet_balance = float(admin_obj.c_wallet_balance)
+            new_admin_wallet_balance = float(current_admin_wallet_balance) + float(cost)
+            admin_obj.c_wallet_balance = new_admin_wallet_balance
+            admin_obj.save()
+
+            # log admin transaction
+            admin_action = PaymentTransactions(
+                p_projectcode=project_code,
+                p_email=admin_email,
+                p_transid=transid,
+                c_usd_amount=float(cost),
+                c_moving_balance=new_admin_wallet_balance,
+                p_direction='in',
+                p_narration='Project payment from ' + client_names
+            )
+            admin_action.save()
 
             task_exists = Tasks.objects.filter(t_p_code=project_code).exists()
             if task_exists:
