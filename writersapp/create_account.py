@@ -14,6 +14,8 @@ class CreateCustomUser:
 
     def create_custom_user(self, firstname, lastname, phone, email, country, preferred_language, userrole, password):
         # print("email:" + email)
+        email = email.strip()
+        email = email.replace(' ', '')
         try:
             user_exists = CustomUser.objects.filter(email=email).exists()
             if user_exists:
@@ -62,14 +64,14 @@ class CreateCustomUser:
                                  're_message': 'Hello ' + firstname + ',<br> Kindly verify your email<br>'
                                                + '<p><a href="https://contentlancers.com/clapp/verify-email/'
                                                + otp_string + '">'
-                                                '<button type="button" '
-                                                'class="btn '
-                                                'btn-outline-primary"> '
-                                                '<i class="bi '
-                                                'bi-check-circle '
-                                                'me-1"></i>Click here to '
-                                                'verify email '
-                                                '</button></p>',
+                                                              '<button type="button" '
+                                                              'class="btn '
+                                                              'btn-outline-primary"> '
+                                                              '<i class="bi '
+                                                              'bi-check-circle '
+                                                              'me-1"></i>Click here to '
+                                                              'verify email '
+                                                              '</button></p>',
                                  're_to': email}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             requests.post(url, data=json.dumps(verification_data), headers=headers)

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import json
 
 from .config import EMAIL_URL
-from .models import WritersApplications, CustomUser
+from .models import WritersApplications, CustomUser, EmailTemplates
 from django.utils.crypto import get_random_string
 from .costs import *
 import decimal
@@ -20,14 +20,17 @@ class RejectApplication:
             application_obj.save()
 
             email = application_obj.a_email
+            first_name = application_obj.a_first_name
+
+            try:
+                email_template_obj = EmailTemplates.objects.get(e_cid='3')
+                email_template = email_template_obj.e_mail
+            except Exception as e:
+                email_template = ''
 
             url = EMAIL_URL
-            data = {'re_subject': 'Your application was rejected!',
-                    're_message': 'Hello ' + application_obj.a_first_name + ',<br>'
-                                                         '<p><h2>We are sorry that your application did not meet our '
-                                                                            'minimum set requirements</h2> '
-                                                         '<br>Try again next time!'
-                                                         '</p>',
+            data = {'re_subject': 'Your ContentLancers application was rejected!',
+                    're_message': 'Hello ' + first_name + ',<br>' + email_template,
                     're_to': email}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             requests.post(url, data=json.dumps(data), headers=headers)

@@ -40,14 +40,29 @@
               <i class="bi bi-circle"></i><span>Complete Tasks</span>
             </a>
           </li>
+           <li>
+            <a href="{% url 'available-tasks' %}">
+              <i class="bi bi-circle"></i><span>Available Tasks</span>
+            </a>
+          </li>
             <li>
             <a href="{% url 'pending-admin-approvals' %}">
               <i class="bi bi-circle"></i><span>Pending Tasks Approval</span>
             </a>
           </li>
+            <li>
+            <a href="{% url 'pending-task-allocations' %}">
+              <i class="bi bi-circle"></i><span>Pending Task Allocations</span>
+            </a>
+          </li>
           <li>
             <a href="{% url 'pending-allocations' %}">
-              <i class="bi bi-circle"></i><span>Pending Allocations</span>
+              <i class="bi bi-circle"></i><span>Pending Project Allocations</span>
+            </a>
+          </li>
+           <li>
+            <a href="{% url 'admin-pending-projects' %}">
+              <i class="bi bi-circle"></i><span>Pending Projects</span>
             </a>
           </li>
           <li>
@@ -194,7 +209,7 @@
             </a>
           </li>
             <li>
-            <a href="{% url 'create-project' %}">
+            <a href="{% url 'page-client-completed-tasks' %}">
               <i class="bi bi-circle"></i><span>Complete Tasks</span>
             </a>
           </li>

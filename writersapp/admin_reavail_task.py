@@ -44,7 +44,8 @@ class AdminRevailTask:
                 action.save()
 
                 ActiveTasks.objects.filter(t_code=task_code).update(t_status='terminated', t_code='', t_author='')
-                Projects.objects.filter(p_code=task_obj.t_p_code).update(p_status='clientsubmitted')
+                Tasks.objects.filter(t_task_code=task_code).update(t_status='adminsubmitted')
+                Projects.objects.filter(p_code=task_obj.t_p_code).update(p_status='adminsubmitted')
 
                 allocated_to = task_obj.t_allocated_to
                 blacklisted_emails = task_obj.t_blacklisted_emails
@@ -57,7 +58,7 @@ class AdminRevailTask:
                 user_obj.save()
 
                 task_obj.t_blacklisted_emails = new_blacklisted_emails
-                task_obj.t_status = 'clientsubmitted'
+                task_obj.t_status = 'adminsubmitted'
                 task_obj.t_allocated_to = ''
                 task_obj.save()
 

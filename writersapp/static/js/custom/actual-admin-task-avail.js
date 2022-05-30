@@ -1,12 +1,10 @@
 $().ready(function() {
-   $(document).on('click', '.actual-task-assign', function(event) {
+   $(document).on('click', '.actual-task-avail', function(event) {
             var id = this.id
             var splitted_id = id.split("-");
 
             var task_code = $('#task-code-holder').val();
-            //var email = id.replace('actual-task-assign-', '');
-            var user_id = id.replace('actual-task-assign-', '');
-            var admin_payout = $('#admin-payout-' + user_id).val();
+            var admin_payout = $('#admin-payout-general').val();
 
             if(admin_payout === ''){
                 swal({
@@ -17,8 +15,8 @@ $().ready(function() {
                  return false;
             }
 
-            var tarehe = $('#admin-date-' + user_id).val();
-            var masaa = $('#admin-time-' + user_id).val();
+            var tarehe = $('#admin-date-general').val();
+            var masaa = $('#admin-time-general').val();
 
             if(tarehe !== '' && masaa === ''){
                 swal({
@@ -31,7 +29,7 @@ $().ready(function() {
 
             var deadline = tarehe + ' ' + masaa;
 			var csrftoken = getCookie('csrftoken');
-			var dataString =  'task_code=' + task_code + '&user_id=' + user_id + '&admin_payout='
+			var dataString =  'task_code=' + task_code + '&admin_payout='
 			+ admin_payout + '&deadline=' + deadline;
 
 			//console.log(dataString); return false;
@@ -39,7 +37,7 @@ $().ready(function() {
             try{
 			$.ajax({
 				type: "POST",
-				url: "/writersapp/assign-task/",
+				url: "/writersapp/admin-avail-task/",
 				headers: {'X-CSRFToken': csrftoken},
 				beforeSend: function() { $(".loading").show(); },
                 complete: function() { $(".loading").hide();},

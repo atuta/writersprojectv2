@@ -32,11 +32,9 @@ $().ready(function() {
                     },
                     complete: function() { $(".loading").hide(); },
                     success: function( data ){
-
-                    //console.log(data);
                         var real_data = data.data;
                         var status = data.status;
-
+                        //console.log(real_data.message);
                         if(status === "success"){
                             swal({
                                 title: "Thank you for your application!",
@@ -64,9 +62,15 @@ $().ready(function() {
                             text: "Too few words!",
                             icon: "error",
                             });
-
-
-                           }else if(real_data.message === 'too_many_words'){
+                            return false;
+                           }else if(real_data.message === 'past_deadline'){
+						     swal({
+                                title: "Failed!",
+                                text: "You cannot submit this task. It is past deadline",
+                                icon: "error"
+                                });
+                                 return false;
+						 }else if(real_data.message === 'too_many_words'){
 
                            swal({
                             title: "Failed!",

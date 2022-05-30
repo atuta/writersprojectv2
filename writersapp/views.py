@@ -17,9 +17,11 @@ from .reject_application import RejectApplication
 from .save_email_template import SaveEmailTemplate
 from .save_cost_settings import SaveCostSettings
 from .approve_application import ApproveApplication
+from .admin_withdraw_task import AdminWithdrawTask
 from .admin_reavail_task import AdminRevailTask
 from .pick_task import PickTask
 from .mark_as_read import MarkAsRead
+from .send_site_message import SendSiteMessage
 from .send_message import SendMessage
 from .client_writer_reject import ClientWriterReject
 from .client_writer_return import ClientWriterReturn
@@ -35,6 +37,7 @@ from .edit_task import EditTask
 from .save_appraisal_task import SaveAppraisalTask
 from .save_task import SaveTask
 from .save_project_options import SaveProjectOptions
+from .admin_avail_task import AdminAvailTask
 from .assign_task import AssignTask
 from .log_task import LogTask
 from .edit_project import EditProject
@@ -84,6 +87,18 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_send_site_message(request):
+    from_email = request.POST.get("from_email")
+    from_name = request.POST.get("from_name")
+    subject = request.POST.get("message_subject")
+    body = request.POST.get("message_body")
+
+    response = SendSiteMessage.send_site_message('', from_email, from_name, subject, body)
+    return HttpResponse(response, content_type='text/json')
 
 
 @api_view(['POST', 'GET'])
@@ -165,12 +180,24 @@ def handle_uploaded_file(f):
 
 @api_view(['POST', 'GET'])
 @csrf_exempt
+def view_admin_avail_task(request):
+    task_code = request.POST.get("task_code")
+    admin_payout = request.POST.get("admin_payout")
+    deadline = request.POST.get("deadline")
+
+    response = AdminAvailTask.admin_avail_task('', task_code, admin_payout, deadline)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
 def view_asign_task(request):
     task_code = request.POST.get("task_code")
     user_id = request.POST.get("user_id")
     admin_payout = request.POST.get("admin_payout")
+    deadline = request.POST.get("deadline")
 
-    response = AssignTask.assign_task('', task_code, user_id, admin_payout)
+    response = AssignTask.assign_task('', task_code, user_id, admin_payout, deadline)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -453,6 +480,9 @@ def view_custom_login(request):
     username = request.POST.get("email")
     password = request.POST.get("password")
 
+    username = username.replace(' ', '')
+    password = password.replace(' ', '')
+
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
@@ -474,6 +504,14 @@ def view_create_admin(request):
     country = request.POST.get("country")
 
     response = CreateAdmin.create_admin('', first_name, last_name, phone, email, country)
+    return HttpResponse(response, content_type='text/json')
+
+
+@api_view(['POST', 'GET'])
+@csrf_exempt
+def view_admin_withdraw_task(request):
+    task_code = request.POST.get("task_code")
+    response = AdminWithdrawTask.admin_withdraw_task('', task_code)
     return HttpResponse(response, content_type='text/json')
 
 
@@ -528,6 +566,8 @@ def do_appraisal_task(request):
         task_title = task_obj.t_title
         article = ""
     except ApprisalTasks.DoesNotExist as e:
+        task_obj = ""
+        task_title = "No appraisal task"
         article = ""
     try:
         user_obj2 = CustomUser.objects.get(email=request.user.email)
@@ -576,7 +616,8 @@ def project_tasks(request, project_code):
 
         favourites_qs = FavoriteWriters.objects.filter(f_client_email=client_email)
 
-        writers = list(CustomUser.objects.filter(userrole='4', is_verified='yes', writer_article='yes')
+        writers = list(CustomUser.objects.filter(userrole='4', is_verified='yes', is_active=True,
+                                                 writer_article='yes', is_archived='no')
                        .order_by('-rating_stars'))
     except Projects.DoesNotExist as e:
         response = {}
@@ -626,6 +667,17 @@ def page_my_admin_approved_tasks(request):
 
 
 @login_required
+def page_admin_drafts(request):
+    try:
+        drafts_qs = Tasks.objects.filter(t_status='writerdraft')
+        page_title = "Admin Drafts"
+    except Exception as e:
+        page_title = "No drafts found!"
+    return render(request, "admin-drafts.html", context={"drafts": drafts_qs,
+                                                         "page_title": page_title})
+
+
+@login_required
 def page_my_drafts(request):
     try:
         email = request.user.email
@@ -635,6 +687,33 @@ def page_my_drafts(request):
         page_title = "No drafts found!"
     return render(request, "my-drafts.html", context={"drafts": drafts,
                                                       "page_title": page_title})
+
+
+@login_required
+def page_admin_pending_projects(request):
+    try:
+        pending_allocations = list(Projects.objects.filter(p_status='pending'))
+        page_title = "Admin Pending Projects"
+    except Exception as e:
+        page_title = "No pending projects found!"
+    return render(request, "admin-pending-projects.html", context={"projects": pending_allocations,
+                                                                   "page_title": page_title})
+
+
+@login_required
+def page_pending_task_allocations(request):
+    try:
+        pending_task_allocations = Tasks.objects.filter(t_status='clientsubmitted')
+        writers = CustomUser.objects.filter(userrole='4', is_verified='yes', is_active=True,
+                                                 writer_article='yes', is_archived='no').order_by('-rating_stars')
+        page_title = "Pending Task Allocations"
+    except Exception as e:
+        pending_task_allocations = ''
+        writers = ''
+        page_title = "No pending task allocation!"
+    return render(request, "pending-task-allocations.html", context={"tasks": pending_task_allocations,
+                                                                     "writers": writers,
+                                                                     "page_title": page_title})
 
 
 @login_required
@@ -775,7 +854,7 @@ def page_revision_tasks(request):
 
 @login_required
 def page_available_tasks(request):
-    tasks = list(Tasks.objects.filter(t_status='clientsubmitted'))
+    tasks = list(Tasks.objects.filter(t_status='adminsubmitted'))
     return render(request, "available-tasks.html", context={"tasks": tasks, "page_title": "Available Tasks"})
 
 
@@ -792,6 +871,13 @@ def page_my_draft_projects(request):
     email = request.user.email
     drafts = Projects.objects.filter(p_status='clientdraft', p_owner=email)
     return render(request, "my-draft-projects.html", context={"drafts": drafts, "page_title": "Draft Projects"})
+
+
+@login_required
+def page_admin_draft_tasks(request):
+    drafts = Tasks.objects.filter(t_status='writerdraft')
+    return render(request, "admin-draft-tasks.html", context={"drafts": drafts,
+                                                              "page_title": "Draft Tasks"})
 
 
 @login_required
@@ -877,7 +963,7 @@ def admin_dashboard(request):
     email = request.user.email
     non_paid_tasks_qs = Tasks.objects.filter(t_status='complete', t_paid='no')
 
-    drafts_count = ActiveTasks.objects.filter(t_status='writerdraft').count()
+    drafts_count = Tasks.objects.filter(t_status='writerdraft').count()
     if not drafts_count:
         drafts_count = '0'
 
@@ -934,9 +1020,9 @@ def client_dashboard(request):
 @login_required
 def writer_dashboard(request):
     email = request.user.email
-    available_tasks_qs = Tasks.objects.filter(t_status='clientsubmitted')
+    available_tasks_qs = Tasks.objects.filter(t_status='adminsubmitted')
 
-    drafts_count = ActiveTasks.objects.filter(t_status='writerdraft', t_author=email).count()
+    drafts_count = Tasks.objects.filter(t_status='writerdraft', t_allocated_to=email).count()
     if not drafts_count:
         drafts_count = '0'
 

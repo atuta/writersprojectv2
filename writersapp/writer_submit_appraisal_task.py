@@ -18,6 +18,15 @@ class WriterSubmitAppraisalTask:
         task_code = '833315adbf6a5d983f3fbbd431f5d515409eca116f516e4a6d811b7ca9ce2469'
         try:
             try:
+                user_obj = CustomUser.objects.get(email=email)
+                deadline = user_obj.appraisal_task_deadline
+                if (float(deadline) / 1000) < float(time.time()):
+                    data = {"status": "fail", "data": {"message": "past_deadline"}}
+                    return HttpResponse(json.dumps(data), content_type='text/json')
+            except Exception as e:
+                data = {"status": "fail", "data": {"message": str(e)}}
+                return HttpResponse(json.dumps(data), content_type='text/json')
+            try:
                 application_exists = WritersApplications.objects.filter(a_email=email, a_status='pending').exists()
             except Exception as e:
                 application_exists = False

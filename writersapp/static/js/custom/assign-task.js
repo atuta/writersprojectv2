@@ -5,6 +5,10 @@ $().ready(function() {
    var id = this.id;
 
     var task_id = id.replace('assign-task-', '');
+    var current_writer = $('#current-writer-' + task_id).val();
+
+    if(current_writer === ''){ var current_writer = 'None'; }
+
     var favourite_needed = $('#favourite-needed-' + task_id).val();
     var payout = $('#payout-' + task_id).val();
     //console.log(payout);
@@ -15,6 +19,7 @@ $().ready(function() {
 
     $('#task-code-holder').val(task_id);
     $('.actual-payout').text(payout);
+    $('#current-writer').text(current_writer);
     $('.admin-payout').val(payout);
     event.preventDefault();
 

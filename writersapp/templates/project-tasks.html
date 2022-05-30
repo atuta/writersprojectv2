@@ -18,10 +18,10 @@
   <tr id="card-{{ task.fields.t_task_code }}">
     <td style="width: 50%; vertical-align: bottom;">
         {{ task.fields.t_title }}
-        <p class="small mt-3"><em>Created on {{ task.fields.t_datetime }}</span></em></p>
+        <p class="small mt-3 orange"><em>Deadline: {{ task.fields.t_deadline }}</span></em></p>
     </td>
-    <td style="width: 50%; vertical-align: bottom;">USD {{ task.fields.t_usd_cost|floatformat:2 }}</td>
-    <td style="width: 50%; vertical-align: bottom;">
+    <td style="width: 35%; vertical-align: bottom;">${{ task.fields.t_usd_cost|floatformat:2 }}</td>
+    <td style="width: 15%; vertical-align: bottom;">
         {% if user.userrole == '3'  %}
             {% if task.fields.t_status == 'clientdraft' %}
             <!--<button id="clientsubmitted-{{ task.fields.t_task_code }}" type="button" class="btn btn-outline-success update-task-status"><i class="bi bi-check-circle ms-1"></i> Submit Task</button>-->
@@ -29,14 +29,12 @@
             {% else %}
             <p>No action required</p>
             {% endif %}
-
-
             {% endif %}
             {% if user.userrole == '2'  %}
-            {% if task.fields.t_status == 'clientsubmitted'  %}
+            {% if task.fields.t_status == 'clientsubmitted' or task.fields.t_status == 'adminsubmitted' %}
             <button id="assign-task-{{ task.fields.t_task_code }}" type="button" class="btn btn-outline-primary assign-task"><i class="bi bi-calendar-check me-1"></i> Assign</button>
-<!--            <button type="button" class="btn btn-outline-primary"><i class="bi bi-calendar-check me-1"></i> Return</button>-->
-<!--            <button type="button" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Reject</button>-->
+            {% elif task.fields.t_status == 'writerdraft' %}
+            <button id="assign-task-{{ task.fields.t_task_code }}" type="button" class="btn btn-outline-primary assign-task"><i class="bi bi-calendar-check me-1"></i> Re-assign</button>
             {% else %}
             <p>No action needed</p>
             {% endif %}
@@ -45,6 +43,7 @@
             <a href="{% url 'do-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Do Task</button></a>
             <a href="{% url 'do-task' task.fields.t_task_code %}"><button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i> Turn Down</button></a>
             {% endif %}
+            <input id="current-writer-{{ task.fields.t_task_code }}" type="hidden" value="{{ task.fields.t_allocated_to_names }}">
             <input id="payout-{{ task.fields.t_task_code }}" type="hidden" value="{{ task.fields.t_usd_payout|floatformat:2 }}">
             <input id="favourite-needed-{{ task.fields.t_task_code }}" type="hidden" value="{{ task.fields.p_favourite_writers }}">
     </td>

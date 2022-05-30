@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Draft Tasks</h5>
+
+                <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th style="width: 40%;" scope="col">Title</th>
+                    <th scope="col">Client</th>
+                    <th scope="col">Writer</th>
+                    <th scope="col">Deadline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for task in drafts %}
+                  <tr>
+                    <td style="width: 40%; vertical-align: bottom;">
+                      {{ task.t_title }} <br>
+                      <div class="orange"> <em>Words: {{ task.t_word_count }} / Pay: USD {{ task.t_usd_payout|floatformat:2 }}</em> </div>
+                    </td>
+                    <td style="vertical-align: bottom;">{{ task.t_owner_names }}</td>
+                    <td style="vertical-align: bottom;">{{ task.t_allocated_to_names }}</td>
+                    <td style="vertical-align: bottom;">{{ task.t_writer_deadline }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+          </div><!-- End Card with header and footer -->
+    </div><!-- End Right side columns -->
+      </div>
+</div>
+{% endblock %}

@@ -230,6 +230,7 @@ class Tasks(models.Model):
     t_owner = models.CharField(max_length=100, blank=True)
     t_owner_names = models.CharField(max_length=150, blank=True)
     t_allocated_to = models.CharField(max_length=100, blank=True)
+    t_allocated_to_names = models.CharField(max_length=150, blank=True)
     t_blacklisted_emails = models.TextField(blank=True)
     t_urgent = models.CharField(max_length=10, blank=True)
     t_deadline = models.CharField(max_length=50, blank=True)

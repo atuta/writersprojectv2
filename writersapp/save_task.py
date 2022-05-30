@@ -41,7 +41,7 @@ class SaveTask:
 
             # if the client has not provided deadline system gives a deadline of 2 days
             if deadline == '':
-                deadline = str(datetime.date.today() + datetime.timedelta(days=3))
+                deadline = str(datetime.date.today() + datetime.timedelta(days=2))
 
             client_deadline_list = deadline.split('-')
             new_client_deadline = str(

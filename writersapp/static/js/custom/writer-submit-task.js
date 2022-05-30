@@ -2,7 +2,6 @@ $().ready(function() {
    $(document).on('click', '.writer-submit-task', function(event) {
             var id = this.id;
             var task_code = id.replace("writer-submit-task-", "");
-
 			var csrftoken = getCookie('csrftoken');
 			var dataString =  'task_code=' + task_code;
 

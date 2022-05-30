@@ -68,3 +68,4 @@ PyQRCode~=1.2.1
 Pillow~=8.3.2
 daemon~=1.2
 phonenumbers~=8.12.45
+environ~=1.0
