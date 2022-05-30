@@ -38,7 +38,7 @@ $().ready(function() {
 				success: function(data) {
 						 var status 	= data.status;
 						 var real_data   = data.data;
-						 console.log(status);
+						 //console.log(data);
 						 if(status === 'success'){
                             swal({
                                 title: "Success!",

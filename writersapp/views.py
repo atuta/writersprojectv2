@@ -576,7 +576,7 @@ def do_appraisal_task(request):
         if not appraisal_dealine:
             appraisal_dealine = 0
 
-        seconds_remaining = float(appraisal_dealine) - float(seconds_now)
+        seconds_remaining = (float(appraisal_dealine) / 1000) - float(seconds_now)
 
         if float(seconds_remaining) > 1:
             appraisal_status = 'active'
